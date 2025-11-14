@@ -1,93 +1,262 @@
 ---
-title: GitHub Workflows
-description: Documentation for GitHub Actions workflows in the HVE Core project
+title: GitHub Actions Workflows
+description: Modular CI/CD workflow architecture for validation, security scanning, and automated maintenance
 author: HVE Core Team
 ms.date: 2025-11-12
 ms.topic: reference
 keywords:
   - github actions
-  - workflows
   - ci/cd
+  - workflows
+  - security scanning
   - automation
+  - reusable workflows
   - validation
   - security
-estimated_reading_time: 20
+estimated_reading_time: 25
 ---
 
-# GitHub Actions Workflows
-
-This directory contains GitHub Actions workflow definitions for continuous integration, code quality validation, security scanning, and automated maintenance in the HVE Core project.
+This directory contains GitHub Actions workflows for continuous integration, security scanning, and automated maintenance of the `hve-core` repository.
 
 ## Overview
 
 Workflows run automatically on pull requests, pushes to protected branches, and scheduled intervals. They enforce code quality standards, validate documentation, perform security scans, and ensure consistency across the codebase.
 
+## Architecture
+
+Modular reusable workflows following Single Responsibility Principle. Each workflow handles one specific tool or validation task.
+
 ## Workflow Organization
 
 ### Naming Conventions
 
-Workflows follow a consistent naming pattern to indicate their purpose and usage:
-
-* **`*-scan.yml`**: Security scanning workflows (reusable or standalone)
-  * Example: `gitleaks-scan.yml`, `checkov-scan.yml`, `dependency-pinning-scan.yml`
-  * Purpose: Run security scanners and produce SARIF outputs for the Security tab
-  * Typically support `workflow_call` trigger for composition
-
-* **`*-check.yml`**: Validation and compliance checking workflows
-  * Example: `sha-staleness-check.yml`
-  * Purpose: Validate code/configuration quality or security posture
-  * May run on schedule or be called by orchestrator workflows
-
-* **`*-lint.yml`**: Code quality and formatting workflows
-  * Example: `markdown-lint.yml`, `spell-check.yml`
-  * Purpose: Enforce code style and formatting standards
-  * Typically run on pull requests
-
-* **Orchestrator workflows**: Compose multiple reusable workflows
-  * Example: `weekly-security-maintenance.yml`
-  * Purpose: Run multiple related checks and generate consolidated reports
-  * Typically run on schedule or manual trigger
+| Pattern       | Purpose                          | Example                   |
+|---------------|----------------------------------|---------------------------|
+| `*-scan.yml`  | Security scanning, SARIF outputs | `codeql-analysis.yml`     |
+| `*-check.yml` | Validation, compliance checking  | `markdown-link-check.yml` |
+| `*-lint.yml`  | Code quality, formatting         | `markdown-lint.yml`       |
+| Orchestrators | Compose multiple workflows       | `pr-validation.yml`       |
 
 ### Workflow Types
 
-**Reusable Workflows** (`workflow_call` trigger)
+**Reusable** (`workflow_call`): Called by other workflows, accept inputs, expose outputs, single-task focused.
 
-* Designed to be called by other workflows
-* Accept inputs via `workflow_call.inputs`
-* Expose outputs via `workflow_call.outputs`
-* Should be self-contained and focused on a single task
-* Include appropriate permissions declarations
+**Standalone** (`schedule`/`push`/`pull_request`): Run on events, may compose reusable workflows.
 
-**Standalone Workflows** (`schedule`, `workflow_dispatch`, `push`, `pull_request` triggers)
+## Orchestrator Workflows
 
-* Run independently based on event triggers
-* May call reusable workflows for composition
-* Should minimize duplication by using reusable workflows
+Compose multiple reusable workflows for comprehensive validation and security scanning.
 
-## Current Workflows
+| Workflow                          | Triggers                                | Jobs                                                            | Mode                       | Purpose                              |
+|-----------------------------------|-----------------------------------------|-----------------------------------------------------------------|----------------------------|--------------------------------------|
+| `pr-validation.yml`               | PR to main/develop (open, push, reopen) | 9 jobs (8 reusable workflows + 1 inline)                        | Strict validation          | Pre-merge quality gate with security |
+| `main.yml`                        | Push to main                            | 5 jobs (5 reusable workflows)                                   | Strict mode, SARIF uploads | Post-merge validation                |
+| `weekly-security-maintenance.yml` | Schedule (Sun 2AM UTC)                  | 4 (validate-pinning, check-staleness, codeql-analysis, summary) | Soft-fail warnings         | Weekly security posture              |
 
-### Security Workflows
+**pr-validation.yml jobs**: codeql-analysis, spell-check, markdown-lint, table-format, psscriptanalyzer, frontmatter-validation, link-lang-check, markdown-link-check, dependency-pinning-check
 
-| Workflow | Type | Purpose | Triggers |
-|----------|------|---------|----------|
-| `weekly-security-maintenance.yml` | Orchestrator | Weekly security posture check | `schedule`, `workflow_dispatch` |
-| `dependency-pinning-scan.yml` | Reusable | Validate SHA pinning compliance | `workflow_call` |
-| `sha-staleness-check.yml` | Reusable | Check for stale SHA pins | `workflow_call`, `workflow_dispatch` |
-| `codeql-analysis.yml` | Reusable | CodeQL security analysis | `push`, `pull_request`, `schedule`, `workflow_call` |
-| `dependency-review.yml` | Reusable | Dependency vulnerability review | `pull_request`, `workflow_call` |
-| `security-scan.yml` | Standalone | Security scanning orchestrator | `push`, `pull_request` |
+**main.yml jobs**: spell-check, markdown-lint, table-format, codeql-analysis, dependency-pinning-scan
+
+## Reusable Workflows
 
 ### Validation Workflows
 
-| Workflow | Purpose | Triggers | Configuration |
-|----------|---------|----------|---------------|
-| `ps-script-analyzer.yml` | PowerShell static analysis | PR (*.ps1, *.psm1), dispatch | `scripts/linting/PSScriptAnalyzer.psd1` |
-| `markdown-lint.yml` | Markdown formatting standards | PR (*.md), dispatch | `.markdownlint.json` |
-| `frontmatter-validation.yml` | YAML frontmatter validation | PR (*.md), dispatch | Script hardcoded |
-| `markdown-link-check.yml` | Link validation | PR (*.md), dispatch | `scripts/linting/markdown-link-check.config.json` |
-| `link-lang-check.yml` | Detect language-specific URLs | PR (*.md), dispatch | Script regex |
-| `spell-check.yml` | Spell checking | PR, dispatch | `.cspell.json` |
-| `table-format.yml` | Markdown table formatting | PR (*.md), dispatch | N/A |
+| Workflow                     | Tool                     | Purpose                              | Key Inputs                                                                                                      | Artifacts                      |
+|------------------------------|--------------------------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------|--------------------------------|
+| `spell-check.yml`            | cspell                   | Validate spelling across all files   | `soft-fail` (false)                                                                                             | spell-check-results            |
+| `markdown-lint.yml`          | markdownlint-cli         | Enforce markdown standards           | `soft-fail` (false)                                                                                             | markdown-lint-results          |
+| `table-format.yml`           | markdown-table-formatter | Verify table formatting (check-only) | `soft-fail` (false)                                                                                             | table-format-results           |
+| `ps-script-analyzer.yml`     | PSScriptAnalyzer         | PowerShell static analysis           | `soft-fail` (false), `changed-files-only` (true)                                                                | psscriptanalyzer-results       |
+| `frontmatter-validation.yml` | Custom PS script         | YAML frontmatter validation          | `soft-fail` (false), `changed-files-only` (true), `skip-footer-validation` (false), `warnings-as-errors` (true) | frontmatter-validation-results |
+| `link-lang-check.yml`        | Custom PS script         | Detect language-specific URLs        | `soft-fail` (false)                                                                                             | link-lang-check-results        |
+| `markdown-link-check.yml`    | markdown-link-check      | Validate links (internal/external)   | `soft-fail` (true)                                                                                              | markdown-link-check-results    |
+
+All validation workflows use `permissions: contents: read`, publish PR annotations, and retain artifacts for 30 days.
+
+**Usage example**:
+
+```yaml
+jobs:
+  spell-check:
+    uses: ./.github/workflows/spell-check.yml
+    with:
+      soft-fail: false
+```
+
+## Workflow Result Publishing Strategy
+
+Each modular workflow implements comprehensive 4-channel result publishing:
+
+1. **PR Annotations**: Warnings/errors appear on Files Changed tab
+2. **Artifacts**: Raw output files retained for 30 days
+3. **SARIF Reports**: Security tab integration (security workflows only)
+4. **Job Summaries**: Rich markdown summaries in Actions tab
+
+## Security Best Practices
+
+All workflows in this repository follow security best practices:
+
+### SHA Pinning
+
+* All GitHub Actions use full 40-character commit SHAs
+* Comments include semantic version tags for human readability
+* Example: `uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2`
+
+### Minimal Permissions
+
+* Workflows use minimal permissions by default (`contents: read`)
+* Additional permissions granted only when required for specific jobs
+* Example: `security-events: write` only for SARIF uploads
+
+### Credential Protection
+
+* `persist-credentials: false` used in checkouts to prevent credential leakage
+* Secrets inherited explicitly with `secrets: inherit`
+* No hardcoded tokens or credentials
+
+### Network Hardening
+
+* `step-security/harden-runner` used in all jobs for egress policy auditing
+* Egress policy set to `audit` mode for visibility
+
+## Maintenance
+
+### Updating SHA Pins
+
+The repository includes PowerShell scripts in `scripts/security/` for SHA pinning maintenance:
+
+* `Update-ActionSHAPinning.ps1` - Update GitHub Actions SHA pins
+* `Update-DockerSHAPinning.ps1` - Update Docker image SHA pins
+* `Update-ShellScriptSHAPinning.ps1` - Update shell script dependencies
+* `Test-SHAStaleness.ps1` - Check for stale SHA pins
+* `Test-DependencyPinning.ps1` - Validate SHA pinning compliance
+
+### Dependabot Integration
+
+Dependabot is configured to automatically create PRs for:
+
+* GitHub Actions updates
+* npm package updates
+* Other dependency updates
+
+The SHA staleness check workflow complements Dependabot by monitoring for stale pins between updates.
+
+## Security Workflows
+
+### Reusable Security Workflows
+
+#### `codeql-analysis.yml`
+
+**Purpose**: Performs comprehensive security analysis using GitHub CodeQL
+
+**Triggers**: `schedule` (Sundays at 4 AM UTC), `workflow_call`
+
+**Features**:
+
+* **Languages**: JavaScript/TypeScript analysis
+* **Queries**: security-extended and security-and-quality query suites
+* **Coverage**: Detects SQL injection, XSS, command injection, path traversal, and 200+ other vulnerabilities
+* **Integration**: Results appear in Security > Code Scanning tab
+* **Auto-build**: Automatically detects and builds JavaScript/TypeScript projects
+
+**Outputs**: SARIF results uploaded to GitHub Security tab, job summary with analysis details
+
+#### `dependency-review.yml`
+
+**Purpose**: Reviews dependency changes in pull requests for known vulnerabilities
+
+**Triggers**: `pull_request`, `workflow_call`
+
+**Features**:
+
+* **Threshold**: Fails on moderate or higher severity vulnerabilities
+* **PR Comments**: Automatically comments on PRs with vulnerability summary
+* **Coverage**: Checks npm packages against GitHub Advisory Database
+* **Integration**: Works with Dependabot alerts and security advisories
+
+**Behavior**: Blocks PRs introducing vulnerable dependencies (moderate+ severity)
+
+#### `dependency-pinning-scan.yml`
+
+**Purpose**: Validates that all GitHub Actions use SHA-pinned versions
+
+**Inputs**:
+
+* `threshold` (number, default: 95): Minimum compliance percentage
+* `dependency-types` (string, default: 'actions,containers'): Types to validate
+* `soft-fail` (boolean, default: false): Continue on failures
+* `upload-sarif` (boolean, default: false): Upload to Security tab
+* `upload-artifact` (boolean, default: true): Upload JSON results
+
+**Outputs**:
+
+* `compliance-score`: Percentage of dependencies properly pinned
+* `unpinned-count`: Number of unpinned dependencies
+* `is-compliant`: Boolean indicating threshold met
+
+#### `sha-staleness-check.yml`
+
+**Purpose**: Detects outdated GitHub Action SHA pins
+
+**Inputs**:
+
+* `max-age-days` (number, default: 30): Maximum age before stale
+
+**Outputs**:
+
+* `stale-count`: Number of stale SHA pins
+* `has-stale`: Boolean indicating stale pins found
+
+**Severity Levels**:
+
+* Info: 0-30 days
+* Low: 31-90 days
+* Medium: 91-180 days
+* High: 181-365 days
+* Critical: >365 days
+
+## Architecture Decisions
+
+### CodeQL Execution Strategy
+
+**Previous Behavior:** CodeQL previously ran as both a standalone workflow (on PR/push events) AND within orchestrator workflows, causing duplicate analyses on the same commits and wasting GitHub Actions minutes.
+
+**Current Architecture:** CodeQL now runs exclusively through orchestrator workflows to prevent duplicate runs and ensure consistent security scanning:
+
+* **CodeQL PR validation**: Runs via `pr-validation.yml` on all PR activity (open, push, reopen)
+* **Main branch**: Runs via `main.yml` on every push to main
+* **Weekly scan**: Standalone scheduled run every Sunday at 4 AM UTC for continuous security monitoring
+
+This architecture ensures:
+
+* CodeQL does not run duplicate analyses on the same commit (previously executed both standalone and within orchestrators)
+* Comprehensive security coverage across all code paths
+* Clear ownership of when and why CodeQL executes
+* Reduced GitHub Actions minutes consumption
+
+**Workflow Execution Matrix**:
+
+| Event                                | Workflows That Run                                       | CodeQL Included    |
+|--------------------------------------|----------------------------------------------------------|--------------------|
+| Open PR to main/develop              | `pr-validation.yml` (9 jobs)                             | ✅ Yes              |
+| Push to PR branch                    | `pr-validation.yml` (9 jobs)                             | ✅ Yes              |
+| Merge to main                        | `main.yml` (5 jobs)                                      | ✅ Yes              |
+| Sunday 4AM UTC                       | `codeql-analysis.yml`, `weekly-security-maintenance.yml` | ✅ Yes (standalone) |
+| Feature branch push (no open PR)[^1] | None                                                     | ❌ No               |
+
+[^1]: Feature branches without an open PR are not validated. Open a PR to main or develop to trigger validation workflows.
+
+## Adding New Workflows
+
+To add a new workflow to the repository:
+
+1. Create `{tool-name}.yml` following existing patterns
+2. Implement 4-channel result publishing (annotations, artifacts, SARIF if security, summaries)
+3. Add harden-runner and SHA pinning
+4. Use minimal permissions
+5. Add soft-fail input support
+6. Update `pr-validation.yml` and `main.yml` to include new job
+7. Document in this README
 
 ## Using Reusable Workflows
 
@@ -142,150 +311,6 @@ jobs:
           echo "Compliance: ${{ needs.security-scan.outputs.compliance-score }}%"
           echo "Unpinned: ${{ needs.security-scan.outputs.unpinned-count }}"
 ```
-
-## Workflow Details
-
-### Security Workflows
-
-#### `weekly-security-maintenance.yml`
-
-**Purpose**: Orchestrates weekly security posture checks
-
-**Schedule**: Weekly on Sundays at 02:00 UTC
-
-**Jobs**:
-
-* `validate-pinning`: Checks SHA pinning compliance (100% threshold)
-* `check-staleness`: Identifies stale SHA pins (>30 days)
-* `codeql-scan`: Runs CodeQL security analysis
-* `summary`: Generates consolidated report
-
-**Outputs**: Consolidated job summaries, JSON reports
-
-**Security Coverage**:
-
-* **CodeQL Analysis**: JavaScript/TypeScript code security scanning with security-extended queries
-* **GitHub Secret Scanning**: Automatic detection of 200+ secret patterns (enabled via Security tab)
-* **Dependabot Alerts**: Automatic vulnerability detection for npm dependencies (enabled via Security tab)
-
-#### `dependency-pinning-scan.yml`
-
-**Purpose**: Validates that all GitHub Actions use SHA-pinned versions
-
-**Inputs**:
-
-* `threshold` (number, default: 95): Minimum compliance percentage
-* `dependency-types` (string, default: 'actions,containers'): Types to validate
-* `soft-fail` (boolean, default: false): Continue on failures
-* `upload-sarif` (boolean, default: false): Upload to Security tab
-* `upload-artifact` (boolean, default: true): Upload JSON results
-
-**Outputs**:
-
-* `compliance-score`: Percentage of dependencies properly pinned
-* `unpinned-count`: Number of unpinned dependencies
-* `is-compliant`: Boolean indicating threshold met
-
-#### `sha-staleness-check.yml`
-
-**Purpose**: Detects outdated GitHub Action SHA pins
-
-**Inputs**:
-
-* `max-age-days` (number, default: 30): Maximum age before stale
-
-**Outputs**:
-
-* `stale-count`: Number of stale SHA pins
-* `has-stale`: Boolean indicating stale pins found
-
-**Severity Levels**:
-
-* Info: 0-30 days
-* Low: 31-90 days
-* Medium: 91-180 days
-* High: 181-365 days
-* Critical: >365 days
-
-#### `codeql-analysis.yml`
-
-**Purpose**: Performs comprehensive security analysis using GitHub CodeQL
-
-**Triggers**: `push`, `pull_request`, `schedule` (Sundays at 4 AM UTC), `workflow_call`
-
-**Features**:
-
-* **Languages**: JavaScript/TypeScript analysis
-* **Queries**: security-extended and security-and-quality query suites
-* **Coverage**: Detects SQL injection, XSS, command injection, path traversal, and 200+ other vulnerabilities
-* **Integration**: Results appear in Security > Code Scanning tab
-* **Autobuild**: Automatically detects and builds JavaScript/TypeScript projects
-
-**Outputs**: SARIF results uploaded to GitHub Security tab, job summary with analysis details
-
-#### `dependency-review.yml`
-
-**Purpose**: Reviews dependency changes in pull requests for known vulnerabilities
-
-**Triggers**: `pull_request`, `workflow_call`
-
-**Features**:
-
-* **Threshold**: Fails on moderate or higher severity vulnerabilities
-* **PR Comments**: Automatically comments on PRs with vulnerability summary
-* **Coverage**: Checks npm packages against GitHub Advisory Database
-* **Integration**: Works with Dependabot alerts and security advisories
-
-**Behavior**: Blocks PRs introducing vulnerable dependencies (moderate+ severity)
-
-### Validation Workflows
-
-#### `ps-script-analyzer.yml`
-
-**Purpose**: Static analysis of PowerShell scripts using PSScriptAnalyzer
-
-**Features**:
-
-* Analyzes only changed PowerShell files
-* Creates GitHub annotations for violations
-* Exports JSON results and markdown summary
-* Uploads artifacts with 30-day retention
-
-**Exit Behavior**: Fails on Error or Warning severity issues
-
-#### `frontmatter-validation.yml`
-
-**Purpose**: Validates YAML frontmatter in markdown files
-
-**Required Fields**:
-
-* `title`, `description`, `author`, `ms.date`, `ms.topic`, `keywords`, `estimated_reading_time`
-
-**Features**:
-
-* Validates frontmatter format
-* Checks footer format and copyright notice
-* Creates GitHub annotations
-* Exports JSON statistics
-
-#### `markdown-link-check.yml`
-
-**Purpose**: Validates all links in markdown files
-
-**Features**:
-
-* Checks internal and external links
-* Retries failed links
-* Creates GitHub annotations
-* Generates detailed summaries
-
-**Exit Behavior**: Soft-fail (sets failure status but continues)
-
-#### `link-lang-check.yml`
-
-**Purpose**: Detects URLs with language paths (e.g., `/en-us/`)
-
-**Exit Behavior**: Warning only (does not fail workflow)
 
 ## Common Patterns
 
@@ -513,51 +538,14 @@ Use `continue-on-error: true` to prevent workflow failure on SARIF upload issues
 
 ## Configuration Files
 
-| File | Purpose | Used By |
-|------|---------|---------|
-| `scripts/linting/PSScriptAnalyzer.psd1` | PowerShell linting rules | ps-script-analyzer.yml |
-| `.markdownlint.json` | Markdown formatting rules | markdown-lint.yml |
-| `scripts/linting/markdown-link-check.config.json` | Link checking configuration | markdown-link-check.yml |
-| `.cspell.json` | Spell checking configuration | spell-check.yml |
-| `.github/instructions/markdown.instructions.md` | Markdown style guide | All markdown workflows |
-| `.github/instructions/commit-message.instructions.md` | Commit message standards | All workflows (informative) |
-
-## Maintenance
-
-### Updating SHA Pins
-
-Keep action SHA pins up-to-date using the provided script:
-
-```powershell
-# Update all stale SHA pins
-scripts/security/Update-ActionSHAPinning.ps1 -Path .github/workflows -UpdateStale
-
-# Dry-run to see what would be updated
-scripts/security/Update-ActionSHAPinning.ps1 -Path .github/workflows -WhatIf
-```
-
-### Adding New Workflows
-
-When adding a new workflow:
-
-1. Follow the naming convention (`*-scan.yml`, `*-check.yml`, or `*-lint.yml`)
-2. Pin all actions to SHA commits
-3. Include Harden Runner as the first step (security workflows)
-4. Document inputs, outputs, and purpose
-5. Add appropriate triggers (pull_request paths, workflow_dispatch)
-6. Implement artifact uploads with 30-day retention
-7. Create GitHub annotations for violations
-8. Generate step summary with results
-9. Support local testing with corresponding script
-10. Update this README with the new workflow entry
-11. Test thoroughly before merging
-
-## Related Documentation
-
-* [Linting Scripts Documentation](../../scripts/linting/README.md)
-* [Security Scripts Documentation](../../scripts/security/)
-* [Scripts Documentation](../../scripts/README.md)
-* [Contributing Guidelines](../../CONTRIBUTING.md)
+| File                                                  | Purpose                      | Used By                     |
+|-------------------------------------------------------|------------------------------|-----------------------------|
+| `scripts/linting/PSScriptAnalyzer.psd1`               | PowerShell linting rules     | `ps-script-analyzer.yml`    |
+| `.markdownlint.json`                                  | Markdown formatting rules    | `markdown-lint.yml`         |
+| `scripts/linting/markdown-link-check.config.json`     | Link checking configuration  | `markdown-link-check.yml`   |
+| `.cspell.json`                                        | Spell checking configuration | `spell-check.yml`           |
+| `.github/instructions/markdown.instructions.md`       | Markdown style guide         | All markdown workflows      |
+| `.github/instructions/commit-message.instructions.md` | Commit message standards     | All workflows (informative) |
 
 ## Resources
 
