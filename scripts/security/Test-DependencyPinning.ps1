@@ -1,6 +1,8 @@
 ﻿#!/usr/bin/env pwsh
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
+#Requires -Version 7.0
+
 <#
 .SYNOPSIS
     Verifies and reports on SHA pinning compliance for supply chain security.
@@ -114,11 +116,10 @@ param(
     [switch]$Remediate
 )
 
+$ErrorActionPreference = 'Stop'
+
 # Import CIHelpers for workflow command escaping
 Import-Module (Join-Path $PSScriptRoot '../lib/Modules/CIHelpers.psm1') -Force
-
-# Set error action preference for consistent error handling
-$ErrorActionPreference = 'Stop'
 
 # Define dependency patterns for different ecosystems
 $DependencyPatterns = @{

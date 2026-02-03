@@ -1,6 +1,8 @@
 #!/usr/bin/env pwsh
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
+#Requires -Version 7.0
+
 <#
 .SYNOPSIS
     Monitors SHA-pinned dependencies for staleness and security vulnerabilities.
@@ -70,6 +72,8 @@ param(
     [ValidateRange(1, 50)]
     [int]$GraphQLBatchSize = 20
 )
+
+$ErrorActionPreference = 'Stop'
 
 # Import CIHelpers for workflow command escaping
 Import-Module (Join-Path $PSScriptRoot '../lib/Modules/CIHelpers.psm1') -Force
