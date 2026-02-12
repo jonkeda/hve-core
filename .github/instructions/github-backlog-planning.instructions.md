@@ -705,6 +705,25 @@ Rules:
 * Comment operations must provide issue_number and body (passed to `mcp_github_add_issue_comment`).
 * Call `mcp_github_list_issue_types` before using the `type` field to confirm the organization supports issue types.
 
+## Content Sanitization Guards
+
+Before composing any content destined for a GitHub API call (issue titles, bodies, comments, labels, milestone descriptions, and other text fields), scan for the patterns below and apply the corresponding resolution. Planning files (*issue-analysis.md*, *planning-log.md*, *issues-plan.md*, *handoff.md*, *handoff-logs.md*) may contain these references locally; however, any content copied from them into GitHub-bound fields must be sanitized using these guards before the API call.
+
+Under Full Autonomy, log the replacement and proceed automatically. Under Partial or Manual autonomy, present the inlined content for user confirmation before the API call.
+
+### Local-Only Path Guard
+
+* **Detect**: Paths matching `.copilot-tracking/`.
+* **Resolve**: Read the referenced file, extract relevant details (findings, data points, conclusions), and inline them into the content. Replace the path with a descriptive label such as "Internal research" or "Local analysis" followed by the extracted details.
+
+### Planning Reference ID Guard
+
+* **Detect**: Identifiers matching `IS` followed by digits and optional letter suffixes (for example, `IS001`, `IS002a`, `IS014`).
+* **Resolve**:
+  * When the actual GitHub issue number is known (from the `issue_number` field in *issues-plan.md* or *handoff.md*, or from the `{{TEMP-N}}` to `#N` mappings in *handoff-logs.md*), replace the planning reference ID with `#<issue_number>`.
+  * When the actual issue number is not yet known, replace the planning reference ID with a descriptive phrase summarizing the referenced work.
+  * When the reference is a self-reference, remove it or replace it with "this issue".
+
 ## Three-Tier Autonomy Model
 
 The autonomy model controls confirmation gates during issue operations. The consuming workflow file must specify the active tier. When no tier is specified, agents should default to Partial Autonomy.
