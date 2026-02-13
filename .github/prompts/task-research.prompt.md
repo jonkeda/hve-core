@@ -10,6 +10,7 @@ maturity: stable
 
 * ${input:chat:true}: (Optional, defaults to true) Include conversation context for research analysis
 * ${input:topic}: (Required) Primary topic or focus area, from user prompt or inferred from conversation
+* ${input:brief}: (Optional) Path to a research brief from `/task-question-frame`
 
 ## Tool Availability
 
@@ -32,9 +33,14 @@ This workflow dispatches subagents for all research activities using the runSuba
 
 Identify what the user wants to accomplish:
 
-* Extract the primary objective from user prompt and conversation context.
-* Note features, behaviors, constraints, and exclusions.
-* Formulate specific questions the research must answer.
+* Check for a research brief at ${input:brief} or in `.copilot-tracking/research/` matching `*-research-brief.md`.
+* When a research brief is found:
+  * Use its Validated Research Questions as the primary scope.
+  * Use its Agreed Scope and Priority Order to guide investigation.
+* When no research brief is found:
+  * Extract the primary objective from user prompt and conversation context.
+  * Note features, behaviors, constraints, and exclusions.
+  * Formulate specific questions the research must answer.
 
 ### Step 2: Locate or Create Research Document
 

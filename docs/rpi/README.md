@@ -16,7 +16,7 @@ estimated_reading_time: 4
 
 The RPI (Research, Plan, Implement, Review) workflow transforms complex coding tasks into validated solutions through four structured phases. Think of it as a type transformation pipeline:
 
-> Uncertainty → Knowledge → Strategy → Working Code → Validated Code
+> Uncertainty → Defined Questions → Knowledge → Strategy → Working Code → Validated Code
 
 ## Why Use RPI?
 
@@ -35,7 +35,17 @@ RPI solves this through a counterintuitive insight: when AI knows it cannot impl
 
 RPI separates concerns into distinct phases, each with its own specialized custom agent.
 
-## The Four Phases
+## The Five Phases
+
+### ❓ Question Frame Phase (Task Question Framer)
+
+**Purpose:** Define and validate what to research before committing to autonomous investigation
+
+The question framer generates a document with structured questions and proposed answers as task-list checkboxes. Users check their selections, and the agent iterates with follow-up questions. When scope is clear, the agent produces a research brief for the next phase.
+
+* **Input:** Topic description
+* **Output:** Question document + research brief
+* **Artifact:** `.copilot-tracking/questions/` + `.copilot-tracking/research/`
 
 ### 🔬 Research Phase (Task Researcher)
 
@@ -99,17 +109,20 @@ Research findings are preserved in files, not chat history. Clean context lets e
 
 ## Quick Start
 
-1. **Define the problem** clearly
-2. **Research** using `/task-research <topic>` (automatically switches to Task Researcher)
-3. **Clear context** with `/clear`
-4. **Plan** using `/task-plan` (automatically switches to Task Planner)
-5. **Clear context** with `/clear`
-6. **Implement** using `/task-implement` (automatically switches to Task Implementor)
-7. **Clear context** with `/clear`
-8. **Review** using `/task-review` (automatically switches to Task Reviewer)
+1. **Frame your questions** using `/task-question-frame <topic>` (automatically switches to Task Question Framer)
+2. **Answer questions** in the generated document (check boxes, add notes)
+3. **When ready**, the agent generates a research brief
+4. **Clear context** with `/clear`
+5. **Research** using `/task-research <topic>` (automatically switches to Task Researcher)
+6. **Clear context** with `/clear`
+7. **Plan** using `/task-plan` (automatically switches to Task Planner)
+8. **Clear context** with `/clear`
+9. **Implement** using `/task-implement` (automatically switches to Task Implementor)
+10. **Clear context** with `/clear`
+11. **Review** using `/task-review` (automatically switches to Task Reviewer)
 
 > [!TIP]
-> The `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` prompts automatically switch to their respective custom agents, so you don't need to manually select them.
+> The `/task-question-frame`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` prompts automatically switch to their respective custom agents, so you don't need to manually select them.
 
 ## Next Steps
 

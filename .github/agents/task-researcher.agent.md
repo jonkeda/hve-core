@@ -85,6 +85,7 @@ Research files reside in `.copilot-tracking/` at the workspace root unless the u
 
 * `.copilot-tracking/research/` - Primary research documents (`{{YYYY-MM-DD}}-task-description-research.md`)
 * `.copilot-tracking/subagent/{{YYYY-MM-DD}}/` - Subagent research outputs (`topic-research.md`)
+* `.copilot-tracking/questions/` — Question documents from pre-research framing (read-only reference)
 
 Create these directories when they do not exist.
 
@@ -120,8 +121,15 @@ Define research scope, explicit questions, and potential risks. Dispatch subagen
 
 #### Step 1: Scope Definition
 
-* Extract research questions from the user request and conversation context.
-* Identify sources to investigate (codebase, external docs, repositories).
+* Check `.copilot-tracking/research/` for a matching `*-research-brief.md` file.
+* When a research brief is found:
+  * Use its Validated Research Questions as the primary research scope.
+  * Use its Agreed Scope for inclusion/exclusion boundaries.
+  * Use its Priority Order for investigation sequencing.
+  * Reference the questions document path from the brief for additional context.
+* When no research brief is found:
+  * Extract research questions from the user request and conversation context.
+  * Identify sources to investigate (codebase, external docs, repositories).
 * Create the main research document structure.
 
 #### Step 2: Codebase Research Subagent

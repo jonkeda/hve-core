@@ -31,6 +31,18 @@ handoffs:
     agent: memory
     prompt: /checkpoint
     send: true
+  - label: "❓ Frame"
+    agent: task-question-framer
+    prompt: /task-question-frame
+    send: true
+  - label: "✅ Approve"
+    agent: rpi-agent
+    prompt: "/rpi approve-gate"
+    send: true
+  - label: "🔄 Steer"
+    agent: rpi-agent
+    prompt: "/rpi steer"
+    send: false
 ---
 
 # RPI Agent
@@ -79,13 +91,25 @@ When dispatching a subagent, state that the subagent does not have access to `ru
 
 Execute phases in order. Review phase returns control to earlier phases when iteration is needed.
 
-| Phase        | Entry                                   | Exit                                                 |
-|--------------|-----------------------------------------|------------------------------------------------------|
-| 1: Research  | New request or iteration                | Research document created                            |
-| 2: Plan      | Research complete                       | Implementation plan created                          |
-| 3: Implement | Plan complete                           | Changes applied to codebase                          |
-| 4: Review    | Implementation complete                 | Iteration decision made                              |
-| 5: Discover  | Review completes or discovery requested | Suggestions presented or auto-continuation announced |
+| Phase              | Entry                                   | Exit                                                 |
+|--------------------|-----------------------------------------|------------------------------------------------------|
+| 0: Question Frame  | New request                             | Research brief created                               |
+| 1: Research        | Research brief or new request           | Research document created                            |
+| 2: Plan            | Research complete                       | Implementation plan created                          |
+| 3: Implement       | Plan complete                           | Changes applied to codebase                          |
+| 4: Review          | Implementation complete                 | Iteration decision made                              |
+| 5: Discover        | Review completes or discovery requested | Suggestions presented or auto-continuation announced |
+
+### Phase 0: Question Frame
+
+Use `runSubagent` to dispatch the task-question-framer agent:
+
+* Instruct the subagent to read and follow `.github/agents/task-question-framer.agent.md` for agent behavior and `.github/prompts/task-question-frame.prompt.md` for workflow steps.
+* Pass the user's topic and conversation context.
+* The subagent creates a question document and iterates with the user until questioning is sufficient.
+* The subagent produces a research brief and returns its path.
+
+Proceed to Phase 1 when the research brief is available.
 
 ### Phase 1: Research
 
@@ -94,6 +118,7 @@ Use `runSubagent` to dispatch the task-researcher agent:
 * Instruct the subagent to read and follow `.github/agents/task-researcher.agent.md` for agent behavior and `.github/prompts/task-research.prompt.md` for workflow steps.
 * Pass the user's topic and any conversation context.
 * Pass user requirements and any iteration feedback from prior phases.
+* Pass the research brief path from Phase 0 when available.
 * Discover applicable `.github/instructions/*.instructions.md` files based on file types and technologies involved.
 * Discover applicable `.github/skills/*/SKILL.md` files based on task requirements.
 * Discover applicable `.github/agents/*.agent.md` patterns for specialized workflows.
@@ -228,6 +253,44 @@ Reply with option numbers to continue, or describe different work.
 ```
 
 Phase 5 is complete only after presenting suggestions or announcing auto-continuation. When the user selects an option, return to Phase 1 with the selected work item.
+
+## Phase Gates
+
+Apply a review gate at each phase boundary. Gate behavior depends on the detected autonomy mode.
+
+### Gate Behavior by Mode
+
+| Mode              | Behavior                                                                                        |
+|-------------------|-------------------------------------------------------------------------------------------------|
+| Full autonomy     | Log a summary and proceed automatically. User reviews asynchronously.                           |
+| Partial (default) | Present a summary with Continue and Steer options. Proceed after presenting.                    |
+| Manual            | Present a detailed review and require explicit approval before proceeding.                      |
+
+### Gate Template
+
+Present the following at each phase boundary:
+
+```markdown
+### Phase Gate: {{completed_phase}} → {{next_phase}}
+
+**Completed**: {{summary_of_phase_outcomes}}
+**Artifacts**: {{paths to created files}}
+**Key Decisions**: {{decisions_made}}
+
+Reply with feedback to steer, or continue to proceed.
+```
+
+### Gate Transitions
+
+| Boundary                    | Steer Target    | What User Can Redirect                              |
+|-----------------------------|-----------------|------------------------------------------------------|
+| Phase 0 → Phase 1          | Phase 0         | Add/remove questions, refine scope                   |
+| Phase 1 → Phase 2          | Phase 1         | Request more research, change approach               |
+| Phase 2 → Phase 3          | Phase 2         | Reorder steps, exclude items, add requirements       |
+| Phase 3 → Phase 4          | Phase 3         | Request additional changes before review             |
+| Phase 4 → Phase 5          | Phase 3 or 1    | Request fixes or escalate to deeper research         |
+
+When the user provides steering input, return to the indicated phase with the feedback incorporated.
 
 ## Error Handling
 

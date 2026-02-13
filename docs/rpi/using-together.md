@@ -14,22 +14,23 @@ keywords:
 estimated_reading_time: 5
 ---
 
-This guide walks through a complete RPI workflow, showing how the four custom agents work together to transform a complex task into validated code.
+This guide walks through a complete RPI workflow, showing how the five custom agents work together to transform a complex task into validated code.
 
 ## The Complete Workflow
 
 ```text
-┌─────────────────┐   Handoff    ┌─────────────────┐   Handoff    ┌─────────────────┐   Handoff    ┌─────────────────┐
-│ Task Researcher │ ──────────→ │  Task Planner   │ ──────────→ │ Task Implementor│ ──────────→ │  Task Reviewer  │
-│                 │  📋 Create   │                 │  ⚡ Implement  │                 │  ✅ Review   │                 │
-│ Uncertainty     │    Plan      │ Knowledge       │              │ Strategy        │              │ Working Code    │
-│     ↓           │              │     ↓           │              │     ↓           │              │     ↓           │
-│ Knowledge       │              │ Strategy        │              │ Working Code    │              │ Validated Code  │
-└─────────────────┘              └─────────────────┘              └─────────────────┘              └─────────────────┘
-        ↓                                ↓                                ↓                                ↓
-   research.md                   plan.md + details.md           code + changes.md              review.md + findings
-        ↑                                ↑
-        └────────────────────────────────┴──────────────── 🔬 Research More / 📋 Revise Plan ────────────────────────┘
+┌─────────────────┐   Handoff    ┌─────────────────┐   Handoff    ┌─────────────────┐   Handoff    ┌─────────────────┐   Handoff    ┌─────────────────┐
+│ Question Framer │ ──────────→ │ Task Researcher │ ──────────→ │  Task Planner   │ ──────────→ │ Task Implementor│ ──────────→ │  Task Reviewer  │
+│                 │  🔬 Research │                 │  📋 Create   │                 │  ⚡ Implement  │                 │  ✅ Review   │                 │
+│ Uncertainty     │              │ Defined         │    Plan      │ Knowledge       │              │ Strategy        │              │ Working Code    │
+│     ↓           │              │ Questions       │              │     ↓           │              │     ↓           │              │     ↓           │
+│ Defined         │              │     ↓           │              │ Strategy        │              │ Working Code    │              │ Validated Code  │
+│ Questions       │              │ Knowledge       │              │                 │              │                 │              │                 │
+└─────────────────┘              └─────────────────┘              └─────────────────┘              └─────────────────┘              └─────────────────┘
+        ↓                                ↓                                ↓                                ↓                                ↓
+   questions.md                    research.md                   plan.md + details.md           code + changes.md              review.md + findings
+   + brief.md                            ↑                                ↑
+                                         └────────────────────────────────┴──────────────── 🔬 Research More / 📋 Revise Plan ────────────────────────┘
 ```
 
 ## Critical Rule: Clear Context
@@ -46,6 +47,17 @@ Why this matters:
 ## Walkthrough: Adding Azure Blob Storage
 
 Let's walk through adding Azure Blob Storage to a Python data pipeline.
+
+### Phase 0: Question Frame
+
+Start by defining what to research:
+
+1. Run `/task-question-frame "Add Azure Blob Storage support"`
+2. The agent creates `.copilot-tracking/questions/2025-01-28-azure-blob-storage-questions.md`
+3. Open the document and check the relevant boxes
+4. Tell the agent you have answered — it appends follow-up questions
+5. Repeat until scope is clear
+6. The agent generates a research brief at `.copilot-tracking/research/2025-01-28-azure-blob-storage-research-brief.md`
 
 ### Phase 1: Research
 
@@ -231,14 +243,16 @@ Ready for commit.
 
 After completing RPI, you have:
 
-| Artifact | Location                      | Purpose                      |
-|----------|-------------------------------|------------------------------|
-| Research | `.copilot-tracking/research/` | Evidence and recommendations |
-| Plan     | `.copilot-tracking/plans/`    | Checkboxes and phases        |
-| Details  | `.copilot-tracking/details/`  | Task specifications          |
-| Changes  | `.copilot-tracking/changes/`  | Change log                   |
-| Review   | `.copilot-tracking/reviews/`  | Validation findings          |
-| Code     | Your source directories       | Working implementation       |
+| Artifact  | Location                      | Purpose                           |
+|-----------|-------------------------------|-----------------------------------|
+| Questions | `.copilot-tracking/questions/`| Task-list document with proposals |
+| Brief     | `.copilot-tracking/research/` | Validated scope contract          |
+| Research  | `.copilot-tracking/research/` | Evidence and recommendations      |
+| Plan      | `.copilot-tracking/plans/`    | Checkboxes and phases             |
+| Details   | `.copilot-tracking/details/`  | Task specifications               |
+| Changes   | `.copilot-tracking/changes/`  | Change log                        |
+| Review    | `.copilot-tracking/reviews/`  | Validation findings               |
+| Code      | Your source directories       | Working implementation            |
 
 ## Common Patterns
 
@@ -275,6 +289,18 @@ RPI artifacts support handoffs:
 
 The Review phase can trigger iteration back to earlier phases when findings reveal gaps.
 
+## Phase Gates
+
+Each phase transition offers a review and steering opportunity. Gate behavior depends on the autonomy mode:
+
+| Mode    | Gate Behavior                                                       |
+|---------|---------------------------------------------------------------------|
+| Full    | Logs a summary and proceeds automatically                           |
+| Partial | Presents summary with continue/steer options, then proceeds        |
+| Manual  | Presents detailed review and waits for explicit approval            |
+
+At any gate, reply with feedback to redirect, or continue to proceed to the next phase.
+
 ### Iteration Paths
 
 | Review Status | Action                      | Target Phase |
@@ -307,15 +333,16 @@ When Task Reviewer identifies research or planning gaps:
 
 ## Quick Reference
 
-| Phase     | Invoke With                  | Agent            | Output              |
-|-----------|------------------------------|------------------|---------------------|
-| Research  | `/task-research <topic>`     | Task Researcher  | research.md         |
-| Plan      | `/task-plan [research-path]` | Task Planner     | plan.md, details.md |
-| Implement | `/task-implement`            | Task Implementor | code + changes.md   |
-| Review    | `/task-review [scope]`       | Task Reviewer    | review.md           |
+| Phase     | Invoke With                        | Agent               | Output                    |
+|-----------|------------------------------------|----------------------|---------------------------|
+| Frame     | `/task-question-frame <topic>`     | Task Question Framer | questions.md, brief.md    |
+| Research  | `/task-research <topic>`           | Task Researcher      | research.md               |
+| Plan      | `/task-plan [research-path]`       | Task Planner         | plan.md, details.md       |
+| Implement | `/task-implement`                  | Task Implementor     | code + changes.md         |
+| Review    | `/task-review [scope]`             | Task Reviewer        | review.md                 |
 
 > [!TIP]
-> `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` all automatically switch to the appropriate custom agent.
+> `/task-question-frame`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` all automatically switch to the appropriate custom agent.
 
 Remember: **Always `/clear` between phases!**
 
