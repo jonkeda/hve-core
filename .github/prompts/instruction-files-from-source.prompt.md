@@ -1,5 +1,5 @@
 ---
-description: "Analyze source code and propose instruction files for selection"
+description: "Analyze source code and propose instruction files for selection - Brought to you by microsoft/hve-core"
 agent: 'instruction-analyzer'
 argument-hint: "topic=... [sourceFolders=folder1,folder2] [chat={true|false}]"
 maturity: preview
@@ -17,17 +17,23 @@ Use this prompt to start an analysis-first workflow that proposes instruction fi
 
 ## Required Steps
 
+**Important requirements**, repeat to yourself these important requirements:
+
+* **Important**, always be thorough and accurate.
+* Score proposals based on actual evidence from source folders rather than assumptions.
+* Stop after analysis and proposal generation; do not generate instruction files in this workflow.
+
 ### Step 1: Resolve Inputs and Scope
 
 * Resolve `topic`, `sourceFolders`, and `chat` from user input and conversation context.
 * Keep source analysis scoped to the requested topic and selected folders.
 * Carry unresolved assumptions into a clarification section instead of guessing.
 
-### Step 2: Run Analyzer Workflow
+### Step 2: Collect Evidence and Build Proposals
 
-* Delegate to the `instruction-analyzer` agent with the resolved inputs.
-* Request checklist output grouped by language and framework with confidence scoring.
-* Keep the checklist focused on files that should be proposed for user selection.
+* Search source folders for naming, type, and behavior signals matching the topic.
+* Score each candidate instruction file with confidence based on evidence strength.
+* Group proposals by language and framework with checklist output for user selection.
 
 ### Step 3: Return Selection-Ready Output
 
