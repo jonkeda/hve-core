@@ -1,0 +1,1 @@
+../../../.github/agents/instruction-generator.agent.md

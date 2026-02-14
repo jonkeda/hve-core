@@ -37,6 +37,7 @@ Handoff validity checks:
   * `applyTo`
   * `priority`
   * `confidence`
+  * `action`
 
 When blocked:
 
@@ -50,9 +51,10 @@ Proceed to Phase 2 when handoff validation passes all guardrails.
 
 * Read selected checked items only from the validated checklist.
 * Process selected items in order and run in a single pass.
-* Create missing instruction files for selected targets.
-* Update existing instruction files in place using minimal-diff edits.
-* Preserve existing frontmatter, section order, and unaffected content whenever possible.
+* Route each item by its `action` field:
+  * `create` — generate a new instruction file at the target path.
+  * `merge` — read the existing file at `mergeTarget`, integrate proposed content using minimal-diff edits, and preserve existing frontmatter, section order, and unaffected content.
+* When merging, add new sections or rules without duplicating content already present in the target file.
 * Align generated content with repository instruction standards and avoid unnecessary rewrites.
 
 Failure handling:
@@ -79,7 +81,7 @@ Proceed to Phase 3 when all selected items are generated successfully.
 ## Output Contract
 
 * Generation uses checked checklist items only.
-* Existing files are updated with a minimal-diff strategy.
+* Items with `action: create` produce new files; items with `action: merge` update the existing `mergeTarget` file.
 * Missing, stale, or incomplete handoff blocks execution and routes to re-analysis.
 * First generation failure stops the workflow with blocking diagnostics.
 * Validation results include `lint:md` and `lint:frontmatter` outcomes.

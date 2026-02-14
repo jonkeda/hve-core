@@ -38,6 +38,8 @@ Proceed to Phase 2 when scope and assumptions are documented.
 * Apply naming detection to files, folders, and conventions that imply language, framework, or domain intent.
 * Apply type or symbol detection to signatures, annotations, imports, decorators, interfaces, and schema artifacts.
 * Apply behavior detection to execution flow, data movement, side effects, and integration points.
+* Scan `.github/instructions/` for existing instruction files whose scope overlaps with proposed candidates.
+* For each overlap, compare `applyTo` patterns, covered topics, and section headings to determine whether the proposal should create a new file or merge into the existing one.
 * Treat conflicting signals as a confidence risk and prepare downgrade notes.
 
 Proceed to Phase 3 when evidence collection is complete across all detection methods.
@@ -55,6 +57,8 @@ Proceed to Phase 3 when evidence collection is complete across all detection met
   * `applyTo`
   * `priority`
   * `confidence`
+  * `action` — `create` for new files, `merge` when an existing instruction file covers overlapping scope
+* When action is `merge`, include a `mergeTarget` field with the path to the existing instruction file and a brief rationale for merging.
 * Keep proposal text concise and actionable for user selection.
 
 Proceed to Phase 4 when all candidates are scored and grouped.
@@ -70,7 +74,8 @@ Proceed to Phase 4 when all candidates are scored and grouped.
 ## Output Contract
 
 * Proposal checklist is selection-ready and grouped by language or framework.
-* Every checklist item includes `target`, `applyTo`, `priority`, and `confidence`.
+* Every checklist item includes `target`, `applyTo`, `priority`, `confidence`, and `action`.
+* Items with `action: merge` include a `mergeTarget` path to the existing instruction file.
 * Low-confidence items appear only under `Needs Clarification` with explicit questions.
 * No generation or file mutation outside proposal output occurs in this workflow.
 
@@ -88,6 +93,8 @@ Proceed to Phase 4 when all candidates are scored and grouped.
 
 - [ ] **{{target}}**
   * `applyTo:` `{{glob_pattern}}`
+  * Action: {{create|merge}}
+  * Merge Target: {{existing_file_path or N/A}}
   * Priority: {{high|medium|low}}
   * Confidence: {{high|medium|low}}
   * Evidence: {{brief_evidence_summary}}
@@ -96,6 +103,8 @@ Proceed to Phase 4 when all candidates are scored and grouped.
 
 - [ ] **{{target}}**
   * `applyTo:` `{{glob_pattern}}`
+  * Action: {{create|merge}}
+  * Merge Target: {{existing_file_path or N/A}}
   * Priority: {{priority}}
   * Confidence: low
   * Conflict: {{ambiguity_or_conflict_reason}}

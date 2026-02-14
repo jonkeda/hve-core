@@ -32,6 +32,8 @@ Use this prompt to start an analysis-first workflow that proposes instruction fi
 ### Step 2: Collect Evidence and Build Proposals
 
 * Search source folders for naming, type, and behavior signals matching the topic.
+* Scan `.github/instructions/` for existing instruction files whose scope overlaps with proposed candidates.
+* For overlapping files, propose a `merge` action instead of `create` and include the existing file path as `mergeTarget`.
 * Score each candidate instruction file with confidence based on evidence strength.
 * Group proposals by language and framework with checklist output for user selection.
 

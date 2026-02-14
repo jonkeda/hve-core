@@ -25,6 +25,8 @@ items:
     kind: agent
   - path: .github/agents/task-reviewer.agent.md
     kind: agent
+  - path: .github/agents/task-question-framer.agent.md
+    kind: agent
   - path: .github/agents/memory.agent.md
     kind: agent
     usage: |
@@ -45,6 +47,8 @@ items:
   - path: .github/prompts/task-implement.prompt.md
     kind: prompt
   - path: .github/prompts/task-review.prompt.md
+    kind: prompt
+  - path: .github/prompts/task-question-frame.prompt.md
     kind: prompt
   - path: .github/prompts/checkpoint.prompt.md
     kind: prompt

@@ -26,6 +26,10 @@ items:
   # Prompt Engineering agents
   - path: .github/agents/prompt-builder.agent.md
     kind: agent
+  - path: .github/agents/instruction-analyzer.agent.md
+    kind: agent
+  - path: .github/agents/instruction-generator.agent.md
+    kind: agent
   # RPI prompts
   - path: .github/prompts/rpi.prompt.md
     kind: prompt
@@ -45,6 +49,8 @@ items:
   - path: .github/prompts/prompt-build.prompt.md
     kind: prompt
   - path: .github/prompts/prompt-refactor.prompt.md
+    kind: prompt
+  - path: .github/prompts/instruction-files-from-source.prompt.md
     kind: prompt
   # Prompt Engineering instructions
   - path: .github/instructions/prompt-builder.instructions.md
