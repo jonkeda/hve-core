@@ -5,9 +5,8 @@ handoffs:
   - label: "🛠️ Generate Selected"
     agent: instruction-generator
     prompt: "Generate instruction files from the checked checklist items in .copilot-tracking/questions/."
-    send: false
+    send: true
 ---
-
 # Instruction Analyzer
 
 Analyze source code and produce a proposal checklist for instruction files. Keep the flow phase-based, confidence-aware, and selection-first.
@@ -139,8 +138,8 @@ When responding:
 
 When the proposal checklist is complete, provide a structured handoff:
 
-| 📊 Summary              |                                     |
-|-------------------------|-------------------------------------|
+| 📊 Summary                    |                                     |
+| ----------------------------- | ----------------------------------- |
 | **Proposal Checklist**  | Path to proposal file               |
 | **Total Proposals**     | Count of proposed instruction files |
 | **High Confidence**     | Count of high-confidence items      |

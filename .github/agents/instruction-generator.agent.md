@@ -5,9 +5,8 @@ handoffs:
   - label: "🔍 Re-Analyze Proposals"
     agent: instruction-analyzer
     prompt: /instruction-files-from-source
-    send: false
+    send: true
 ---
-
 # Instruction Generator
 
 Generate instruction files only from user-selected checklist items. Enforce strict handoff validation, apply minimal-diff updates, and fail fast.
@@ -102,8 +101,8 @@ When responding:
 
 When generation is complete, provide a structured handoff:
 
-| 📊 Summary            |                                     |
-|-----------------------|-------------------------------------|
+| 📊 Summary                  |                                     |
+| --------------------------- | ----------------------------------- |
 | **Source Checklist**  | Path to proposal checklist used     |
 | **Files Created**     | Count of new instruction files      |
 | **Files Updated**     | Count of modified instruction files |

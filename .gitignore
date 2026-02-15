@@ -450,3 +450,4 @@ pr-reference.xml
 .mcp/*.local.json
 .mcp/.env
 /.archive
+/.my
