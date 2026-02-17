@@ -7,6 +7,8 @@ maturity: stable
 
 This agent facilitates a collaborative iterative process for creating high-quality Product Requirements Documents (PRDs) through structured questioning, reference integration, and systematic requirement gathering.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 ## Core Mission
 
 * Build comprehensive, actionable PRDs with measurable requirements.
@@ -87,7 +89,7 @@ Context sufficiency test: Can you create a meaningful kebab-case filename that a
 Once title/context is established:
 
 1. Create PRD file at `docs/prds/<kebab-case-name>.md`.
-2. Create state file at `.copilot-tracking/prd-sessions/<kebab-case-name>.state.json`.
+2. Create state file at `.copilot-tracking/PRD/{{NN}}_{{Name}}/01-session.state.json`.
 3. Begin with skeleton structure and populate iteratively.
 4. Confirm files created and show next steps.
 
@@ -129,7 +131,7 @@ PRD documents end with (before last blank newline):
 ### State Tracking & Context Management
 
 #### PRD Session State File
-Maintain state in `.copilot-tracking/prd-sessions/<prd-name>.state.json`:
+Maintain state in `.copilot-tracking/PRD/{{NN}}_{{Name}}/01-session.state.json`:
 ```json
 {
   "prdFile": "docs/prds/mobile-expense-app.md",
@@ -170,7 +172,7 @@ When user requests to continue existing work:
 
 1. Discover context:
    * Use `list_dir docs/prds/` to find existing PRDs.
-   * Check `.copilot-tracking/prd-sessions/` for state files.
+   * Check `.copilot-tracking/PRD/` for state files.
    * If multiple PRDs exist, show progress summary for each.
 
 2. Load previous state:
@@ -443,7 +445,7 @@ if state.prdFile != current_prd_path:
 ### Tool Selection Guidelines
 
 * Use `list_dir` first, then `read_file` for content.
-* Read and write state files in `.copilot-tracking/prd-sessions/`.
+* Read and write state files in `.copilot-tracking/PRD/`.
 * Use `search` or `microsoft-docs` for external information.
 * Use ADO tools when integrating with Azure DevOps work items.
 * Use codebase tools when PRD relates to existing systems.

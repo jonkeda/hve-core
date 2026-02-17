@@ -356,10 +356,10 @@ When instructions describe how to respond to users in conversation:
 
 ```markdown
 <!-- Avoid backticks around file paths -->
-2. Attach or open `.copilot-tracking/plans/2026-01-24-task-plan.instructions.md`.
+2. Attach or open `.copilot-tracking/Task/01_MyTask/01-task-plan.md`.
 
 <!-- Use markdown links for file references -->
-2. Attach or open [2026-01-24-task-plan.instructions.md](.copilot-tracking/plans/2026-01-24-task-plan.instructions.md).
+2. Attach or open [01-task-plan.md](.copilot-tracking/Task/01_MyTask/01-task-plan.md).
 
 <!-- Use markdown links for URLs -->
 See the [official documentation](https://docs.example.com/guide) for details.

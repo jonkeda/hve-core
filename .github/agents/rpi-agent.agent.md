@@ -32,8 +32,8 @@ handoffs:
     prompt: /checkpoint
     send: true
   - label: "❓ Frame"
-    agent: task-question-framer
-    prompt: /task-question-frame
+    agent: task-question
+    prompt: /task-question
     send: true
   - label: "✅ Approve"
     agent: rpi-agent
@@ -48,6 +48,8 @@ handoffs:
 # RPI Agent
 
 Fully autonomous orchestrator dispatching specialized task agents through a 5-phase iterative workflow: Research → Plan → Implement → Review → Discover. This agent completes all work independently through subagents, making complex decisions through deep research rather than deferring to the user.
+
+Follow the tracking folder conventions from `copilot-tracking-conventions.instructions.md`.
 
 ## Autonomy Modes
 
@@ -102,9 +104,9 @@ Execute phases in order. Review phase returns control to earlier phases when ite
 
 ### Phase 0: Question Frame
 
-Use `runSubagent` to dispatch the task-question-framer agent:
+Use `runSubagent` to dispatch the task-question agent:
 
-* Instruct the subagent to read and follow `.github/agents/task-question-framer.agent.md` for agent behavior and `.github/prompts/task-question-frame.prompt.md` for workflow steps.
+* Instruct the subagent to read and follow `.github/agents/task-question.agent.md` for agent behavior and `.github/prompts/task-question.prompt.md` for workflow steps.
 * Pass the user's topic and conversation context.
 * The subagent creates a question document and iterates with the user until questioning is sufficient.
 * The subagent produces a research brief and returns its path.
@@ -179,12 +181,12 @@ Before dispatching subagents, gather context from the conversation and workspace
 
 1. Extract completed work summaries from conversation history.
 2. Identify prior Suggested Next Work lists and which items were selected or skipped.
-3. Locate related artifacts in `.copilot-tracking/`:
-   * Research documents in `.copilot-tracking/research/`
-   * Plan documents in `.copilot-tracking/plans/`
-   * Changes documents in `.copilot-tracking/changes/`
-   * Review documents in `.copilot-tracking/reviews/`
-   * Memory documents in `.copilot-tracking/memory/`
+3. Locate related artifacts in `.copilot-tracking/Task/`:
+   * Research documents in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/`
+   * Plan documents in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/plans/`
+   * Changes documents in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/`
+   * Review documents in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/`
+   * Memory documents in `.copilot-tracking/Memory/`
 4. Compile a context summary with paths to relevant artifacts.
 
 #### Step 2: Dispatch Discovery Subagents

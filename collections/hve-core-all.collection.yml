@@ -46,7 +46,7 @@ items:
   kind: agent
 - path: .github/agents/task-planner.agent.md
   kind: agent
-- path: .github/agents/task-question-framer.agent.md
+- path: .github/agents/task-question.agent.md
   kind: agent
 - path: .github/agents/task-researcher.agent.md
   kind: agent
@@ -106,7 +106,7 @@ items:
   kind: prompt
 - path: .github/prompts/task-plan.prompt.md
   kind: prompt
-- path: .github/prompts/task-question-frame.prompt.md
+- path: .github/prompts/task-question.prompt.md
   kind: prompt
 - path: .github/prompts/task-research.prompt.md
   kind: prompt

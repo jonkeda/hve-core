@@ -25,7 +25,7 @@ Follow the Conventional Commit Title Pattern to Label Mapping, Scope Keyword to 
 
 ## Required Steps
 
-This workflow proceeds through four steps: fetch the milestone issues, analyze coverage and gaps, produce the sprint plan, then review and execute approved changes. Planning artifacts are written to `.copilot-tracking/github-issues/sprint/{{milestone-kebab}}/` where `{{milestone-kebab}}` is the milestone name normalized to kebab-case (for example, `v2-2-0`).
+This workflow proceeds through four steps: fetch the milestone issues, analyze coverage and gaps, produce the sprint plan, then review and execute approved changes. Planning artifacts are written to `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` where `{{ScopeName}}` is derived from the milestone name in PascalCase (for example, `01_V2_2_0`).
 
 ### Step 1: Fetch Milestone and Issues
 
@@ -33,7 +33,7 @@ Resolve the repository context, verify access, and retrieve all issues assigned 
 
 1. Determine the repository owner and name from workspace context (remote URL, open files, or user input).
 2. Call `mcp_github_get_me` to verify authenticated access to the repository.
-3. Create the planning directory at `.copilot-tracking/github-issues/sprint/{{milestone-kebab}}/` and initialize *planning-log.md* following the template in the planning specification.
+3. Create the planning directory at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` and initialize *planning-log.md* following the template in the planning specification.
 4. Fetch open issues for the milestone using `mcp_github_search_issues` with query `repo:{owner}/{repo} milestone:"{milestone}" is:open`. Paginate until all results are retrieved.
 5. Fetch closed issues for progress context using `mcp_github_search_issues` with query `repo:{owner}/{repo} milestone:"{milestone}" is:closed`.
 6. Hydrate each open issue via `mcp_github_issue_read` with `method: 'get'` to retrieve body content, labels, and assignments. Also fetch sub-issues with `method: 'get_sub_issues'` on issues with sub-issue relationships or titles suggesting tracking scope (epics, umbrella issues, feature aggregations).
@@ -90,7 +90,7 @@ Present the sprint plan for review and execute approved changes according to the
 * A coverage matrix identifies which scope labels are represented and which have gaps.
 * When documents are provided, extracted requirements have been assessed for similarity against existing milestone issues.
 * The sprint plan includes prioritized issues within capacity constraints, deferred items with rationale, and dependency chains.
-* Planning artifacts exist in `.copilot-tracking/github-issues/sprint/{{milestone-kebab}}/`: *planning-log.md*, *sprint-analysis.md*, *sprint-plan.md*, *handoff.md*, and *handoff-logs.md*.
+* Planning artifacts exist in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`: *planning-log.md*, *sprint-analysis.md*, *sprint-plan.md*, *handoff.md*, and *handoff-logs.md*.
 * The user has reviewed the plan and confirmed or adjusted recommended changes, respecting the active autonomy tier.
 * Approved changes have been executed and recorded in *handoff-logs.md* with checkbox tracking.
 

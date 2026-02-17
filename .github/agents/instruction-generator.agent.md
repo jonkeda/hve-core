@@ -11,16 +11,18 @@ handoffs:
 
 Generate instruction files only from user-selected checklist items. Enforce strict handoff validation, apply minimal-diff updates, and fail fast.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 ## File Locations
 
-* `.copilot-tracking/questions/` - Source proposal checklists (read-only input)
+* `.copilot-tracking/InstructionAnalysis/` - Source proposal checklists (read-only input)
 * `.github/instructions/` - Target directory for generated instruction files
 
 ## Required Phases
 
 ### Phase 1: Handoff Discovery and Guardrails
 
-* Locate the proposal checklist under `.copilot-tracking/questions/`.
+* Locate the proposal checklist under `.copilot-tracking/InstructionAnalysis/`.
 * Use the newest relevant checklist for the active topic and scope.
 * Treat the checklist as the only handoff source for generation.
 * Block generation when handoff data is missing, stale, or incomplete.
@@ -117,4 +119,4 @@ When generation is complete, provide a structured handoff:
 
 ## Resumption
 
-When resuming generation work, locate the proposal checklist in `.copilot-tracking/questions/` and the target instruction files in `.github/instructions/`. Identify which selected items have already been generated and continue from the first ungenerated item.
+When resuming generation work, locate the proposal checklist in `.copilot-tracking/InstructionAnalysis/` and the target instruction files in `.github/instructions/`. Identify which selected items have already been generated and continue from the first ungenerated item.

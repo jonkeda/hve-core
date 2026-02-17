@@ -33,7 +33,7 @@ Resolve the repository owner and name from the active workspace context or user 
    * Path A (User-Centric): User requests assigned issues, milestone progress, or their own work without referencing artifacts or search terms.
    * Path B (Artifact-Driven): Documents, PRDs, or requirements are provided via `${input:documents}` or conversation. User requests issue creation or updates from artifacts.
    * Path C (Search-Based): User provides `${input:searchTerms}` directly without artifacts or assignment context.
-3. Create the planning folder at `.copilot-tracking/github-issues/discovery/<scope-name>/` and initialize *planning-log.md*.
+3. Create the planning folder at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` and initialize *planning-log.md*.
 4. When Path B is selected and the organization supports issue types, call `mcp_github_list_issue_types` with the owner parameter.
 
 When neither documents nor search terms are provided and user intent does not indicate assigned-issue retrieval, ask the user to clarify their discovery goal before proceeding.
@@ -110,7 +110,7 @@ This step applies to Path B only. Produce the handoff file and present the disco
 * Similarity assessments classify each candidate-to-existing-issue pair as Match, Similar, Distinct, or Uncertain.
 * All four action categories (Create, Update, Link, Close) are represented in the plan when applicable.
 * Hierarchy grouping produces epic-level tracking issues when a requirement has more than 5 sub-requirements.
-* Path B produces *planning-log.md*, *issue-analysis.md*, *issues-plan.md*, and *handoff.md* in `.copilot-tracking/github-issues/discovery/<scope-name>/`.
+* Path B produces *planning-log.md*, *issue-analysis.md*, *issues-plan.md*, and *handoff.md* in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`.
 * Paths A and C produce *planning-log.md* and a conversational summary.
 * The handoff is presented for review before any execution occurs. Discovery does not execute issue operations.
 

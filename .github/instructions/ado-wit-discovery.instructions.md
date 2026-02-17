@@ -1,10 +1,12 @@
 ---
 description: 'Protocol for discovering Azure DevOps work items via user assignment or artifact analysis with planning file output'
-applyTo: '**/.copilot-tracking/workitems/discovery/**'
+applyTo: '**/.copilot-tracking/WorkItem/**'
 maturity: stable
 ---
 
 # Azure DevOps Work Item Discovery
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 Discover Azure DevOps work items through two paths: user-centric queries ("show me my work items") or artifact-driven analysis (documents, branches, commits). Follow #file:ado-wit-planning.instructions.md for templates, field definitions, and search protocols.
 
@@ -27,14 +29,14 @@ Discover Azure DevOps work items through two paths: user-centric queries ("show 
 * Artifact-driven (Path B): Documents, branches, or commits require translation into work items
 * Search-based (Path C): User provides search terms directly without artifacts or assignment context
 
-**Output location**: `.copilot-tracking/workitems/discovery/<folder-name>/` where `<folder-name>` is a descriptive kebab-case identifier derived from the work scope.
+**Output location**: `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/` where `{{NN}}_{{InstanceName}}` follows the conventions in copilot-tracking-conventions.instructions.md.
 
 ## Deliverables
 
-* `planning-log.md`: Search terms, discovered items, similarity assessments, and phase tracking
-* `artifact-analysis.md`: Extracted requirements and working field values (artifact-driven path only)
-* `work-items.md`: Source of truth for planned operations (artifact-driven path only)
-* `handoff.md`: Create actions first, Update second, No Change last (artifact-driven path only)
+* `01-planning-log.md`: Search terms, discovered items, similarity assessments, and phase tracking
+* `02-artifact-analysis.md`: Extracted requirements and working field values (artifact-driven path only)
+* `03-work-items.md`: Source of truth for planned operations (artifact-driven path only)
+* `04-handoff.md`: Create actions first, Update second, No Change last (artifact-driven path only)
 * Conversational summary with counts, parent links, and planning folder path
 
 Add an **External References** section to work item descriptions when authoritative sources inform requirements.
@@ -110,13 +112,13 @@ Skip conditions:
 
 Execution:
 
-1. Determine folder name from work scope (descriptive kebab-case).
-2. Create planning folder at `.copilot-tracking/workitems/discovery/<folder-name>/`.
+1. Determine instance name following copilot-tracking-conventions.instructions.md.
+2. Create planning folder at `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/`.
 3. Gather artifacts:
    * Explicit `${input:documents}` paths or attachments
    * Documents inferred from conversation
    * Git diff XML when `${input:includeBranchChanges}` is `true`
-4. Log artifacts in `planning-log.md` under **Discovered Artifacts & Related Files**.
+4. Log artifacts in `01-planning-log.md` under **Discovered Artifacts & Related Files**.
 5. Read each artifact to completion; extract requirements grouped by persona or system impact.
 6. Build keyword groups from nouns, verbs, component names, and file paths.
 7. Execute searches with `mcp_ado_search_workitem` for each keyword group:
@@ -126,7 +128,7 @@ Execution:
    * `areaPath`: `["${input:areaPath}"]` when specified (array)
    * `top`: 50; increment `skip` until fewer results return than `top`
 8. Hydrate discovered items via batch retrieval.
-9. Compute similarity per #file:ado-wit-planning.instructions.md and log in `planning-log.md`.
+9. Compute similarity per #file:ado-wit-planning.instructions.md and log in `01-planning-log.md`.
 10. For User Stories, search for parent Features when linking is required.
 
 #### Path C: Search-Based Discovery
@@ -155,7 +157,7 @@ Apply to artifact-driven discovery only.
 **Similarity-based actions**:
 
 * Match (≥0.70): Plan Update action; merge new requirements, preserve existing content
-* Similar (0.50-0.69): Mark **Needs Review** in `handoff.md` with rationale
+* Similar (0.50-0.69): Mark **Needs Review** in `04-handoff.md` with rationale
 * Distinct (<0.50): Consider for new work item creation
 
 **New work items**:
@@ -173,7 +175,7 @@ Apply to artifact-driven discovery only.
 
 ### Phase 3 – Assemble Handoff
 
-Build `handoff.md` per template in #file:ado-wit-planning.instructions.md
+Build `04-handoff.md` per template in #file:ado-wit-planning.instructions.md
 
 1. Order: Create entries first, Update second, No Change last.
 2. Include checkboxes, summaries, relationships, and artifact references.

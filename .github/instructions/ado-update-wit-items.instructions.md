@@ -1,10 +1,12 @@
 ---
 description: 'Work item creation and update protocol using MCP ADO tools with handoff tracking'
-applyTo: '**/.copilot-tracking/workitems/**/handoff-logs.md'
+applyTo: '**/.copilot-tracking/WorkItem/**/05-handoff-logs.md'
 maturity: stable
 ---
 
 # Azure DevOps Work Item Update Instructions
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 Follow all instructions from #file:./ado-wit-planning.instructions.md for work item planning, templates, and field definitions.
 

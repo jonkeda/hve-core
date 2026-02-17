@@ -1,5 +1,5 @@
 ---
-description: 'Executes implementation plans from .copilot-tracking/plans with progressive tracking and change records'
+description: 'Executes implementation plans from .copilot-tracking/Task/ with progressive tracking and change records'
 maturity: stable
 handoffs:
   - label: "✅ Review"
@@ -10,7 +10,9 @@ handoffs:
 
 # Implementation Plan Executor
 
-Executes implementation plan instructions located in `.copilot-tracking/plans/**` by dispatching subagents for each phase. Progress is tracked in matching change logs at `.copilot-tracking/changes/**`.
+Executes implementation plan instructions located in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/plans/**` by dispatching subagents for each phase. Progress is tracked in matching change logs at `.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/**`.
+
+Follow the tracking folder conventions from `copilot-tracking-conventions.instructions.md`.
 
 ## Subagent Architecture
 
@@ -29,16 +31,16 @@ When the implementation plan indicates phases can be parallelized (marked with `
 
 ### Inline Research
 
-When subagents need additional context, use these tools: `semantic_search`, `grep_search`, `read_file`, `list_dir`, `fetch_webpage`, `github_repo`, and MCP documentation tools. Write findings to `.copilot-tracking/subagent/{{YYYY-MM-DD}}/<topic>-research.md`.
+When subagents need additional context, use these tools: `semantic_search`, `grep_search`, `read_file`, `list_dir`, `fetch_webpage`, `github_repo`, and MCP documentation tools. Write findings to `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/{{NN}}-<topic>-research.md`. Scan the target folder for existing numbered files and use the next available number.
 
 ## Required Artifacts
 
 | Artifact               | Path Pattern                                                        | Required |
 |------------------------|---------------------------------------------------------------------|----------|
-| Implementation Plan    | `.copilot-tracking/plans/<date>-<description>-plan.instructions.md` | Yes      |
-| Implementation Details | `.copilot-tracking/details/<date>-<description>-details.md`         | Yes      |
-| Research               | `.copilot-tracking/research/<date>-<description>-research.md`       | No       |
-| Changes Log            | `.copilot-tracking/changes/<date>-<description>-changes.md`         | Yes      |
+| Implementation Plan    | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/plans/<description>-plan.instructions.md` | Yes      |
+| Implementation Details | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/details/<description>-details.md`         | Yes      |
+| Research               | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/<description>-research.md`       | No       |
+| Changes Log            | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/<description>-changes.md`         | Yes      |
 
 Reference relevant guidance in `.github/instructions/**` before editing code. Dispatch subagents for inline research when context is missing.
 
@@ -140,7 +142,7 @@ When implementation completes, provide a structured handoff:
 ### Ready for Review
 
 1. Clear context by typing `/clear`.
-2. Attach or open [{{YYYY-MM-DD}}-{{task}}-changes.md](../../.copilot-tracking/changes/{{YYYY-MM-DD}}-{{task}}-changes.md).
+2. Attach or open [{{NN}}-{{task}}-changes.md](../../.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/{{NN}}-{{task}}-changes.md).
 3. Start reviewing by typing `/task-review`.
 
 ## Implementation Standards
@@ -165,7 +167,7 @@ Constraints:
 
 Keep the changes file chronological. Add entries under the appropriate change category after each step completion. Include links to supporting research excerpts when they inform implementation decisions.
 
-Changes file naming: `{{YYYY-MM-DD}}-task-description-changes.md` in `.copilot-tracking/changes/`. Begin each file with `<!-- markdownlint-disable-file -->`.
+Changes file naming: `{{NN}}-task-description-changes.md` in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/`. Begin each file with `<!-- markdownlint-disable-file -->`.
 
 Changes file structure:
 

@@ -26,7 +26,7 @@ maturity: stable
 
 Collect context from available sources:
 
-* Use ${input:research} when provided; otherwise check `.copilot-tracking/research/` for relevant files.
+* Use ${input:research} when provided; otherwise check `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/` for relevant files.
 * Accept user-provided context, attached files, or conversation history as sufficient input.
 * Dispatch subagents via `runSubagent` when additional codebase analysis is needed.
 

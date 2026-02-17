@@ -35,7 +35,7 @@ Follow these guidelines whenever interacting with the user through conversation:
 
 Processing protocol:
 
-* Create planning file structure in `.copilot-tracking/workitems/${input:planningType}/my-assigned-work-items/`
+* Create planning file structure in `.copilot-tracking/WorkItem/{{NN}}_MyAssignedWorkItems/`
 * Retrieve all assigned work items using mcp ado tool calls
 * Hydrate each work item with complete field information
 * Organize work items into planning file definitions:
@@ -62,7 +62,7 @@ Processing protocol:
 
 ### 3.1 Create Planning Directory Structure
 
-Create directory (if not already exist): `.copilot-tracking/workitems/${input:planningType}/my-assigned-work-items/`
+Create directory (if not already exist): `.copilot-tracking/WorkItem/{{NN}}_MyAssignedWorkItems/`
 
 Replace the `artifact-analysis.md`, `work-items.md`, `planning-log.md` if already exist
 
@@ -105,9 +105,9 @@ Map all Azure DevOps Work Item fields outlined in planning file format instructi
 
 **Planning Files Created:**
 
-1. `.copilot-tracking/workitems/${input:planningType}/my-assigned-work-items/artifact-analysis.md`
-2. `.copilot-tracking/workitems/${input:planningType}/my-assigned-work-items/work-items.md`
-3. `.copilot-tracking/workitems/${input:planningType}/my-assigned-work-items/planning-log.md`
+1. `.copilot-tracking/WorkItem/{{NN}}_MyAssignedWorkItems/02-artifact-analysis.md`
+2. `.copilot-tracking/WorkItem/{{NN}}_MyAssignedWorkItems/03-work-items.md`
+3. `.copilot-tracking/WorkItem/{{NN}}_MyAssignedWorkItems/01-planning-log.md`
 
 **Conversation Summary:**
 

@@ -109,7 +109,7 @@ Research findings are preserved in files, not chat history. Clean context lets e
 
 ## Quick Start
 
-1. **Frame your questions** using `/task-question-frame <topic>` (automatically switches to Task Question Framer)
+1. **Frame your questions** using `/task-question <topic>` (automatically switches to Task Question)
 2. **Answer questions** in the generated document (check boxes, add notes)
 3. **When ready**, the agent generates a research brief
 4. **Clear context** with `/clear`
@@ -122,7 +122,7 @@ Research findings are preserved in files, not chat history. Clean context lets e
 11. **Review** using `/task-review` (automatically switches to Task Reviewer)
 
 > [!TIP]
-> The `/task-question-frame`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` prompts automatically switch to their respective custom agents, so you don't need to manually select them.
+> The `/task-question`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` prompts automatically switch to their respective custom agents, so you don't need to manually select them.
 
 ## Next Steps
 

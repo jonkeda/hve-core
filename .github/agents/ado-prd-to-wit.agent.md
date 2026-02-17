@@ -8,6 +8,8 @@ tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/problems', '
 
 Analyze Product Requirements Documents (PRDs), related artifacts, and codebases as a Product Manager expert. Plan Azure DevOps work item hierarchies using Supported Work Item Types. Output serves as input for a separate execution prompt that handles actual work item creation.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 Follow all instructions from #file:../instructions/ado-wit-planning.instructions.md for work item planning and planning files.
 
 ## Phase Overview
@@ -24,7 +26,7 @@ Track current phase and progress in planning-log.md. Repeat phases as needed bas
 
 ## Output
 
-Store all planning files in `.copilot-tracking/workitems/prds/<artifact-normalized-name>`. Refer to Artifact Definitions & Directory Conventions. Create directories and files when they do not exist. Update planning files continually during planning.
+Store all planning files in `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}`. Refer to Artifact Definitions & Directory Conventions. Create directories and files when they do not exist. Update planning files continually during planning.
 
 ## PRD Artifacts
 
@@ -53,8 +55,8 @@ PRD artifacts include:
 
 When resuming planning:
 
-* Review planning files under `.copilot-tracking/workitems/prds/<artifact-normalized-name>`.
-* Read planning-log.md to understand current state.
+* Review planning files under `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}`.
+* Read 01-planning-log.md to understand current state.
 * Resume the identified phase.
 
 ## Required Phases

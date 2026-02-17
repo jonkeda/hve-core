@@ -7,12 +7,14 @@ maturity: stable
 
 Autonomous agent for documentation quality assurance. Discovers divergences from style conventions, verifies documentation accuracy against implementation, and identifies undocumented functionality.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 ## Core Principles
 
 * Operate autonomously after initial invocation with minimal user interaction.
 * Use runSubagent for all discovery, planning, and implementation work.
 * Continue iterating through phases until all issues are resolved.
-* Track all work in `.copilot-tracking/doc-ops/` session files.
+* Track all work in `.copilot-tracking/DocOps/` session files.
 
 ## Tool Availability
 
@@ -23,7 +25,7 @@ This agent requires the runSubagent tool for all documentation processing.
 
 The main agent executes directly only for:
 
-* Creating and updating session tracking files in `.copilot-tracking/doc-ops/`.
+* Creating and updating session tracking files in `.copilot-tracking/DocOps/`.
 * Coordinating phase transitions based on subagent discoveries.
 * Communicating progress and final outcomes to the user.
 
@@ -87,17 +89,17 @@ Discover undocumented functionality:
 
 ## Tracking Integration
 
-All session work is tracked in `.copilot-tracking/doc-ops/`.
+All session work is tracked in `.copilot-tracking/DocOps/`.
 
 ### Session File
 
-Create a session file at `.copilot-tracking/doc-ops/{{YYYY-MM-DD}}-session.md` on first invocation.
+Create a session file at `.copilot-tracking/DocOps/{{NN}}_{{SessionName}}/01-session.md` on first invocation.
 
 Session file structure:
 
 ```markdown
 ---
-title: Doc-Ops Session {{YYYY-MM-DD}}
+title: Doc-Ops Session
 status: in-progress
 started: {{YYYY-MM-DDTHH:MM:SS}}
 ---
@@ -286,7 +288,7 @@ Description: [CAPABILITY] discovery
 Prompt:
 You are a documentation planning subagent. Create a prioritized work plan from discovered issues.
 
-Read the session file at: .copilot-tracking/doc-ops/[SESSION-DATE]-session.md
+Read the session file at: .copilot-tracking/DocOps/{{NN}}_{{SessionName}}/01-session.md
 
 Prioritize work items:
 1. Accuracy discrepancies (incorrect information)

@@ -1,10 +1,12 @@
 ---
 description: 'Triage workflow for GitHub issue backlog management - automated label suggestion, milestone assignment, and duplicate detection'
-applyTo: '**/.copilot-tracking/github-issues/triage/**'
+applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: experimental
 ---
 
 # GitHub Backlog Triage Instructions
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 ## Purpose and Scope
 
@@ -73,7 +75,7 @@ For each untriaged issue, perform the following analysis:
 
 #### Step 5: Record Analysis
 
-Create planning-log.md in `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/` to track progress. Update the log as each issue is analyzed, recording:
+Create planning-log.md in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` to track progress. Update the log as each issue is analyzed, recording:
 
 * Issue number and title
 * Current labels (from hydration)
@@ -88,7 +90,7 @@ Produce a triage plan for user review and execute confirmed recommendations. Thi
 
 #### Step 1: Generate Triage Plan
 
-Create triage-plan.md in `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/` with a recommendation row per issue. Use the triage plan template defined in the Output section of this file.
+Create triage-plan.md in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` with a recommendation row per issue. Use the triage plan template defined in the Output section of this file.
 
 #### Step 2: Present for Review
 
@@ -235,7 +237,7 @@ Handle API failures and edge cases during triage execution:
 
 ## Output
 
-The triage workflow produces output files in `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/`.
+The triage workflow produces output files in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`.
 
 ### triage-plan.md Template
 

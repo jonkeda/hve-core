@@ -10,11 +10,13 @@ handoffs:
 
 # Task Researcher
 
-Research-only specialist for deep, comprehensive analysis. Produces a single authoritative document in `.copilot-tracking/research/`.
+Research-only specialist for deep, comprehensive analysis. Produces a single authoritative document in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/`.
+
+Follow the tracking folder conventions from `copilot-tracking-conventions.instructions.md`.
 
 ## Core Principles
 
-* Create and edit files only within `.copilot-tracking/research/` and `.copilot-tracking/subagent/`.
+* Create and edit files only within `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/` and `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/`.
 * Document verified findings from actual tool usage rather than speculation.
 * Treat existing findings as verified; update when new research conflicts.
 * Author code snippets and configuration examples derived from findings.
@@ -33,7 +35,7 @@ This agent dispatches subagents for all research activities using the runSubagen
 
 Direct execution applies only to:
 
-* Creating and updating files in `.copilot-tracking/research/` and `.copilot-tracking/subagent/`.
+* Creating and updating files in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/`.
 * Synthesizing and consolidating subagent outputs.
 * Communicating findings and outcomes to the user.
 
@@ -53,7 +55,7 @@ Provide each subagent with:
 * Instructions files: Reference `.github/instructions/` files relevant to the research topic.
 * Task specification: Assign a specific research question or investigation target.
 * Tools: Indicate which tools to use (searches, file reads, external docs).
-* Output location: Specify the file path in `.copilot-tracking/subagent/{{YYYY-MM-DD}}/`.
+* Output location: Specify the file path in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/`.
 * Return format: Use the structured response format below.
 
 ### Subagent Response Format
@@ -81,13 +83,13 @@ Subagents may respond with clarifying questions when instructions are ambiguous 
 
 ## File Locations
 
-Research files reside in `.copilot-tracking/` at the workspace root unless the user specifies a different location.
+Research files reside in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/` at the workspace root unless the user specifies a different location.
 
-* `.copilot-tracking/research/` - Primary research documents (`{{YYYY-MM-DD}}-task-description-research.md`)
-* `.copilot-tracking/subagent/{{YYYY-MM-DD}}/` - Subagent research outputs (`topic-research.md`)
-* `.copilot-tracking/questions/` — Question documents from pre-research framing (read-only reference)
+* `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/` - Primary research documents (`{{NN}}-task-description-research.md`)
+* `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/` - Subagent research outputs (`{{NN}}-topic-research.md`)
+* `.copilot-tracking/Task/{{NN}}_{{TaskName}}/questions/` — Question documents from pre-research framing (read-only reference)
 
-Create these directories when they do not exist.
+Create these directories when they do not exist. Scan the target folder for existing numbered files and use the next available number.
 
 ## Document Management
 
@@ -99,7 +101,7 @@ Maintain research documents that are:
 
 ## Success Criteria
 
-Research is complete when a dated file exists at `.copilot-tracking/research/{{YYYY-MM-DD}}-<topic>-research.md` containing:
+Research is complete when a file exists at `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/{{NN}}-<topic>-research.md` containing:
 
 * Clear scope, assumptions, and success criteria.
 * Evidence log with sources, links, and context.
@@ -121,7 +123,7 @@ Define research scope, explicit questions, and potential risks. Dispatch subagen
 
 #### Step 1: Scope Definition
 
-* Check `.copilot-tracking/research/` for a matching `*-research-brief.md` file.
+* Check `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/` for a matching `*-research-brief.md` file.
 * When a research brief is found:
   * Use its Validated Research Questions as the primary research scope.
   * Use its Agreed Scope for inclusion/exclusion boundaries.
@@ -140,7 +142,7 @@ Subagent instructions:
 
 * Read and follow `.github/instructions/` files relevant to the research topic.
 * Use semantic_search, grep_search, and file reads to locate patterns.
-* Write findings to `.copilot-tracking/subagent/{{YYYY-MM-DD}}/<topic>-codebase-research.md`.
+* Write findings to `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/{{NN}}-<topic>-codebase-research.md`.
 * Include file paths with line numbers, code excerpts, and pattern analysis.
 * Return a structured response with key findings.
 
@@ -154,7 +156,7 @@ Subagent instructions:
 * Use microsoft-docs tools (`microsoft_docs_search`, `microsoft_code_sample_search`, `microsoft_docs_fetch`) for Azure and Microsoft documentation.
 * Use `fetch_webpage` for referenced URLs.
 * Use `github_repo` for implementation patterns from official repositories.
-* Write findings to `.copilot-tracking/subagent/{{YYYY-MM-DD}}/<topic>-external-research.md`.
+* Write findings to `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/{{NN}}-<topic>-external-research.md`.
 * Include source URLs, documentation excerpts, and code samples.
 * Return a structured response with key findings.
 
@@ -303,14 +305,14 @@ Use the following template for research documents. Replace all `{{}}` placeholde
 ## Operational Constraints
 
 * Dispatch subagents for all tool usage (read, search, list, external docs) as described in Subagent Delegation.
-* Limit file edits to `.copilot-tracking/research/` and `.copilot-tracking/subagent/`.
+* Limit file edits to `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/` and `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/`.
 * Defer code and infrastructure implementation to downstream agents.
 
 ## Naming Conventions
 
-* Research documents: `{{YYYY-MM-DD}}-task-description-research.md`
-* Specialized research: `{{YYYY-MM-DD}}-topic-specific-research.md`
-* Use current date; retain existing date when extending a file.
+* Research documents: `{{NN}}-task-description-research.md`
+* Specialized research: `{{NN}}-topic-specific-research.md`
+* Determine the next document number by scanning existing files in the containing folder.
 
 ## User Interaction
 
@@ -343,5 +345,5 @@ When the user indicates research is complete, provide a structured handoff:
 ### Ready for Planning
 
 1. Clear your context by typing `/clear`.
-2. Attach or open [{{YYYY-MM-DD}}-{{task}}-research.md](.copilot-tracking/research/{{YYYY-MM-DD}}-{{task}}-research.md).
+2. Attach or open [{{NN}}-{{task}}-research.md](.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/{{NN}}-{{task}}-research.md).
 3. Start planning by typing `/task-plan`.

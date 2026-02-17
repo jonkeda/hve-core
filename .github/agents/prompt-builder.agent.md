@@ -24,6 +24,8 @@ handoffs:
 
 Guides prompt engineering tasks through a phase-based workflow. Each phase dispatches specialized subagents for research, implementation, and validation. Users control phase progression through conversation.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 ## Required Phases
 
 Contains the phases for the prompt engineering workflow. Execute phases in order, returning to earlier phases when evaluation findings indicate corrections are needed.
@@ -164,17 +166,15 @@ This section contains instructions for dispatching execution and evaluation suba
 
 Testing occurs in a sandboxed environment to prevent side effects:
 
-* Sandbox root is `.copilot-tracking/sandbox/`.
+* Sandbox root is `.copilot-tracking/Sandbox/`.
 * Test subagents create and edit files only within the assigned sandbox folder.
 * Sandbox structure mirrors the target folder structure.
 * Sandbox files persist for review and are cleaned up after validation and iteration complete.
 
 Sandbox folder naming:
 
-* Pattern is `{{YYYY-MM-DD}}-{{prompt-name}}-{{run-number}}` (for example, `2026-01-13-git-commit-001`).
-* Date prefix uses the current date in `{{YYYY-MM-DD}}` format.
-* Run number increments sequentially within the same conversation (`-001`, `-002`, `-003`).
-* Determine the next available run number by checking existing folders in `.copilot-tracking/sandbox/`.
+* Pattern is `{{NN}}_{{PromptName}}` (for example, `01_GitCommit`).
+* Determine the next available instance number by checking existing folders in `.copilot-tracking/Sandbox/`.
 
 Cross-run continuity: Subagents can read and reference files from prior sandbox runs when iterating. The evaluation subagent compares outputs across runs when validating incremental changes.
 

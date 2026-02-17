@@ -61,7 +61,7 @@ Submit the issue to GitHub and confirm the result.
 
 Record the created issue for tracking purposes.
 
-1. Create or append to an artifact file in `.copilot-tracking/github-issues/` using the filename pattern `issue-{number}.md`.
+1. Create or append to an artifact file in `.copilot-tracking/GitHubIssue/` using the filename pattern `issue-{number}.md`.
 2. Include the issue number, URL, creation timestamp, template used, applied labels, assignees, and field values.
 3. Confirm the artifact location to the user.
 
@@ -71,7 +71,7 @@ Record the created issue for tracking purposes.
 * All available templates are discovered and presented when multiple exist.
 * Required fields are validated before issue creation.
 * The issue is created with correct metadata including labels, assignees, and type when supported.
-* An artifact file is created in `.copilot-tracking/github-issues/` with issue details.
+* An artifact file is created in `.copilot-tracking/GitHubIssue/` with issue details.
 
 ## Error Handling
 

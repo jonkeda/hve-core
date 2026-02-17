@@ -29,7 +29,7 @@ Resolve the repository owner and name from the active workspace context or user 
 2. Search for open issues carrying the `needs-triage` label using `mcp_github_search_issues` with the query `repo:{owner}/{repo} is:issue is:open label:needs-triage`.
 3. Limit results to the `${input:maxIssues}` count using the `perPage` parameter.
 4. For each returned issue, fetch full details with `mcp_github_issue_read` using method `get`, then fetch the complete label set using method `get_labels`. Both calls are needed for replacement semantics during execution.
-5. Create the planning directory at `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/` and record fetched issues in planning-log.md.
+5. Create the planning directory at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` and record fetched issues in planning-log.md.
 
 When no untriaged issues are found, inform the user and suggest broadening the search (for example, removing label filters or checking for issues without any labels).
 
@@ -69,7 +69,7 @@ Execution follows the `${input:autonomy}` tier per the Three-Tier Autonomy Model
 * The triage plan has been reviewed per the active autonomy tier before execution.
 * Labels and milestones are applied using replacement semantics in consolidated API calls.
 * The `needs-triage` label is removed from all classified issues. Unclassified issues retain `needs-triage` for manual review.
-* Planning artifacts are created in `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/`.
+* Planning artifacts are created in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`.
 
 ## Error Handling
 

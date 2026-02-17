@@ -61,11 +61,11 @@ See [Contributing Instructions](../../docs/contributing/instructions.md) for aut
 
 | File | Applies To | Purpose |
 | ---- | ---------- | ------- |
-| [ado-create-pull-request.instructions.md](ado-create-pull-request.instructions.md) | `**/.copilot-tracking/pr/new/**` | Pull request creation protocol |
-| [ado-get-build-info.instructions.md](ado-get-build-info.instructions.md) | `**/.copilot-tracking/pr/*-build-*.md` | Build status and log retrieval |
-| [ado-update-wit-items.instructions.md](ado-update-wit-items.instructions.md) | `**/.copilot-tracking/workitems/**/handoff-logs.md` | Work item creation and updates |
-| [ado-wit-discovery.instructions.md](ado-wit-discovery.instructions.md) | `**/.copilot-tracking/workitems/discovery/**` | Work item discovery protocol |
-| [ado-wit-planning.instructions.md](ado-wit-planning.instructions.md) | `**/.copilot-tracking/workitems/**` | Work item planning specifications |
+| [ado-create-pull-request.instructions.md](ado-create-pull-request.instructions.md) | `**/.copilot-tracking/PR/**` | Pull request creation protocol |
+| [ado-get-build-info.instructions.md](ado-get-build-info.instructions.md) | `**/.copilot-tracking/PR/**` | Build status and log retrieval |
+| [ado-update-wit-items.instructions.md](ado-update-wit-items.instructions.md) | `**/.copilot-tracking/WorkItem/**/05-handoff-logs.md` | Work item creation and updates |
+| [ado-wit-discovery.instructions.md](ado-wit-discovery.instructions.md) | `**/.copilot-tracking/WorkItem/**` | Work item discovery protocol |
+| [ado-wit-planning.instructions.md](ado-wit-planning.instructions.md) | `**/.copilot-tracking/WorkItem/**` | Work item planning specifications |
 
 ## XML-Style Blocks
 

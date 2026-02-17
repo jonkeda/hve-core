@@ -1,6 +1,6 @@
 ---
 description: 'Reference specification for GitHub backlog management tooling - planning files, search protocols, similarity assessment, and state persistence'
-applyTo: '**/.copilot-tracking/github-issues/**'
+applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: experimental
 ---
 
@@ -9,6 +9,8 @@ maturity: experimental
 ## Purpose and Scope
 
 Templates, field conventions, search protocols, and state persistence for GitHub backlog planning files. Workflow files must consume this specification by including a cross-reference at the top of their content.
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 Cross-reference pattern for consuming files:
 
@@ -92,31 +94,21 @@ Root planning workspace structure:
 
 ```text
 .copilot-tracking/
-  github-issues/
-    <planning-type>/
-      <scope-name>/
-        issue-analysis.md
-        issues-plan.md
-        planning-log.md
-        handoff.md
-        handoff-logs.md
+  GitHubIssue/
+    {{NN}}_{{ScopeName}}/
+      issue-analysis.md
+      issues-plan.md
+      planning-log.md
+      handoff.md
+      handoff-logs.md
 ```
 
-Valid `<planning-type>` values:
+Normalization rules for `{{ScopeName}}`:
 
-* `discovery`: Issue discovery from artifacts, PRDs, or user requests
-* `triage`: Issue triage, label assignment, and duplicate detection
-* `sprint`: Sprint planning and milestone organization
-* `backlog`: Backlog refinement and prioritization
-* `execution`: Issue creation, update, and closure from finalized plans
-
-Normalization rules for `<scope-name>`:
-
-* Use lower-case, hyphenated form without extension (for example, `docs/Customer Onboarding PRD.md` becomes `docs--customer-onboarding-prd`).
-* Replace spaces and punctuation with hyphens.
+* Use PascalCase form without extension (for example, `docs/Customer Onboarding PRD.md` becomes `CustomerOnboardingPrd`).
 * Choose the primary artifact when multiple artifacts and documents are provided.
-* For triage scopes, use the date as the scope name (for example, `2026-02-05`).
-* For sprint scopes, use the milestone name (for example, `v2-2-0`).
+* For triage scopes, use a descriptive name (for example, `TriageJan2026`).
+* For sprint scopes, use the milestone name (for example, `V2_2_0`).
 
 ## Planning File Requirements
 
@@ -356,10 +348,10 @@ This convention enables resumable execution. When an execution run is interrupte
 
 ## Planning Files
 
-* .copilot-tracking/github-issues/<planning-type>/<scope-name>/issue-analysis.md
-* .copilot-tracking/github-issues/<planning-type>/<scope-name>/issues-plan.md
-* .copilot-tracking/github-issues/<planning-type>/<scope-name>/planning-log.md
-* .copilot-tracking/github-issues/<planning-type>/<scope-name>/handoff.md
+* .copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/issue-analysis.md
+* .copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/issues-plan.md
+* .copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/planning-log.md
+* .copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/handoff.md
 
 ## Summary
 
@@ -798,7 +790,7 @@ Before summarization occurs, agents must capture in planning-log.md:
 
 VS Code Copilot periodically compresses conversation history into a `<summary>` block when the context window approaches capacity. When the recovered context contains a `<summary>` block with only one tool call, agents must recover state before continuing:
 
-1. List the working folder with `list_dir` under `.copilot-tracking/github-issues/<planning-type>/<scope-name>/`.
+1. List the working folder with `list_dir` under `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`.
 2. Read planning-log.md to rebuild context.
 3. Notify the user that context is being rebuilt and confirm the approach before proceeding.
 

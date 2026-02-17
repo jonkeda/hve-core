@@ -32,12 +32,14 @@ handoffs:
 
 Central orchestrator for GitHub backlog management that classifies incoming requests, dispatches them to the appropriate workflow, and consolidates results into actionable summaries. Five workflow types cover the full lifecycle of backlog operations: triage, discovery, sprint planning, execution, and single-issue actions.
 
-Workflow conventions, planning file templates, similarity assessment, and the three-tier autonomy model are defined in the [backlog planning instructions](../instructions/github-backlog-planning.instructions.md). Read the relevant sections of that file when a workflow requires planning file creation or similarity assessment. Architecture and design rationale are documented in `.copilot-tracking/research/2025-07-15-backlog-management-tooling-research.md` when available.
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
+Workflow conventions, planning file templates, similarity assessment, and the three-tier autonomy model are defined in the [backlog planning instructions](../instructions/github-backlog-planning.instructions.md). Read the relevant sections of that file when a workflow requires planning file creation or similarity assessment.
 
 ## Core Directives
 
 * Classify every request before dispatching. Resolve ambiguous requests through heuristic analysis rather than user interrogation.
-* Maintain state files in `.copilot-tracking/github-issues/<planning-type>/<scope-name>/` for every workflow run per directory conventions in the [planning specification](../instructions/github-backlog-planning.instructions.md).
+* Maintain state files in `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` for every workflow run per directory conventions in the [planning specification](../instructions/github-backlog-planning.instructions.md).
 * Before any GitHub API call, apply the Content Sanitization Guards from the [planning specification](../instructions/github-backlog-planning.instructions.md) to strip `.copilot-tracking/` paths and planning reference IDs (such as `IS002`) from all outbound content.
 * Default to Partial autonomy unless the user specifies otherwise.
 * Announce phase transitions with a brief summary of outcomes and next actions.
@@ -74,15 +76,15 @@ Transition to Phase 2 once classification is confirmed.
 
 ### Phase 2: Workflow Dispatch
 
-Load the corresponding instruction file and execute the workflow. Each run creates a tracking directory under `.copilot-tracking/github-issues/` using the scope conventions from the [planning specification](../instructions/github-backlog-planning.instructions.md).
+Load the corresponding instruction file and execute the workflow. Each run creates a tracking directory under `.copilot-tracking/GitHubIssue/` using the scope conventions from the [planning specification](../instructions/github-backlog-planning.instructions.md).
 
-| Workflow        | Instruction Source                                                                                                       | Tracking Path                                                 |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| Triage          | [github-backlog-triage.instructions.md](../instructions/github-backlog-triage.instructions.md)                           | `.copilot-tracking/github-issues/triage/{{YYYY-MM-DD}}/`      |
-| Discovery       | [github-backlog-discovery.instructions.md](../instructions/github-backlog-discovery.instructions.md)                     | `.copilot-tracking/github-issues/discovery/{{scope-name}}/`   |
-| Sprint Planning | Discovery followed by Triage as a coordinated sequence                                                                   | `.copilot-tracking/github-issues/sprint/{{milestone-kebab}}/` |
-| Execution       | [github-backlog-update.instructions.md](../instructions/github-backlog-update.instructions.md)                           | `.copilot-tracking/github-issues/execution/{{YYYY-MM-DD}}/`   |
-| Single Issue    | Per-issue operations from [github-backlog-update.instructions.md](../instructions/github-backlog-update.instructions.md) | `.copilot-tracking/github-issues/execution/{{YYYY-MM-DD}}/`   |
+| Workflow        | Instruction Source                                                                                                       | Tracking Path                                                      |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Triage          | [github-backlog-triage.instructions.md](../instructions/github-backlog-triage.instructions.md)                           | `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`              |
+| Discovery       | [github-backlog-discovery.instructions.md](../instructions/github-backlog-discovery.instructions.md)                     | `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`              |
+| Sprint Planning | Discovery followed by Triage as a coordinated sequence                                                                   | `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`              |
+| Execution       | [github-backlog-update.instructions.md](../instructions/github-backlog-update.instructions.md)                           | `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`              |
+| Single Issue    | Per-issue operations from [github-backlog-update.instructions.md](../instructions/github-backlog-update.instructions.md) | `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`              |
 
 For each dispatched workflow:
 
@@ -130,7 +132,7 @@ The `mcp_github_update_pull_request` tool manages PR-specific metadata (title, b
 
 ## State Management
 
-All workflow state persists under `.copilot-tracking/github-issues/`. Each workflow run creates a date-stamped directory containing:
+All workflow state persists under `.copilot-tracking/GitHubIssue/`. Each workflow run creates an instance directory containing:
 
 * *issue-analysis.md* for search results and similarity assessment
 * *issues-plan.md* for proposed changes awaiting approval

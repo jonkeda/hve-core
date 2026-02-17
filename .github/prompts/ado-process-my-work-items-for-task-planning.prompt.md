@@ -24,7 +24,7 @@ Follow these guidelines whenever interacting with the user through conversation:
 
 ## Inputs
 
-* ${input:planningDir:`.copilot-tracking/workitems/current-work/my-assigned-work-items/`}: (Required) Path to planning directory containing work-items.md
+* ${input:planningDir:`.copilot-tracking/WorkItem/01_MyAssignedWorkItems/`}: (Required) Path to planning directory containing work-items.md
 * ${input:project}: (Required) Azure DevOps project name or ID
 * ${input:maxItems:all}: Maximum number of work items to process. Default: all.
 * ${input:boostTags}: (Optional) Comma/semicolon separated tags that elevate work items to top recommendation

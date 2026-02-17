@@ -52,7 +52,7 @@ Let's walk through adding Azure Blob Storage to a Python data pipeline.
 
 Start by defining what to research:
 
-1. Run `/task-question-frame "Add Azure Blob Storage support"`
+1. Run `/task-question "Add Azure Blob Storage support"`
 2. The agent creates `.copilot-tracking/questions/2025-01-28-azure-blob-storage-questions.md`
 3. Open the document and check the relevant boxes
 4. Tell the agent you have answered — it appends follow-up questions
@@ -335,14 +335,14 @@ When Task Reviewer identifies research or planning gaps:
 
 | Phase     | Invoke With                        | Agent               | Output                    |
 |-----------|------------------------------------|----------------------|---------------------------|
-| Frame     | `/task-question-frame <topic>`     | Task Question Framer | questions.md, brief.md    |
+| Frame     | `/task-question <topic>`           | Task Question        | questions.md, brief.md    |
 | Research  | `/task-research <topic>`           | Task Researcher      | research.md               |
 | Plan      | `/task-plan [research-path]`       | Task Planner         | plan.md, details.md       |
 | Implement | `/task-implement`                  | Task Implementor     | code + changes.md         |
 | Review    | `/task-review [scope]`             | Task Reviewer        | review.md                 |
 
 > [!TIP]
-> `/task-question-frame`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` all automatically switch to the appropriate custom agent.
+> `/task-question`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` all automatically switch to the appropriate custom agent.
 
 Remember: **Always `/clear` between phases!**
 

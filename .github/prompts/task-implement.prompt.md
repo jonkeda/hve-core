@@ -30,7 +30,7 @@ Find the implementation plan using this priority:
 1. Use ${input:plan} when provided.
 2. Check the currently open file for plan, details, or changes content.
 3. Extract plan reference from an open changes log.
-4. Select the most recent file in `.copilot-tracking/plans/`.
+4. Select the most recent file in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/plans/`.
 
 Dispatch a subagent via `runSubagent` for file discovery when the plan location is unclear. The subagent returns the plan file path and associated details/changes paths.
 
@@ -47,7 +47,7 @@ Inspect the implementation plan for completion status:
 Invoke task-implementor mode with the located plan:
 
 * Follow stop controls: pause after each phase when ${input:phaseStop} is true; pause after each step when ${input:stepStop} is true.
-* Dispatch subagents for inline research when context is missing. Subagents return findings to `.copilot-tracking/subagent/{{YYYY-MM-DD}}/<topic>-research.md`.
+* Dispatch subagents for inline research when context is missing. Subagents return findings to `.copilot-tracking/Task/{{NN}}_{{TaskName}}/subagent/{{NN}}-<topic>-research.md`. Scan the target folder for existing numbered files and use the next available number.
 * Update the changes log as steps complete.
 
 ### Step 4: Report Progress

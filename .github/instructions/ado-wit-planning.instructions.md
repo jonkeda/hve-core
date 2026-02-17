@@ -1,13 +1,15 @@
 ---
 name: 'ADO Work Item Planning'
 description: 'Reference specification for Azure DevOps work item planning files, templates, field definitions, and search protocols'
-applyTo: '**/.copilot-tracking/workitems/**'
+applyTo: '**/.copilot-tracking/WorkItem/**'
 maturity: stable
 ---
 
 # Azure DevOps Work Items Planning File Instructions
 
 ## Purpose and Scope
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 This file is a reference specification that defines templates, field conventions, and search protocols for work item planning files. Workflow files consume this specification by including a cross-reference at the top of their content.
 
@@ -58,23 +60,17 @@ Root planning workspace structure:
 
 ```plain
 .copilot-tracking/
-  workitems/
-    <planning-type>/
-      <artifact-normalized-name>/
-        artifact-analysis.md                    # Human-readable table + recommendations
-        work-items.md                           # Human/Machine-readable plan (source of truth)
-        handoff.md                              # Handoff for workitem execution
-        planning-log.md                         # Structured operational & state log (routinely updated sections)
+  WorkItem/
+    {{NN}}_{{InstanceName}}/
+        02-artifact-analysis.md                 # Human-readable table + recommendations
+        03-work-items.md                        # Human/Machine-readable plan (source of truth)
+        04-handoff.md                           # Handoff for workitem execution
+        01-planning-log.md                      # Structured operational & state log (routinely updated sections)
 ```
 
-Valid `<planning-type>` values:
+Instance naming follows copilot-tracking-conventions.instructions.md. Use a descriptive PascalCase name derived from the work scope.
 
-* `discovery`: Work item discovery from artifacts, PRDs, or user requests
-* `pr`: Pull request work item linking and validation
-* `sprint`: Sprint planning and work item organization
-* `backlog`: Backlog refinement and prioritization
-
-Normalization rules for `<artifact-normalized-name>`:
+Normalization rules for `{{InstanceName}}`:
 
 * Use lower-case, hyphenated base filename without extension (for example, `docs/Customer Onboarding PRD.md` becomes `docs--customer-onboarding-prd`).
 * Replace spaces and punctuation with hyphens.
@@ -95,11 +91,11 @@ Planning markdown files end with (before the final newline):
 <!-- markdown-table-prettify-ignore-end -->
 ```
 
-## artifact-analysis.md
+## 02-artifact-analysis.md
 
-Create artifact-analysis.md when beginning work item discovery from PRDs, user requests, or codebase artifacts. This file captures the human-readable analysis of planned work items before finalizing in work-items.md.
+Create 02-artifact-analysis.md when beginning work item discovery from PRDs, user requests, or codebase artifacts. This file captures the human-readable analysis of planned work items before finalizing in 03-work-items.md.
 
-Populate sections by extracting requirements from referenced artifacts, searching ADO for related items, and incorporating user feedback. Update the file iteratively as discovery progresses.
+Populate sections by extracting requirements from referenced artifacts. Update the file iteratively as discovery progresses.
 
 ### Template
 
@@ -143,9 +139,9 @@ Populate sections by extracting requirements from referenced artifacts, searchin
 * [(Optional) Notes worth mentioning (e.g., PRD specifically included two Epics (WI001, WI002))]
 ````
 
-## work-items.md
+## 03-work-items.md
 
-work-items.md is the source of truth for planned work item operations. Capture the `System.State` field for every referenced work item, highlighting `Resolved` items. When a `Resolved` User Story satisfies the requirement without updates, keep the action as `No Change` and add a `Related` link from any new stories back to that item.
+03-work-items.md is the source of truth for planned work item operations. Capture the `System.State` field for every referenced work item, highlighting `Resolved` items. When a `Resolved` User Story satisfies the requirement without updates, keep the action as `No Change` and add a `Related` link from any new stories back to that item.
 
 ### Template
 
@@ -204,9 +200,9 @@ As a user, I want to update component with functionality A and B.
 * WI002 - Child - WI001: Functionality A needed for Feature WI001
 ````
 
-## planning-log.md
+## 01-planning-log.md
 
-planning-log.md is a living document with sections that are routinely added, updated, extended, and removed in-place.
+01-planning-log.md is a living document with sections that are routinely added, updated, extended, and removed in-place.
 
 Phase tracking applies when the consuming workflow file defines phases (see the workflow file's Required Phases section for phase definitions):
 
@@ -267,14 +263,14 @@ Phase tracking applies when the consuming workflow file defines phases (see the 
   ```
 ````
 
-## handoff.md
+## 04-handoff.md
 
 Handoff file requirements:
 
-* Include a reference to each work item defined in work-items.md.
+* Include a reference to each work item defined in 03-work-items.md.
 * Order entries with Create actions first, Update actions second, and No Change entries last. When operating in discovery-only mode, list the No Change entries while noting that no modifications are planned.
 * Include a markdown checkbox next to each work item with a summary.
-* Include project-relative paths to all planning files (handoff.md, work-items.md, planning-log.md).
+* Include project-relative paths to all planning files (04-handoff.md, 03-work-items.md, 01-planning-log.md).
 * Update the Summary section whenever the Work Items section changes.
 
 ### Template
@@ -285,16 +281,16 @@ Handoff file requirements:
 * **Repository**: [(Optional) `repository` field for mcp ado tool]
 
 ## Planning Files:
-  * .copilot-tracking/workitems/<planning-type>/<artifact-normalized-name>/handoff.md
-  * .copilot-tracking/workitems/<planning-type>/<artifact-normalized-name>/work-items.md
-  * .copilot-tracking/workitems/<planning-type>/<artifact-normalized-name>/planning-log.md
+  * .copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/04-handoff.md
+  * .copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/03-work-items.md
+  * .copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/01-planning-log.md
 
 ## Summary
 * Total Items: 3
 * Actions: create 1, update 1, no change 1
 * Types: User Story 3
 
-## Work Items - work-items.md
+## Work Items - 03-work-items.md
 * [ ] (Create) [(Optional) **Needs Review**] WI[Reference Number (e.g., 003)] [Work Item Type (e.g., Epic)]
   * [(Optional) all WI[Reference Number] Relationships as individual line items]
   * [Summary (e.g., New user story for functionality C)]
@@ -423,11 +419,11 @@ Example:
 
 ## State Persistence Protocol
 
-Update planning-log.md as information is discovered to ensure continuity when context is summarized.
+Update 01-planning-log.md as information is discovered to ensure continuity when context is summarized.
 
 ### Pre-Summarization Capture
 
-Before summarization occurs, capture in planning-log.md:
+Before summarization occurs, capture in 01-planning-log.md:
 
 * Full paths to all working files with a summary of each file's purpose
 * Any uncaptured information that belongs in planning files
@@ -440,8 +436,8 @@ Before summarization occurs, capture in planning-log.md:
 
 When context contains `<summary>` with only one tool call, recover state before continuing:
 
-1. List the working folder with `list_dir` under `.copilot-tracking/workitems/<planning-type>/<artifact-normalized-name>/`.
-2. Read planning-log.md to rebuild context.
+1. List the working folder with `list_dir` under `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/`.
+2. Read `01-planning-log.md` to rebuild context.
 3. Notify the user that context is being rebuilt and confirm the approach before proceeding.
 
 Recovery notification format:

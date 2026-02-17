@@ -1,10 +1,12 @@
 ---
 description: "Required protocol for creating Azure DevOps pull requests with work item discovery, reviewer identification, and automated linking."
-applyTo: '**/.copilot-tracking/pr/new/**'
+applyTo: '**/.copilot-tracking/PR/**'
 maturity: stable
 ---
 
 # Azure DevOps Pull Request Creation
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 Follow all instructions from #file:./ado-wit-planning.instructions.md for planning file conventions while executing this workflow.
 
@@ -12,7 +14,7 @@ Follow all instructions from #file:./ado-wit-planning.instructions.md for planni
 
 Apply this procedure when creating a new Azure DevOps pull request with automated PR description generation, work item discovery and linking, reviewer identification from git history, and complete traceability through planning documents.
 
-Output planning files to `.copilot-tracking/pr/new/<normalized-branch-name>/` using the specified Azure DevOps project `${input:adoProject}` and repository `${input:repository}`.
+Output planning files to `.copilot-tracking/PR/{{NN}}_{{BranchName}}/` using the specified Azure DevOps project `${input:adoProject}` and repository `${input:repository}`.
 
 ## Inputs
 
@@ -64,19 +66,18 @@ Persist all tool output into planning files per ado-wit-planning.instructions.md
 
 ## Tracking Directory Structure
 
-All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normalized branch name}}`.
+All PR creation tracking artifacts reside in `.copilot-tracking/PR/{{NN}}_{{BranchName}}`.
 
 ```plaintext
 .copilot-tracking/
-  pr/
-    new/
-      {{normalized branch name}}/
-        pr-reference.xml          # Generated git diff and commit history
-        pr.md                     # Generated PR description
-        pr-analysis.md            # Change analysis and work item findings
-        reviewer-analysis.md      # Potential reviewer analysis
-        planning-log.md           # Operational log
-        handoff.md                # Final PR creation plan
+  PR/
+    {{NN}}_{{BranchName}}/
+        01-pr-reference.xml           # Generated git diff and commit history
+        02-pr.md                      # Generated PR description
+        03-pr-analysis.md             # Change analysis and work item findings
+        04-reviewer-analysis.md       # Potential reviewer analysis
+        05-planning-log.md            # Operational log
+        06-handoff.md                 # Final PR creation plan
 ```
 
 **Branch Name Normalization Rules**:
@@ -88,7 +89,7 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 
 ## Planning File Formats
 
-### pr-analysis.md
+### 03-pr-analysis.md
 
 ````markdown
 # Pull Request Analysis - [Branch Name]
@@ -99,7 +100,7 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 
 ## Change Summary
 
-[1-5 sentence summary of what changed based on pr-reference.xml analysis]
+[1-5 sentence summary of what changed based on 01-pr-reference.xml analysis]
 
 ## Changed Files
 
@@ -129,7 +130,7 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 * [Optional notes about the analysis]
 ````
 
-### reviewer-analysis.md
+### 04-reviewer-analysis.md
 
 ````markdown
 # Reviewer Analysis - [Branch Name]
@@ -173,7 +174,7 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 * **Additional Reviewers**: [List of lower-contribution reviewers]
 ````
 
-### handoff.md
+### 06-handoff.md
 
 ````markdown
 # Pull Request Creation Handoff
@@ -186,22 +187,22 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 
 ## Planning Files
 
-* .copilot-tracking/pr/new/[normalized-branch-name]/handoff.md
-* .copilot-tracking/pr/new/[normalized-branch-name]/pr-analysis.md
-* .copilot-tracking/pr/new/[normalized-branch-name]/reviewer-analysis.md
-* .copilot-tracking/pr/new/[normalized-branch-name]/planning-log.md
-* .copilot-tracking/pr/new/[normalized-branch-name]/pr.md
+* .copilot-tracking/PR/{{NN}}_{{BranchName}}/06-handoff.md
+* .copilot-tracking/PR/{{NN}}_{{BranchName}}/03-pr-analysis.md
+* .copilot-tracking/PR/{{NN}}_{{BranchName}}/04-reviewer-analysis.md
+* .copilot-tracking/PR/{{NN}}_{{BranchName}}/05-planning-log.md
+* .copilot-tracking/PR/{{NN}}_{{BranchName}}/02-pr.md
 
 ## PR Details
 
 ### Title
 
-[Generated PR title from pr.md]
+[Generated PR title from 02-pr.md]
 
 ### Description
 
 ```markdown
-[Complete PR description from pr.md]
+[Complete PR description from 02-pr.md]
 ```
 
 ## Work Items to Link
@@ -282,7 +283,7 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 **User Confirmation**: [Pending|Approved]
 ````
 
-### planning-log.md
+### 05-planning-log.md
 
 ````markdown
 # Planning Log - [Branch Name]
@@ -309,11 +310,11 @@ All PR creation tracking artifacts reside in `.copilot-tracking/pr/new/{{normali
 
 ## Artifacts
 
-* **pr-reference.xml**: [Generated/Existing/Pending]
-* **pr.md**: [Generated/Pending]
-* **pr-analysis.md**: [Generated/Pending]
-* **reviewer-analysis.md**: [Generated/Pending]
-* **handoff.md**: [Generated/Pending]
+* **01-pr-reference.xml**: [Generated/Existing/Pending]
+* **02-pr.md**: [Generated/Pending]
+* **03-pr-analysis.md**: [Generated/Pending]
+* **04-reviewer-analysis.md**: [Generated/Pending]
+* **06-handoff.md**: [Generated/Pending]
 
 ## Work Items
 
@@ -363,20 +364,20 @@ When `${input:noGates}` is true:
 Execute without presenting details to user:
 
 1. Determine normalized branch name from `${input:sourceBranch}` or current git branch.
-2. Create planning directory: `.copilot-tracking/pr/new/<normalized-branch-name>/`
-3. Initialize `planning-log.md` with Phase-1 status.
-4. Check if `pr-reference.xml` exists:
+2. Create planning directory: `.copilot-tracking/PR/{{NN}}_{{BranchName}}/`
+3. Initialize `05-planning-log.md` with Phase-1 status.
+4. Check if `01-pr-reference.xml` exists:
    * If exists: Use existing file silently.
    * If not exists: Generate using `scripts/dev-tools/pr-ref-gen.sh` with optional `--no-md-diff` flag if `${input:includeMarkdown}` is false.
-5. Read complete `pr-reference.xml`. For files exceeding 2000 lines, read in 1000-2000 line chunks, capturing complete commit boundaries before advancing to the next chunk.
-6. Log artifact in `planning-log.md` with status `Complete`.
+5. Read complete `01-pr-reference.xml`. For files exceeding 2000 lines, read in 1000-2000 line chunks, capturing complete commit boundaries before advancing to the next chunk.
+6. Log artifact in `05-planning-log.md` with status `Complete`.
 
 ### Phase 2: Generate PR Description
 
 Execute without presenting to user yet:
 
-1. Analyze `pr-reference.xml` completely before writing any content. Include only changes visible in the reference file; do not invent or assume changes.
-2. Generate `pr.md` in the planning directory (not in root) following the PR File Format below.
+1. Analyze `01-pr-reference.xml` completely before writing any content. Include only changes visible in the reference file; do not invent or assume changes.
+2. Generate `02-pr.md` in the planning directory (not in root) following the PR File Format below.
 3. Extract commit types, scopes, and key changes for PR title and description.
 4. Use past tense for all descriptions.
 5. Describe WHAT changed, not speculating WHY.
@@ -387,7 +388,7 @@ Execute without presenting to user yet:
 10. Only add sub-bullets when they provide genuine clarification value.
 11. Only include "Notes," "Important," or "Follow-up" sections if supported by commit messages or code comments.
 12. Extract changed file list with descriptions for Gate 1 presentation.
-13. Log generation in `planning-log.md`.
+13. Log generation in `05-planning-log.md`.
 
 **PR File Format for pr.md**:
 
@@ -464,8 +465,8 @@ Execute without presenting to user yet:
    * Work item acceptance criteria vs. PR change summary
    * Boost for matching commit scopes, file paths, technical terms
 5. Filter work items with similarity >= `${input:similarityThreshold}`.
-6. Capture findings in `pr-analysis.md` with relevance reasoning.
-7. Log discovered work items in `planning-log.md`.
+6. Capture findings in `03-pr-analysis.md` with relevance reasoning.
+7. Log discovered work items in `05-planning-log.md`.
 8. If NO viable work items are discovered (zero work items with similarity >= threshold):
    * Proceed to Phase 3a - Create Work Item for PR
    * After Phase 3a completion, continue to Phase 4
@@ -476,11 +477,11 @@ Execute this phase when Phase 3 discovers zero viable work items.
 
 Follow ado-wit-discovery.instructions.md and ado-update-wit-items.instructions.md to create a work item:
 
-1. Create planning directory `.copilot-tracking/workitems/discovery/<folder-name>/` using the branch name without prefix.
-2. Reuse `pr-reference.xml`, PR title, description, and keyword groups from previous phases.
+1. Create planning directory `.copilot-tracking/WorkItem/{{NN}}_{{InstanceName}}/` using the branch name without prefix.
+2. Reuse `01-pr-reference.xml`, PR title, description, and keyword groups from previous phases.
 3. Follow ado-wit-discovery.instructions.md phases to plan creation of ONE User Story or Bug based on PR content. Derive type from branch name or commit type (feat → User Story, fix → Bug).
-4. Execute work item creation following ado-update-wit-items.instructions.md. Capture created work item ID in `handoff-logs.md`.
-5. Store created work item ID for Phase 6 linking. Update `pr-analysis.md` with created work item details.
+4. Execute work item creation following ado-update-wit-items.instructions.md. Capture created work item ID in `05-handoff-logs.md`.
+5. Store created work item ID for Phase 6 linking. Update `03-pr-analysis.md` with created work item details.
 
 ### Phase 4: Identify Potential Reviewers
 
@@ -504,8 +505,8 @@ Execute without presenting to user yet:
    * For GitHub noreply emails (`*@users.noreply.github.com`): Search git history for alternative email addresses using `git log --author="<username>" --pretty=format:'%ae' | sort -u`, then retry identity resolution with discovered alternatives
    * If no match found after alternatives, mark reviewer for manual addition
    * If multiple matches found, use most recent activity or mark for user disambiguation
-6. Capture analysis in `reviewer-analysis.md` with rationale and resolved identity IDs.
-7. Log potential reviewers and resolution status in `planning-log.md`.
+6. Capture analysis in `04-reviewer-analysis.md` with rationale and resolved identity IDs.
+7. Log potential reviewers and resolution status in `05-planning-log.md`.
 
 ### Phase 5: User Review and Confirmation
 
@@ -515,7 +516,7 @@ Present each gate separately and wait for user approval before proceeding to the
 
 #### Gate 1: Changed Files Review
 
-1. Extract all changed files from `pr-reference.xml`.
+1. Extract all changed files from `01-pr-reference.xml`.
 2. For each file, provide brief description of changes from diff analysis.
 3. Perform quality review and identify:
    * Accidental or unintended changes (e.g., debug code, commented code)
@@ -528,7 +529,7 @@ Present each gate separately and wait for user approval before proceeding to the
 **File Count Handling**:
 
 * If ≤ 50 files: Present full list inline with change descriptions
-* If > 50 files: Provide summary statistics and link to `pr-analysis.md`, instruct user to review and confirm when ready
+* If > 50 files: Provide summary statistics and link to `03-pr-analysis.md`, instruct user to review and confirm when ready
 
 **Presentation Format**:
 
@@ -553,13 +554,13 @@ For changesets over 50 files, provide summary statistics and link to `pr-analysi
 
 #### Gate 2: PR Title & Description Review
 
-1. Extract PR title from `pr.md` first line:
+1. Extract PR title from `02-pr.md` first line:
    * Remove leading `#` and whitespace
    * Example: `# feat(scope): description` → `feat(scope): description`
    * This cleaned title will be used for Azure DevOps PR creation
-2. Present complete PR description from `pr.md` body (after first line):
+2. Present complete PR description from `02-pr.md` body (after first line):
    * Preserve all markdown formatting including headings with `#` markers
-3. Perform security/compliance analysis on `pr-reference.xml`:
+3. Perform security/compliance analysis on `01-pr-reference.xml`:
    * Customer information leaks (PII, customer data)
    * Secrets or credentials (API keys, passwords, tokens)
    * Non-compliant language (FIXME, WIP, etc in committed code)
@@ -613,7 +614,7 @@ Reply with "Link [ID1], [ID2]", "Link all", or "Skip".
 
 #### Gate 4: Reviewers Review
 
-1. Present suggested reviewers from `reviewer-analysis.md`.
+1. Present suggested reviewers from `04-reviewer-analysis.md`.
 2. Separate into Recommended and Additional categories based on contribution score.
 3. Provide contribution score and rationale for each.
 
@@ -634,7 +635,7 @@ Reply with "Continue", "Add [email]", "Remove [email]", or "Skip".
 
 #### Gate 5: Final Summary & Signoff
 
-1. Build complete `handoff.md` with all user-confirmed selections.
+1. Build complete `06-handoff.md` with all user-confirmed selections.
 2. Present comprehensive summary of everything that will be created.
 3. Request final signoff before executing PR creation.
 
@@ -654,7 +655,7 @@ Reply with "Create PR", "Modify [aspect]", or "Cancel".
 
 ### Phase 5 Modification Handling
 
-When user requests modifications at any gate, update the relevant planning file, log changes in `planning-log.md`, and re-present that gate for confirmation. Track modification count per gate; after 3+ iterations, suggest an alternative approach or pause.
+When user requests modifications at any gate, update the relevant planning file, log changes in `05-planning-log.md`, and re-present that gate for confirmation. Track modification count per gate; after 3+ iterations, suggest an alternative approach or pause.
 
 ### Phase 6: Create Pull Request and Link Work Items
 
@@ -664,7 +665,7 @@ Proceed after user gives explicit approval.
    * Use `${input:repository}` directly if GUID format; otherwise call `mcp_ado_repo_get_repo_by_name_or_id` with project and repository name.
    * Use `${input:adoProject}` directly if GUID; otherwise extract from `mcp_ado_search_workitem` response metadata.
    * For GitHub-backed Azure DevOps projects where repository is not found: Verify the GitHub connection in Azure DevOps project settings (Project Settings → Repos → GitHub connections). The repository may require explicit configuration before appearing in ADO queries.
-   * Log both IDs in `planning-log.md`.
+   * Log both IDs in `05-planning-log.md`.
 
 2. Prepare branch references:
    * Source: `refs/heads/${input:sourceBranch}` (or current branch)
@@ -673,13 +674,13 @@ Proceed after user gives explicit approval.
      * `upstream/develop` → `refs/heads/develop`
      * `main` → `refs/heads/main`
 
-3. Create pull request using `mcp_ado_repo_create_pull_request` with `repositoryId`, `sourceRefName`, `targetRefName`, and `title` (from pr.md without leading #). Optionally include `description`, `isDraft`, and `labels`. The `workItems` parameter accepts space-separated IDs to link work items during creation, simplifying the workflow. Capture returned PR ID and URL.
+3. Create pull request using `mcp_ado_repo_create_pull_request` with `repositoryId`, `sourceRefName`, `targetRefName`, and `title` (from 02-pr.md without leading #). Optionally include `description`, `isDraft`, and `labels`. The `workItems` parameter accepts space-separated IDs to link work items during creation, simplifying the workflow. Capture returned PR ID and URL.
 
-4. Link additional work items using `mcp_ado_wit_link_work_item_to_pull_request` for each selected work item not linked during creation. Requires `projectId` (GUID format), `repositoryId`, `pullRequestId`, and `workItemId`. For cross-project linking, include `pullRequestProjectId`. Log results in `planning-log.md`.
+4. Link additional work items using `mcp_ado_wit_link_work_item_to_pull_request` for each selected work item not linked during creation. Requires `projectId` (GUID format), `repositoryId`, `pullRequestId`, and `workItemId`. For cross-project linking, include `pullRequestProjectId`. Log results in `05-planning-log.md`.
 
 5. Add reviewers using `mcp_ado_repo_update_pull_request_reviewers` with resolved identity GUIDs. All reviewers are added as optional by default. In no-gates mode, add top 2 by contribution score. Document unresolved reviewers for manual addition.
 
-6. Validate completion by reading `handoff.md` to verify checkboxes and confirming PR URL accessibility.
+6. Validate completion by reading `06-handoff.md` to verify checkboxes and confirming PR URL accessibility.
 
 ## MCP Tool Reference
 
@@ -743,7 +744,7 @@ Provide conversational summary covering PR creation status and URL, work items l
 **PR**: [PR ID] | [PR URL] | [Active|Draft]
 **Linked**: ADO-[ID], ADO-[ID]
 **Reviewers**: [Name] (added) | [Name] (manual)
-**Files**: `.copilot-tracking/pr/new/[branch]/`
+* **Files**: `.copilot-tracking/PR/{{NN}}_{{BranchName}}/`
 ```
 
 ## Error Recovery
@@ -769,8 +770,8 @@ Provide conversational summary covering PR creation status and URL, work items l
 * Maintain `planning-log.md` after each major action
 * Update phase transitions in `planning-log.md`
 * If context is summarized:
-  1. Read all planning files from `.copilot-tracking/pr/new/<normalized-branch>/`
-  2. Rebuild context from `planning-log.md` current phase
+  1. Read all planning files from `.copilot-tracking/PR/{{NN}}_{{BranchName}}/`
+  2. Rebuild context from `05-planning-log.md` current phase
   3. Resume from last incomplete step
   4. Inform user of recovery process
 

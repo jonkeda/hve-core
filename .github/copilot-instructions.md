@@ -68,21 +68,22 @@ Skills are self-contained packages providing guidance and utilities:
 
 ### Copilot Tracking
 
-The `.copilot-tracking/` directory (gitignored) contains AI-assisted workflow artifacts:
+The `.copilot-tracking/` directory (gitignored) contains AI-assisted workflow artifacts organized by category:
 
-* Work Items (`.copilot-tracking/workitems/`) - ADO work item discovery and planning.
-* Pull Requests (`.copilot-tracking/pr/`) - PR reference generation, handoff, and review tracking.
-* Changes (`.copilot-tracking/changes/`) - Change tracking and implementation logs.
-* Plans (`.copilot-tracking/plans/`) - Task planning documents.
-* Details (`.copilot-tracking/details/`) - Task plan implementation details.
-* Research (`.copilot-tracking/research/`) - Technical research findings.
-* Subagent (`.copilot-tracking/subagent/`) - Subagent research outputs organized by date.
-* ADRs (`.copilot-tracking/adrs/`) - Architecture Decision Record drafts.
-* BRD Sessions (`.copilot-tracking/brd-sessions/`) - Business requirements document session state.
-* PRD Sessions (`.copilot-tracking/prd-sessions/`) - Product requirements document session state.
-* GitHub Issues (`.copilot-tracking/github-issues/`) - GitHub issue search and tracking logs.
+* Task (`.copilot-tracking/Task/`) - Task research, planning, implementation, and review.
+* WorkItem (`.copilot-tracking/WorkItem/`) - ADO work item discovery and planning.
+* PR (`.copilot-tracking/PR/`) - PR reference generation, handoff, and review tracking.
+* BRD (`.copilot-tracking/BRD/`) - Business requirements document session state.
+* PRD (`.copilot-tracking/PRD/`) - Product requirements document session state.
+* ADR (`.copilot-tracking/ADR/`) - Architecture Decision Record drafts.
+* SecurityPlan (`.copilot-tracking/SecurityPlan/`) - Security plan documents.
+* Memory (`.copilot-tracking/Memory/`) - Persistent conversation memory files.
+* DocOps (`.copilot-tracking/DocOps/`) - Documentation operations session tracking.
+* GitHubIssue (`.copilot-tracking/GitHubIssue/`) - GitHub issue search and tracking logs.
+* Sandbox (`.copilot-tracking/Sandbox/`) - Prompt testing sandbox environments.
+* InstructionAnalysis (`.copilot-tracking/InstructionAnalysis/`) - Instruction file proposal checklists.
 
-All tracking files use markdown format with frontmatter and follow patterns from `.github/instructions/ado-*.instructions.md`.
+All tracking files use markdown format with frontmatter and follow conventions from `.github/instructions/copilot-tracking-conventions.instructions.md`.
 <!-- </project-structure> -->
 
 <!-- <script-operations> -->

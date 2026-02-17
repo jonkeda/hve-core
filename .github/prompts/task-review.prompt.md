@@ -43,7 +43,7 @@ Identify artifacts to review using this priority:
    * "since last review" - artifacts created after the most recent review log.
 4. Default to reviewing all artifacts since the last review log when no scope is specified.
 
-Check `.copilot-tracking/reviews/` for existing review logs to determine the baseline.
+Check `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/` for existing review logs to determine the baseline.
 
 ### Step 2: Locate Related Artifacts
 
@@ -59,9 +59,9 @@ Dispatch a subagent via `runSubagent` for artifact discovery when file locations
 
 ### Step 3: Create or Update Review Log
 
-Create a new review log in `.copilot-tracking/reviews/` or update an existing one:
+Create a new review log in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/` or update an existing one:
 
-* Use `{{YYYY-MM-DD}}-task-description-review.md` naming.
+* Use `{{NN}}-task-description-review.md` naming. Scan the folder for existing numbered files and use the next available number.
 * Initialize the review structure with artifact references.
 * Begin populating the implementation checklist.
 

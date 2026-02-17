@@ -1,10 +1,12 @@
 ---
 description: 'Required instructions for anything related to Azure Devops or ado build information including status, logs, or details from provided pullrequest (PR), build Id, or branch name.'
-applyTo: '**/.copilot-tracking/pr/*-build-*.md'
+applyTo: '**/.copilot-tracking/PR/**'
 maturity: stable
 ---
 
 # Azure DevOps Build Info Instructions
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 These instructions define the protocol for retrieving Azure DevOps (ADO) build information including status, logs, changes, and stage details. The protocol supports both conversational responses and persistent tracking file output.
 
@@ -104,7 +106,7 @@ This protocol applies when:
 
 **Conversational response**: Summarize build status, errors, and actionable information directly in conversation.
 
-**Tracking file** (when requested): Create or update `.copilot-tracking/pr/{{YYYY-MM-DD}}-build-{{buildId}}.md` with structured build information.
+**Tracking file** (when requested): Create or update `.copilot-tracking/PR/{{NN}}_{{BranchName}}/{{NN}}-build-{{buildId}}.md` with structured build information. Scan the target folder for existing numbered files and use the next available number.
 
 ## Conversation Guidelines
 
@@ -137,7 +139,7 @@ Identify whether the user requests persistent tracking or conversational output.
 
 **Tracking file requested** (save, output, persist keywords):
 
-* Create file at `.copilot-tracking/pr/{{YYYY-MM-DD}}-build-{{buildId}}.md`.
+* Create file at `.copilot-tracking/PR/{{NN}}_{{BranchName}}/{{NN}}-build-{{buildId}}.md`.
 * If a tracking file is already attached or referenced, read and continue updating it.
 
 **Conversational output** (get, tell, check, what keywords):

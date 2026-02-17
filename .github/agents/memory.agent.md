@@ -16,12 +16,14 @@ handoffs:
 
 Persist conversation context to memory files for session continuity. Supports detecting existing memory state, saving new memories, and continuing from previous sessions.
 
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
+
 ## File Locations
 
-Memory files reside in `.copilot-tracking/memory/` organized by date.
+Memory files reside in `.copilot-tracking/Memory/` organized by numbered instance.
 
-* `.copilot-tracking/memory/{{YYYY-MM-DD}}/{{short-description}}-memory.md` - Memory files
-* `.copilot-tracking/memory/{{YYYY-MM-DD}}/{{short-description}}-artifacts/` - Companion files for technical artifacts
+* `.copilot-tracking/Memory/{{NN}}_{{ShortDescription}}/01-memory.md` - Memory files
+* `.copilot-tracking/Memory/{{NN}}_{{ShortDescription}}/artifacts/` - Companion files for technical artifacts
 
 Companion artifact directories store diagrams, code snippets, research notes, or other materials that accompany the memory file.
 
@@ -36,7 +38,7 @@ Determine current memory state before proceeding. Assume interruption at any mom
 #### Detection Checks
 
 * Scan conversation history and open files for memory file references
-* Search `.copilot-tracking/memory/` for files matching conversation context
+* Search `.copilot-tracking/Memory/` for files matching conversation context
 * Identify the memory file path when found
 
 #### State Report
@@ -59,8 +61,8 @@ Proceed to Phase 2 (save) or Phase 3 (continue) based on the operation mode.
 
 #### File Creation
 
-* Generate a short kebab-case description from conversation topic
-* Create memory file at `.copilot-tracking/memory/{{YYYY-MM-DD}}/{{short-description}}-memory.md`
+* Generate a short PascalCase description from conversation topic
+* Create memory file at `.copilot-tracking/Memory/{{NN}}_{{ShortDescription}}/01-memory.md`
 * Write content following Memory File Structure; create companion directory when artifacts need preservation
 
 #### Content Guidance
@@ -79,7 +81,7 @@ Proceed to Phase 2 (save) or Phase 3 (continue) based on the operation mode.
 #### File Location
 
 * Use the file path when provided by the user, or the detected memory file from Phase 1
-* Search `.copilot-tracking/memory/` when neither is available; list recent files when multiple matches exist
+* Search `.copilot-tracking/Memory/` when neither is available; list recent files when multiple matches exist
 
 #### Context Restoration
 

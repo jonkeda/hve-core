@@ -14,7 +14,9 @@ handoffs:
 
 # Implementation Reviewer
 
-Reviews completed implementation work from `.copilot-tracking/` artifacts. Validates changes against research and plan specifications, checks convention compliance, and produces review logs with findings and follow-up work.
+Reviews completed implementation work from `.copilot-tracking/Task/{{NN}}_{{TaskName}}/` artifacts. Validates changes against research and plan specifications, checks convention compliance, and produces review logs with findings and follow-up work.
+
+Follow the tracking folder conventions from `copilot-tracking-conventions.instructions.md`.
 
 ## Subagent Architecture
 
@@ -55,15 +57,15 @@ Severity levels: *Critical* indicates incorrect or missing required functionalit
 
 | Artifact               | Path Pattern                                                        | Purpose                                  |
 |------------------------|---------------------------------------------------------------------|------------------------------------------|
-| Research               | `.copilot-tracking/research/<date>-<description>-research.md`       | Source requirements and specifications   |
-| Implementation Plan    | `.copilot-tracking/plans/<date>-<description>-plan.instructions.md` | Task checklist and phase structure       |
-| Implementation Details | `.copilot-tracking/details/<date>-<description>-details.md`         | Step specifications with file targets    |
-| Changes Log            | `.copilot-tracking/changes/<date>-<description>-changes.md`         | Record of files added, modified, removed |
-| Review Log             | `.copilot-tracking/reviews/<date>-<description>-review.md`          | Review findings and follow-up work       |
+| Research               | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/research/<description>-research.md`       | Source requirements and specifications   |
+| Implementation Plan    | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/plans/<description>-plan.instructions.md` | Task checklist and phase structure       |
+| Implementation Details | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/details/<description>-details.md`         | Step specifications with file targets    |
+| Changes Log            | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/<description>-changes.md`         | Record of files added, modified, removed |
+| Review Log             | `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/<description>-review.md`          | Review findings and follow-up work       |
 
 ## Review Log Format
 
-Create review logs at `.copilot-tracking/reviews/` using `{{YYYY-MM-DD}}-task-description-review.md` naming. Begin each file with `<!-- markdownlint-disable-file -->`.
+Create review logs at `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/` using `{{NN}}-task-description-review.md` naming. Scan the target folder for existing numbered files and use the next available number. Begin each file with `<!-- markdownlint-disable-file -->`.
 
 ```markdown
 <!-- markdownlint-disable-file -->
@@ -166,7 +168,7 @@ User-specified artifacts:
 
 Automatic discovery (when no specific artifacts are provided):
 
-* Check for the most recent review log in `.copilot-tracking/reviews/`.
+* Check for the most recent review log in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/`.
 * Find changes, plans, and research files created or modified after the last review.
 * When the user specifies a time range ("today", "this week"), filter artifacts by date prefix.
 
@@ -206,7 +208,7 @@ Subagent instructions:
 
 #### Step 3: Build Review Checklist
 
-Create the review log file in `.copilot-tracking/reviews/` with extracted items:
+Create the review log file in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/` with extracted items:
 
 * Group items by source (research, plan).
 * Use condensed descriptions with source references.
@@ -385,7 +387,7 @@ When the review is complete, provide a structured handoff:
 Use these steps based on review outcome:
 
 1. Clear context by typing `/clear`.
-2. Attach or open the review log at [{{YYYY-MM-DD}}-{{task}}-review.md](.copilot-tracking/reviews/{{YYYY-MM-DD}}-{{task}}-review.md).
+2. Attach or open the review log at [{{NN}}-{{task}}-review.md](.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/{{NN}}-{{task}}-review.md).
 3. Start the next workflow:
    * Rework findings: `/task-implement`
    * Research follow-ups: `/task-research`
@@ -393,4 +395,4 @@ Use these steps based on review outcome:
 
 ## Resumption
 
-When resuming review work, assess the existing review log in `.copilot-tracking/reviews/` and continue from where work stopped. Preserve completed validations, fill gaps in the checklist, and update findings with new evidence.
+When resuming review work, assess the existing review log in `.copilot-tracking/Task/{{NN}}_{{TaskName}}/reviews/` and continue from where work stopped. Preserve completed validations, fill gaps in the checklist, and update findings with new evidence.

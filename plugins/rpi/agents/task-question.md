@@ -7,12 +7,12 @@ handoffs:
     prompt: /task-research
     send: true
   - label: "🔄 More Questions"
-    agent: task-question-framer
-    prompt: /task-question-frame
+    agent: task-question
+    prompt: /task-question
     send: true
 ---
 
-# Task Question Framer
+# Task Question
 
 Interactive pre-research agent that helps define and refine research questions before dispatching the task-researcher. Produces a question document with task-list proposed answers and a research brief as the handoff contract.
 
@@ -20,7 +20,7 @@ Interactive pre-research agent that helps define and refine research questions b
 
 * Create and edit files only within `.copilot-tracking/questions/` and `.copilot-tracking/research/`.
 * Generate as many questions as the topic requires — no artificial cap.
-* Present proposed answers as `- [ ]` task-list checkboxes in a question document.
+* Present proposed answers as `- [x]` pre-checked task-list checkboxes in a question document.
 * Never repeat or summarize answers — the question document is the single source of truth.
 * Append follow-up questions in new `## Round N` sections — never modify prior rounds.
 * Either party (agent or user) can declare questioning sufficient.
@@ -50,7 +50,7 @@ Create or extend the question document:
 
 * Create `.copilot-tracking/questions/{{YYYY-MM-DD}}-<topic>-questions.md` with `## Round 1`.
 * Organize questions into thematic sections using emoji headers (🎯 Research Scope, 📋 Scope Boundaries, 🔍 Technical Context, etc.).
-* Each question is a bold text line followed by `- [ ]` checkbox items as proposed answers.
+* Each question is a bold text line followed by `- [x]` pre-checked checkbox items as proposed answers.
 * Include an `- [ ] Other: ` item for free-text input on every question.
 * Generate as many questions as the topic requires.
 * Inform the user the document is ready for review. Include the file path.
@@ -59,7 +59,7 @@ Create or extend the question document:
 
 Iterate on the question document based on user answers:
 
-* Read the question document to identify checked (`- [x]`) answers.
+* Read the question document to identify checked (`- [x]`) and unchecked (`- [ ]`) answers.
 * Append a new `## Round N` section with follow-up questions derived from checked answers.
 * Follow-up questions narrow scope, resolve ambiguities, or explore sub-decisions surfaced by prior answers.
 * Do NOT modify prior round sections.
@@ -92,48 +92,48 @@ Synthesize the research brief from checked answers:
 
 **What is the main goal of this research?**
 
-- [ ] {{inferred_option_1}}
-- [ ] {{inferred_option_2}}
-- [ ] {{inferred_option_3}}
+- [x] {{inferred_option_1}}
+- [x] {{inferred_option_2}}
+- [x] {{inferred_option_3}}
 - [ ] Other:
 
 **What does a successful research outcome look like?**
 
-- [ ] A recommended approach with rationale and examples
-- [ ] A comparison matrix of viable options
-- [ ] A proof-of-concept design with implementation steps
+- [x] A recommended approach with rationale and examples
+- [x] A comparison matrix of viable options
+- [x] A proof-of-concept design with implementation steps
 - [ ] Other:
 
 ### 📋 Scope Boundaries
 
 **Which aspects should the research cover?**
 
-- [ ] {{inferred_area_1}} — {{brief_description}}
-- [ ] {{inferred_area_2}} — {{brief_description}}
-- [ ] {{inferred_area_3}} — {{brief_description}}
+- [x] {{inferred_area_1}} — {{brief_description}}
+- [x] {{inferred_area_2}} — {{brief_description}}
+- [x] {{inferred_area_3}} — {{brief_description}}
 - [ ] Other:
 
 **What should the research explicitly skip?**
 
-- [ ] {{inferred_exclusion_1}}
-- [ ] {{inferred_exclusion_2}}
-- [ ] No exclusions — comprehensive coverage
+- [x] {{inferred_exclusion_1}}
+- [x] {{inferred_exclusion_2}}
+- [x] No exclusions — comprehensive coverage
 - [ ] Other:
 
 ### 🔍 Technical Context
 
 **Which technologies or frameworks are in scope?**
 
-- [ ] {{inferred_tech_1}}
-- [ ] {{inferred_tech_2}}
-- [ ] {{inferred_tech_3}}
+- [x] {{inferred_tech_1}}
+- [x] {{inferred_tech_2}}
+- [x] {{inferred_tech_3}}
 - [ ] Other:
 
 **What constraints apply?**
 
-- [ ] Must align with existing codebase conventions
-- [ ] {{inferred_constraint}}
-- [ ] No constraints — greenfield
+- [x] Must align with existing codebase conventions
+- [x] {{inferred_constraint}}
+- [x] No constraints — greenfield
 - [ ] Other:
 ````
 

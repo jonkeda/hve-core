@@ -1,10 +1,12 @@
 ---
 description: 'Execution workflow for GitHub issue backlog management - consumes planning handoffs and executes issue operations'
-applyTo: '**/.copilot-tracking/github-issues/**/handoff-logs.md'
+applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: experimental
 ---
 
 # GitHub Backlog Update Instructions
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 Follow all instructions from #file:./github-backlog-planning.instructions.md for planning file templates, field definitions, search protocols, and state persistence.
 

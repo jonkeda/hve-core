@@ -1,12 +1,14 @@
 ---
 description: 'Discovery protocol for GitHub backlog management - artifact-driven, user-centric, and search-based issue discovery'
-applyTo: '**/.copilot-tracking/github-issues/discovery/**'
+applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: experimental
 ---
 
 # GitHub Backlog Discovery
 
 Discover GitHub issues through three paths: user-centric queries, artifact-driven analysis, or search-based exploration. Follow *github-backlog-planning.instructions.md* for templates, field definitions, and search protocols.
+
+Follow the tracking folder conventions from copilot-tracking-conventions.instructions.md.
 
 ## Scope
 
@@ -16,7 +18,7 @@ Discovery path selection:
 * Artifact-driven (Path B): Documents, PRDs, or requirements provided for translation into issues
 * Search-based (Path C): User provides search terms directly without artifacts or assignment context
 
-Output location: `.copilot-tracking/github-issues/discovery/<scope-name>/` where `<scope-name>` is a descriptive kebab-case slug derived from the discovery context (for example, `v2-features` or `security-audit`).
+Output location: `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` where `{{ScopeName}}` is a descriptive PascalCase slug derived from the discovery context (for example, `01_V2Features` or `02_SecurityAudit`).
 
 ## Deliverables
 
@@ -76,7 +78,7 @@ Execution:
 3. Execute `mcp_github_search_issues` and paginate until all results are retrieved.
 4. Hydrate each result via `mcp_github_issue_read` with `method: 'get'`. When `includeSubIssues` is true, also fetch sub-issues.
 5. Present results grouped by state and labels.
-6. Create the planning folder at `.copilot-tracking/github-issues/discovery/<scope-name>/` and initialize *planning-log.md*.
+6. Create the planning folder at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` and initialize *planning-log.md*.
 7. Log discovered issues in *planning-log.md* and deliver a conversational summary.
 8. Skip Phases 2-3; no additional planning files beyond *planning-log.md* are required for user-centric discovery.
 
@@ -93,7 +95,7 @@ Skip conditions:
 
 Execution:
 
-1. Create the planning folder at `.copilot-tracking/github-issues/discovery/<scope-name>/`.
+1. Create the planning folder at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/`.
 2. Call `mcp_github_get_me` to verify repository access. When the organization supports issue types, call `mcp_github_list_issue_types` with the `owner` parameter.
 3. Read each document to completion and extract discrete requirements, acceptance criteria, and action items using the document parsing guidelines in this file.
 4. Record each extracted requirement as a candidate issue entry in *issue-analysis.md* with: temporary ID, suggested title in conventional commit format, body summary, suggested labels, suggested milestone, and source reference.
@@ -138,7 +140,7 @@ Execution:
 3. Execute `mcp_github_search_issues` for each query and paginate results.
 4. Hydrate each result via `mcp_github_issue_read` with `method: 'get'`. When `includeSubIssues` is true, also fetch sub-issues.
 5. Present results grouped by state and labels.
-6. Create the planning folder at `.copilot-tracking/github-issues/discovery/<scope-name>/` and initialize *planning-log.md*.
+6. Create the planning folder at `.copilot-tracking/GitHubIssue/{{NN}}_{{ScopeName}}/` and initialize *planning-log.md*.
 7. Log discovered issues in *planning-log.md* and deliver a conversational summary.
 8. Skip Phases 2-3; no additional planning files beyond *planning-log.md* are required for search-based discovery.
 

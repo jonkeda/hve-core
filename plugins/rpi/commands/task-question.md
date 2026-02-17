@@ -1,10 +1,10 @@
 ---
 description: "Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core"
-agent: 'task-question-framer'
+agent: 'task-question'
 maturity: experimental
 ---
 
-# Task Question Frame
+# Task Question
 
 ## Inputs
 
@@ -41,4 +41,4 @@ Refine questions based on user answers:
 
 ---
 
-Invoke task-question-framer mode and proceed with the Required Steps.
+Invoke task-question mode and proceed with the Required Steps.
