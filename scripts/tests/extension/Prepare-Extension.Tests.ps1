@@ -143,28 +143,28 @@ Describe 'Invoke-ExtensionCollectionsGeneration' {
             contributes = @{}
         } | ConvertTo-Json -Depth 5 | Set-Content -Path (Join-Path $templatesDir 'package.template.json')
 
-        # hve-core-all collection
+        # hve-core collection (flagship)
         @"
-id: hve-core-all
-name: hve-core
+id: hve-core
+name: HVE Core
 displayName: HVE Core
 description: All artifacts
-"@ | Set-Content -Path (Join-Path $collectionsDir 'hve-core-all.collection.yml')
+"@ | Set-Content -Path (Join-Path $collectionsDir 'hve-core.collection.yml')
 
-        # rpi collection
+        # ado collection
         @"
-id: rpi
-name: RPI Workflow
-displayName: HVE Core - RPI Workflow
-description: RPI workflow agents
-"@ | Set-Content -Path (Join-Path $collectionsDir 'rpi.collection.yml')
+id: ado
+name: ADO Workflow
+displayName: HVE Core - ADO Workflow
+description: ADO workflow agents
+"@ | Set-Content -Path (Join-Path $collectionsDir 'ado.collection.yml')
     }
 
     AfterAll {
         Remove-Item -Path $script:tempDir -Recurse -Force -ErrorAction SilentlyContinue
     }
 
-    It 'Generates package.json for hve-core-all' {
+    It 'Generates package.json for hve-core' {
         $null = Invoke-ExtensionCollectionsGeneration -RepoRoot $script:tempDir
         $pkgPath = Join-Path $script:tempDir 'extension/package.json'
         Test-Path $pkgPath | Should -BeTrue
@@ -175,11 +175,11 @@ description: RPI workflow agents
 
     It 'Generates collection package file for non-default collection' {
         $null = Invoke-ExtensionCollectionsGeneration -RepoRoot $script:tempDir
-        $pkgPath = Join-Path $script:tempDir 'extension/package.rpi.json'
+        $pkgPath = Join-Path $script:tempDir 'extension/package.ado.json'
         Test-Path $pkgPath | Should -BeTrue
         $pkg = Get-Content $pkgPath -Raw | ConvertFrom-Json
-        $pkg.name | Should -Be 'hve-rpi'
-        $pkg.displayName | Should -Be 'HVE Core - RPI Workflow'
+        $pkg.name | Should -Be 'hve-ado'
+        $pkg.displayName | Should -Be 'HVE Core - ADO Workflow'
     }
 
     It 'Returns array of generated file paths' {
@@ -309,14 +309,14 @@ description: "My skill description"
         $content | Should -Match 'Body content goes here'
     }
 
-    It 'Uses HVE Core as title for hve-core-all collection' {
+    It 'Uses HVE Core as title for hve-core collection' {
         $collection = @{
-            id          = 'hve-core-all'
-            name        = 'HVE Core All'
+            id          = 'hve-core'
+            name        = 'HVE Core'
             description = 'Full bundle'
             items       = @()
         }
-        $mdPath = Join-Path $script:tempDir 'all.collection.md'
+        $mdPath = Join-Path $script:tempDir 'core.collection.md'
         'All artifacts.' | Set-Content -Path $mdPath
         $outPath = Join-Path $script:tempDir 'README.md'
 
@@ -375,6 +375,23 @@ description: "My skill description"
         $content = Get-Content -Path $outPath -Raw
         $content | Should -Match '## Full Edition'
         $content | Should -Match 'HVE Core.*extension'
+    }
+
+    It 'Excludes Full Edition link for hve-core' {
+        $collection = @{
+            id          = 'hve-core'
+            name        = 'HVE Core'
+            description = 'Flagship bundle'
+            items       = @()
+        }
+        $mdPath = Join-Path $script:tempDir 'core2.collection.md'
+        'Core body.' | Set-Content -Path $mdPath
+        $outPath = Join-Path $script:tempDir 'README.core2.md'
+
+        New-CollectionReadme -Collection $collection -CollectionMdPath $mdPath -TemplatePath $script:templatePath -RepoRoot $script:tempDir -OutputPath $outPath
+
+        $content = Get-Content -Path $outPath -Raw
+        $content | Should -Not -Match '## Full Edition'
     }
 
     It 'Excludes Full Edition link for hve-core-all' {
@@ -557,20 +574,21 @@ Describe 'Get-DiscoveredAgents' {
     BeforeAll {
         $script:tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
         $script:agentsDir = Join-Path $script:tempDir 'agents'
-        New-Item -ItemType Directory -Path $script:agentsDir -Force | Out-Null
+        $script:agentsSubDir = Join-Path $script:agentsDir 'test-collection'
+        New-Item -ItemType Directory -Path $script:agentsSubDir -Force | Out-Null
 
-        # Create test agent files
+        # Create test agent files in subdirectory (distributable)
         @'
 ---
 description: "Stable agent"
 ---
-'@ | Set-Content -Path (Join-Path $script:agentsDir 'stable.agent.md')
+'@ | Set-Content -Path (Join-Path $script:agentsSubDir 'stable.agent.md')
 
         @'
 ---
 description: "Preview agent"
 ---
-'@ | Set-Content -Path (Join-Path $script:agentsDir 'preview.agent.md')
+'@ | Set-Content -Path (Join-Path $script:agentsSubDir 'preview.agent.md')
 
     }
 
@@ -607,15 +625,16 @@ Describe 'Get-DiscoveredPrompts' {
     BeforeAll {
         $script:tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
         $script:promptsDir = Join-Path $script:tempDir 'prompts'
+        $script:promptsSubDir = Join-Path $script:promptsDir 'test-collection'
         $script:ghDir = Join-Path $script:tempDir '.github'
-        New-Item -ItemType Directory -Path $script:promptsDir -Force | Out-Null
+        New-Item -ItemType Directory -Path $script:promptsSubDir -Force | Out-Null
         New-Item -ItemType Directory -Path $script:ghDir -Force | Out-Null
 
         @'
 ---
 description: "Test prompt"
 ---
-'@ | Set-Content -Path (Join-Path $script:promptsDir 'test.prompt.md')
+'@ | Set-Content -Path (Join-Path $script:promptsSubDir 'test.prompt.md')
     }
 
     AfterAll {
@@ -639,8 +658,9 @@ Describe 'Get-DiscoveredInstructions' {
     BeforeAll {
         $script:tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
         $script:instrDir = Join-Path $script:tempDir 'instructions'
+        $script:instrSubDir = Join-Path $script:instrDir 'test-collection'
         $script:ghDir = Join-Path $script:tempDir '.github'
-        New-Item -ItemType Directory -Path $script:instrDir -Force | Out-Null
+        New-Item -ItemType Directory -Path $script:instrSubDir -Force | Out-Null
         New-Item -ItemType Directory -Path $script:ghDir -Force | Out-Null
 
         @'
@@ -648,7 +668,7 @@ Describe 'Get-DiscoveredInstructions' {
 description: "Test instruction"
 applyTo: "**/*.ps1"
 ---
-'@ | Set-Content -Path (Join-Path $script:instrDir 'test.instructions.md')
+'@ | Set-Content -Path (Join-Path $script:instrSubDir 'test.instructions.md')
     }
 
     AfterAll {
@@ -667,15 +687,13 @@ applyTo: "**/*.ps1"
         $result.DirectoryExists | Should -BeFalse
     }
 
-    It 'Skips repo-specific instructions in hve-core subdirectory' {
-        $hveCoreDir = Join-Path $script:instrDir 'hve-core'
-        New-Item -ItemType Directory -Path $hveCoreDir -Force | Out-Null
+    It 'Skips root-level repo-specific instructions' {
         @'
 ---
 description: "Repo-specific workflow instruction"
 applyTo: "**/.github/workflows/*.yml"
 ---
-'@ | Set-Content -Path (Join-Path $hveCoreDir 'workflows.instructions.md')
+'@ | Set-Content -Path (Join-Path $script:instrDir 'workflows.instructions.md')
 
         $result = Get-DiscoveredInstructions -InstructionsDir $script:instrDir -GitHubDir $script:ghDir -AllowedMaturities @('stable')
         $instrNames = $result.Instructions | ForEach-Object { $_.name }
@@ -683,17 +701,15 @@ applyTo: "**/.github/workflows/*.yml"
         $result.Skipped | Where-Object { $_.Reason -match 'repo-specific' } | Should -Not -BeNullOrEmpty
     }
 
-    It 'Still discovers instructions in other subdirectories' {
-        $hveCoreDir = Join-Path $script:instrDir 'hve-core'
+    It 'Still discovers instructions in subdirectories' {
         $otherDir = Join-Path $script:instrDir 'csharp'
-        New-Item -ItemType Directory -Path $hveCoreDir -Force | Out-Null
         New-Item -ItemType Directory -Path $otherDir -Force | Out-Null
         @'
 ---
 description: "Repo-specific"
 applyTo: "**/.github/workflows/*.yml"
 ---
-'@ | Set-Content -Path (Join-Path $hveCoreDir 'workflows.instructions.md')
+'@ | Set-Content -Path (Join-Path $script:instrDir 'workflows.instructions.md')
         @'
 ---
 description: "C# instruction"
@@ -714,8 +730,8 @@ Describe 'Get-DiscoveredSkills' {
         $script:skillsDir = Join-Path $script:tempDir 'skills'
         New-Item -ItemType Directory -Path $script:skillsDir -Force | Out-Null
 
-        # Create test skill
-        $skillDir = Join-Path $script:skillsDir 'test-skill'
+        # Create test skill under a collection-id directory
+        $skillDir = Join-Path $script:skillsDir 'test-collection/test-skill'
         New-Item -ItemType Directory -Path $skillDir -Force | Out-Null
         @'
 ---
@@ -725,7 +741,7 @@ description: "Test skill"
 # Skill
 '@ | Set-Content -Path (Join-Path $skillDir 'SKILL.md')
 
-        # Create nested skill under a collection-id directory
+        # Create nested skill under same collection-id directory
         $nestedSkillDir = Join-Path $script:skillsDir 'test-collection/nested-skill'
         New-Item -ItemType Directory -Path $nestedSkillDir -Force | Out-Null
         @'
@@ -1129,49 +1145,52 @@ Describe 'Invoke-PrepareExtension' {
 }
 '@ | Set-Content -Path (Join-Path $script:templatesDir 'package.template.json')
 
-        # Create collections directory with a minimal hve-core-all collection
+        # Create collections directory with a minimal hve-core collection (flagship)
         $script:collectionsDir = Join-Path $script:tempDir 'collections'
         New-Item -ItemType Directory -Path $script:collectionsDir -Force | Out-Null
         @"
-id: hve-core-all
-name: hve-core
+id: hve-core
+name: HVE Core
 displayName: HVE Core
 description: Test extension
-"@ | Set-Content -Path (Join-Path $script:collectionsDir 'hve-core-all.collection.yml')
+"@ | Set-Content -Path (Join-Path $script:collectionsDir 'hve-core.collection.yml')
 
-        # Create .github structure
+        # Create .github structure with subdirectories (root-level files are repo-specific)
         $script:ghDir = Join-Path $script:tempDir '.github'
         $script:agentsDir = Join-Path $script:ghDir 'agents'
+        $script:agentsSubDir = Join-Path $script:agentsDir 'test-collection'
         $script:promptsDir = Join-Path $script:ghDir 'prompts'
+        $script:promptsSubDir = Join-Path $script:promptsDir 'test-collection'
         $script:instrDir = Join-Path $script:ghDir 'instructions'
-        New-Item -ItemType Directory -Path $script:agentsDir -Force | Out-Null
-        New-Item -ItemType Directory -Path $script:promptsDir -Force | Out-Null
-        New-Item -ItemType Directory -Path $script:instrDir -Force | Out-Null
+        $script:instrSubDir = Join-Path $script:instrDir 'test-collection'
+        New-Item -ItemType Directory -Path $script:agentsSubDir -Force | Out-Null
+        New-Item -ItemType Directory -Path $script:promptsSubDir -Force | Out-Null
+        New-Item -ItemType Directory -Path $script:instrSubDir -Force | Out-Null
 
-        # Create test agent
+        # Create test agent in subdirectory
         @'
 ---
 description: "Test agent"
 ---
 # Agent
-'@ | Set-Content -Path (Join-Path $script:agentsDir 'test.agent.md')
+'@ | Set-Content -Path (Join-Path $script:agentsSubDir 'test.agent.md')
 
-        # Create test prompt
+        # Create test prompt in subdirectory
         @'
 ---
 description: "Test prompt"
 ---
 # Prompt
-'@ | Set-Content -Path (Join-Path $script:promptsDir 'test.prompt.md')
+'@ | Set-Content -Path (Join-Path $script:promptsSubDir 'test.prompt.md')
 
-        # Create test instruction
+        # Create test instruction in subdirectory
         @'
 ---
 description: "Test instruction"
 applyTo: "**/*.ps1"
 ---
 # Instruction
-'@ | Set-Content -Path (Join-Path $script:instrDir 'test.instructions.md')
+'@ | Set-Content -Path (Join-Path $script:instrSubDir 'test.instructions.md')
 
     }
 
@@ -1205,25 +1224,25 @@ applyTo: "**/*.ps1"
     }
 
     It 'Respects channel filtering' {
-        # Add preview agent
+        # Add preview agent in subdirectory
         @'
 ---
 description: "Preview agent"
 ---
-'@ | Set-Content -Path (Join-Path $script:agentsDir 'preview.agent.md')
+'@ | Set-Content -Path (Join-Path $script:agentsSubDir 'preview.agent.md')
 
         $collectionPath = Join-Path $script:tempDir 'channel-filter.collection.yml'
         @"
-id: hve-core-all
-name: hve-core-all
-displayName: HVE Core - All
+id: hve-core
+name: HVE Core
+displayName: HVE Core
 description: Channel filtering test
 items:
   - kind: agent
-    path: .github/agents/test.agent.md
+    path: .github/agents/test-collection/test.agent.md
     maturity: stable
   - kind: agent
-    path: .github/agents/preview.agent.md
+    path: .github/agents/test-collection/preview.agent.md
     maturity: preview
 "@ | Set-Content -Path $collectionPath
 
@@ -1245,42 +1264,42 @@ items:
     }
 
     It 'Filters prompts and instructions by maturity' {
-        # Add experimental prompt
+        # Add experimental prompt in subdirectory
         @'
 ---
 description: "Experimental prompt"
 ---
-'@ | Set-Content -Path (Join-Path $script:promptsDir 'experimental.prompt.md')
+'@ | Set-Content -Path (Join-Path $script:promptsSubDir 'experimental.prompt.md')
 
-        # Add preview instruction
+        # Add preview instruction in subdirectory
         @'
 ---
 description: "Preview instruction"
 applyTo: "**/*.js"
 ---
-'@ | Set-Content -Path (Join-Path $script:instrDir 'preview.instructions.md')
+'@ | Set-Content -Path (Join-Path $script:instrSubDir 'preview.instructions.md')
 
         $collectionPath = Join-Path $script:tempDir 'prompt-instruction-filter.collection.yml'
         @"
-id: hve-core-all
-name: hve-core-all
-displayName: HVE Core - All
+id: hve-core
+name: HVE Core
+displayName: HVE Core
 description: Prompt/instruction filtering test
 items:
   - kind: agent
-    path: .github/agents/test.agent.md
+    path: .github/agents/test-collection/test.agent.md
     maturity: stable
   - kind: prompt
-    path: .github/prompts/test.prompt.md
+    path: .github/prompts/test-collection/test.prompt.md
     maturity: stable
   - kind: prompt
-    path: .github/prompts/experimental.prompt.md
+    path: .github/prompts/test-collection/experimental.prompt.md
     maturity: experimental
   - kind: instruction
-    path: .github/instructions/test.instructions.md
+    path: .github/instructions/test-collection/test.instructions.md
     maturity: stable
   - kind: instruction
-    path: .github/instructions/preview.instructions.md
+    path: .github/instructions/test-collection/preview.instructions.md
     maturity: preview
 "@ | Set-Content -Path $collectionPath
 
@@ -1379,14 +1398,14 @@ description: Developer edition
 "@ | Set-Content -Path $script:devCollectionYaml
             $script:devCollectionPath = $script:devCollectionYaml
 
-            # hve-core-all collection manifest (default)
-            $script:allCollectionPath = Join-Path $script:tempDir 'hve-core-all.collection.yml'
+            # hve-core collection manifest (flagship, skips template copy)
+            $script:coreCollectionPath = Join-Path $script:tempDir 'hve-core.collection.yml'
             @"
-id: hve-core-all
-name: hve-core-all
-displayName: HVE Core - All
-description: All artifacts
-"@ | Set-Content -Path $script:allCollectionPath
+id: hve-core
+name: HVE Core
+displayName: HVE Core
+description: Flagship collection
+"@ | Set-Content -Path $script:coreCollectionPath
 
             # Collection manifest referencing a missing template
             $script:missingCollectionPath = Join-Path $script:tempDir 'nonexistent.collection.yml'
@@ -1415,18 +1434,18 @@ description: Missing template
                 -DryRun
 
             $result.Success | Should -BeTrue
-            # package.json should contain the generated hve-core-all content (not a collection template)
+            # package.json should contain the generated hve-core content (not a collection template)
             $currentJson = Get-Content -Path (Join-Path $script:extDir 'package.json') -Raw | ConvertFrom-Json
             $currentJson.name | Should -Be 'hve-core'
             Test-Path (Join-Path $script:extDir 'package.json.bak') | Should -BeFalse
         }
 
-        It 'Skips template copy for hve-core-all collection' {
+        It 'Skips template copy for hve-core collection' {
             $result = Invoke-PrepareExtension `
                 -ExtensionDirectory $script:extDir `
                 -RepoRoot $script:tempDir `
                 -Channel 'Stable' `
-                -Collection $script:allCollectionPath `
+                -Collection $script:coreCollectionPath `
                 -DryRun
 
             $result.Success | Should -BeTrue
@@ -1469,7 +1488,7 @@ description: Missing template
             $result.Success | Should -BeTrue
             $bakPath = Join-Path $script:extDir 'package.json.bak'
             Test-Path $bakPath | Should -BeTrue
-            # Backup should contain the hve-core-all (canonical) generated content
+            # Backup should contain the hve-core (flagship) generated content
             $bakJson = Get-Content -Path $bakPath -Raw | ConvertFrom-Json
             $bakJson.name | Should -Be 'hve-core'
         }
@@ -1854,11 +1873,11 @@ Describe 'Invoke-PrepareExtension - error cases' {
         $script:collectionsDir = Join-Path $script:tempDir 'collections'
         New-Item -ItemType Directory -Path $script:collectionsDir -Force | Out-Null
         @"
-id: hve-core-all
-name: hve-core
+id: hve-core
+name: HVE Core
 displayName: HVE Core
 description: Test
-"@ | Set-Content -Path (Join-Path $script:collectionsDir 'hve-core-all.collection.yml')
+"@ | Set-Content -Path (Join-Path $script:collectionsDir 'hve-core.collection.yml')
 
         $script:ghDir = Join-Path $script:tempDir '.github'
         New-Item -ItemType Directory -Path (Join-Path $script:ghDir 'agents') -Force | Out-Null
@@ -1937,34 +1956,38 @@ description: Test
         BeforeAll {
             $script:reqCollectionPath = Join-Path $script:tempDir 'requires-test.collection.yml'
             @"
-id: hve-core-all
-name: hve-core-all
-displayName: HVE Core All
+id: hve-core
+name: HVE Core
+displayName: HVE Core
 description: Requires test
 items:
   - kind: agent
-    path: .github/agents/main.agent.md
+    path: .github/agents/test-collection/main.agent.md
     maturity: stable
     requires:
       prompts:
         - dep-prompt
   - kind: prompt
-    path: .github/prompts/dep-prompt.prompt.md
+    path: .github/prompts/test-collection/dep-prompt.prompt.md
     maturity: stable
 "@ | Set-Content -Path $script:reqCollectionPath
 
-            # Create required agent and prompt files
+            # Create required agent and prompt files in subdirectories
+            $reqAgentDir = Join-Path $script:ghDir 'agents/test-collection'
+            $reqPromptDir = Join-Path $script:ghDir 'prompts/test-collection'
+            New-Item -ItemType Directory -Path $reqAgentDir -Force | Out-Null
+            New-Item -ItemType Directory -Path $reqPromptDir -Force | Out-Null
             @'
 ---
 description: "Main agent"
 ---
-'@ | Set-Content -Path (Join-Path $script:ghDir 'agents/main.agent.md')
+'@ | Set-Content -Path (Join-Path $reqAgentDir 'main.agent.md')
 
             @'
 ---
 description: "Dependent prompt"
 ---
-'@ | Set-Content -Path (Join-Path $script:ghDir 'prompts/dep-prompt.prompt.md')
+'@ | Set-Content -Path (Join-Path $reqPromptDir 'dep-prompt.prompt.md')
 
             # Restore valid package.json
             $validPkgPath = Join-Path $script:extDir 'package.json'
@@ -2081,13 +2104,13 @@ description: Test readme generation
 
         'Body content for readme test.' | Set-Content -Path (Join-Path $collectionsDir 'readme-test.collection.md')
 
-        # hve-core-all needed for the defaults
+        # hve-core needed for the defaults
         @"
-id: hve-core-all
-name: hve-core
+id: hve-core
+name: HVE Core
 displayName: HVE Core
 description: All artifacts
-"@ | Set-Content -Path (Join-Path $collectionsDir 'hve-core-all.collection.yml')
+"@ | Set-Content -Path (Join-Path $collectionsDir 'hve-core.collection.yml')
     }
 
     AfterAll {
@@ -2104,7 +2127,7 @@ description: All artifacts
 
     It 'Skips README generation when .collection.md is missing' {
         $null = Invoke-ExtensionCollectionsGeneration -RepoRoot $script:tempDir
-        # hve-core-all has no .md body in this test setup
+        # hve-core has no .md body in this test setup
         $readmePath = Join-Path $script:tempDir 'extension/README.md'
         Test-Path $readmePath | Should -BeFalse
     }
