@@ -16,3 +16,4 @@ This collection includes agents, prompts, and instructions for:
 - **DT→RPI Handoff Contract** — Exit-point definitions, artifact schemas, per-agent input contracts, graduation awareness behavior, and quality markers for lateral transitions from Design Thinking coaching into the RPI workflow
 - **DT Method 07: High-Fidelity Prototypes** — Technical translation, functional prototypes, and specifications for Implementation Space entry with three-hat architecture and progressive fidelity modeling
 - **DT Method 07: Deep Expertise** — On-demand fidelity translation, architecture trade-off analysis, specification writing patterns, and manufacturing-specific prototyping guidance for complex Method 7 coaching scenarios
+- **DT Method 08: User Testing** — Evidence-based evaluation, test protocols, and non-linear iteration support for structured user testing of hi-fi prototypes with leap-enabling questioning and loop decision coaching
