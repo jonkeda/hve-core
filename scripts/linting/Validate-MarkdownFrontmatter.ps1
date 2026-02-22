@@ -167,7 +167,7 @@ function Get-SchemaForFile {
     # Returns path to docs-frontmatter.schema.json
 
     .EXAMPLE
-    $schema = Get-SchemaForFile -FilePath '.github/instructions/shell.instructions.md' -RepoRoot '/repo'
+    $schema = Get-SchemaForFile -FilePath 'artifacts/instructions/shell.instructions.md' -RepoRoot '/repo'
     # Returns path to instruction-frontmatter.schema.json
 
     .NOTES

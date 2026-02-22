@@ -1,1 +1,1 @@
-../../../.github/agents/task-planner.agent.md
+../../../artifacts/agents/task-planner.agent.md

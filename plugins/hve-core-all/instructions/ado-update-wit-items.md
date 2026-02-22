@@ -1,1 +1,1 @@
-../../../.github/instructions/ado-update-wit-items.instructions.md
+../../../artifacts/instructions/ado-update-wit-items.instructions.md

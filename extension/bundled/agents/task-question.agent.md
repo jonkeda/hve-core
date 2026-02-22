@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Pre-research question framing for defining research scope through interactive task-list documents - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

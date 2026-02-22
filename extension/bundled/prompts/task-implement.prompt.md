@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: "Locates and executes implementation plans using task-implementor mode - Brought to you by microsoft/hve-core"
 agent: 'task-implementor'
 maturity: stable

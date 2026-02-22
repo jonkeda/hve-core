@@ -1,1 +1,1 @@
-../../../.github/agents/prd-builder.agent.md
+../../../artifacts/agents/prd-builder.agent.md

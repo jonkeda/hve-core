@@ -1,4 +1,5 @@
 ---
+category: 'GitHub'
 description: "Orchestrator agent for GitHub backlog management workflows including triage, discovery, sprint planning, and execution - Brought to you by microsoft/hve-core"
 maturity: stable
 tools:

@@ -130,11 +130,11 @@ function Get-AllCollections {
 function Get-ArtifactFiles {
     <#
     .SYNOPSIS
-    Discovers all artifact files from .github/ directories.
+    Discovers all artifact files from artifacts/ directories.
 
     .DESCRIPTION
-    Scans .github/agents/, .github/prompts/, .github/instructions/ (recursively),
-    and .github/skills/ to build a complete list of collection items. Returns
+    Scans artifacts/agents/, artifacts/prompts/, artifacts/instructions/,
+    and artifacts/skills/ to build a complete list of collection items. Returns
     repo-relative paths with forward slashes.
 
     .PARAMETER RepoRoot
@@ -154,7 +154,7 @@ function Get-ArtifactFiles {
     $items = @()
 
     # Agents
-    $agentsDir = Join-Path -Path $RepoRoot -ChildPath '.github/agents'
+    $agentsDir = Join-Path -Path $RepoRoot -ChildPath 'artifacts/agents'
     if (Test-Path -Path $agentsDir) {
         $agentFiles = Get-ChildItem -Path $agentsDir -Filter '*.agent.md' -File
         foreach ($file in $agentFiles) {
@@ -164,7 +164,7 @@ function Get-ArtifactFiles {
     }
 
     # Prompts
-    $promptsDir = Join-Path -Path $RepoRoot -ChildPath '.github/prompts'
+    $promptsDir = Join-Path -Path $RepoRoot -ChildPath 'artifacts/prompts'
     if (Test-Path -Path $promptsDir) {
         $promptFiles = Get-ChildItem -Path $promptsDir -Filter '*.prompt.md' -File
         foreach ($file in $promptFiles) {
@@ -173,10 +173,10 @@ function Get-ArtifactFiles {
         }
     }
 
-    # Instructions (recursive for subfolders)
-    $instructionsDir = Join-Path -Path $RepoRoot -ChildPath '.github/instructions'
+    # Instructions
+    $instructionsDir = Join-Path -Path $RepoRoot -ChildPath 'artifacts/instructions'
     if (Test-Path -Path $instructionsDir) {
-        $instructionFiles = Get-ChildItem -Path $instructionsDir -Filter '*.instructions.md' -File -Recurse
+        $instructionFiles = Get-ChildItem -Path $instructionsDir -Filter '*.instructions.md' -File
         foreach ($file in $instructionFiles) {
             $relativePath = [System.IO.Path]::GetRelativePath($RepoRoot, $file.FullName) -replace '\\', '/'
             $items += @{ path = $relativePath; kind = 'instruction' }
@@ -184,7 +184,7 @@ function Get-ArtifactFiles {
     }
 
     # Skills (directories containing SKILL.md)
-    $skillsDir = Join-Path -Path $RepoRoot -ChildPath '.github/skills'
+    $skillsDir = Join-Path -Path $RepoRoot -ChildPath 'artifacts/skills'
     if (Test-Path -Path $skillsDir) {
         $skillDirs = Get-ChildItem -Path $skillsDir -Directory
         foreach ($dir in $skillDirs) {
@@ -255,7 +255,7 @@ function Update-HveCoreAllCollection {
     Auto-updates hve-core-all.collection.yml with all non-deprecated artifacts.
 
     .DESCRIPTION
-    Discovers all artifacts from .github/ directories, excludes deprecated items,
+    Discovers all artifacts from artifacts/ directories, excludes deprecated items,
     and rewrites the hve-core-all collection manifest. Preserves existing
     metadata fields (id, name, description, tags, display).
 

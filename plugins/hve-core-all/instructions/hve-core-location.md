@@ -1,1 +1,1 @@
-../../../.github/instructions/hve-core-location.instructions.md
+../../../artifacts/instructions/hve-core-location.instructions.md

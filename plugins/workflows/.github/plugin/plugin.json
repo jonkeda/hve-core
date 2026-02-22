@@ -1,0 +1,5 @@
+{
+  "name": "workflows",
+  "description": "Multi-phase workflow agents and prompts for fix, steering, issue, backlog, todo tracking, and workflow creation",
+  "version": "1.0.0"
+}

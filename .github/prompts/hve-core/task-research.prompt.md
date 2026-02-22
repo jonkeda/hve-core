@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: "Initiates research for implementation planning based on user requirements - Brought to you by microsoft/hve-core"
 agent: 'task-researcher'
 maturity: stable

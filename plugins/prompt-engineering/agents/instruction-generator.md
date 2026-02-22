@@ -1,1 +1,1 @@
-../../../.github/agents/instruction-generator.agent.md
+../../../artifacts/agents/instruction-generator.agent.md

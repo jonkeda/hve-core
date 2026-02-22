@@ -39,8 +39,7 @@ A `.code-workspace` file defines multiple folders as a single workspace. VS Code
 ├─────────────────────────────────────────────┤
 │  📁 My Project (primary)                    │
 │     └── Your code                           │
-│  📁 HVE-Core Library (secondary)            │
-│     └── .github/agents, prompts, etc.       │
+│  📁 HVE-Core Library (secondary)            │\n│     └── artifacts/agents, prompts, etc.     │", "oldString": "│  📁 HVE-Core Library (secondary)            │\n│     └── .github/agents, prompts, etc.       │
 └─────────────────────────────────────────────┘
          ↑
    .code-workspace file defines this
@@ -87,15 +86,15 @@ Create `.devcontainer/hve-core.code-workspace` in your project:
   ],
   "settings": {
     "chat.agentFilesLocations": {
-      "HVE-Core Library/.github/agents": true,
+      "HVE-Core Library/artifacts/agents": true,
       "My Project/.github/agents": true
     },
     "chat.promptFilesLocations": {
-      "HVE-Core Library/.github/prompts": true,
+      "HVE-Core Library/artifacts/prompts": true,
       "My Project/.github/prompts": true
     },
     "chat.instructionsFilesLocations": {
-      "HVE-Core Library/.github/instructions": true,
+      "HVE-Core Library/artifacts/instructions": true,
       "My Project/.github/instructions": true
     }
   },
@@ -154,8 +153,8 @@ Multi-root workspaces use folder names for paths:
 
 | Path Style           | Example                                 | Recommended       |
 |----------------------|-----------------------------------------|-------------------|
-| Folder name relative | `"HVE-Core Library/.github/agents"`     | ✅  Yes            |
-| Absolute path        | `"/workspaces/hve-core/.github/agents"` | ⚠️  Less portable |
+| Folder name relative | `"HVE-Core Library/artifacts/agents"`     | ✅  Yes            |
+| Absolute path        | `"/workspaces/hve-core/artifacts/agents"` | ⚠️  Less portable |
 
 The folder names in your `.code-workspace` file (`"name": "HVE-Core Library"`) become path prefixes in settings.
 

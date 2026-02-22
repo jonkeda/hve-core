@@ -39,9 +39,9 @@ The extension packages all HVE-Core components (chat agents, prompts, instructio
 ```text
 VS Code Extension System
 ├── Extension installed via marketplace
-│   ├── .github/agents/         # All chat agents
-│   ├── .github/prompts/        # All prompt templates
-│   ├── .github/instructions/   # All coding guidelines
+│   ├── artifacts/agents/         # All chat agents
+│   ├── artifacts/prompts/        # All prompt templates
+│   ├── artifacts/instructions/   # All coding guidelines
 │   └── scripts/dev-tools/      # PR reference generation
 └── Only optional workspace configuration needed!
 ```

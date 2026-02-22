@@ -1,4 +1,6 @@
 ---
+category: 'Azure DevOps'
+prompt: 'ado-process-my-work-items-for-task-planning'
 name: 'ADO Work Item Planning'
 description: 'Reference specification for Azure DevOps work item planning files, templates, field definitions, and search protocols'
 applyTo: '**/.copilot-tracking/WorkItem/**'

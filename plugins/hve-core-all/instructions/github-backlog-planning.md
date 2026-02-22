@@ -1,1 +1,1 @@
-../../../.github/instructions/github-backlog-planning.instructions.md
+../../../artifacts/instructions/github-backlog-planning.instructions.md

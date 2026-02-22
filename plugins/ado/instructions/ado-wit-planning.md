@@ -1,1 +1,1 @@
-../../../.github/instructions/ado-wit-planning.instructions.md
+../../../artifacts/instructions/ado-wit-planning.instructions.md

@@ -1,4 +1,4 @@
-﻿#Requires -Modules Pester
+#Requires -Modules Pester
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 # Import module with 'using' to make PowerShell class types (FileTypeInfo, ValidationSummary, etc.) available at parse time
@@ -27,9 +27,9 @@ Describe 'Get-FileTypeInfo' -Tag 'Unit' {
         # Create subdirectories to simulate repo structure
         @(
             'docs/guide',
-            '.github/instructions',
-            '.github/prompts',
-            '.github/chatmodes',
+            'artifacts/instructions',
+            'artifacts/prompts',
+            'artifacts/chatmodes',
             '.devcontainer',
             '.vscode',
             'random/path'
@@ -107,7 +107,7 @@ Describe 'Get-FileTypeInfo' -Tag 'Unit' {
 
     Context 'Instruction files' {
         It 'Identifies *.instructions.md as instruction file' {
-            $filePath = Join-Path $script:TempTestDir '.github/instructions/test.instructions.md'
+            $filePath = Join-Path $script:TempTestDir 'artifacts/instructions/test.instructions.md'
             Set-Content -Path $filePath -Value 'test'
             $file = Get-Item $filePath
             $result = Get-FileTypeInfo -File $file -RepoRoot $script:TempTestDir
@@ -117,7 +117,7 @@ Describe 'Get-FileTypeInfo' -Tag 'Unit' {
 
     Context 'Prompt files' {
         It 'Identifies *.prompt.md as prompt file' {
-            $filePath = Join-Path $script:TempTestDir '.github/prompts/build.prompt.md'
+            $filePath = Join-Path $script:TempTestDir 'artifacts/prompts/build.prompt.md'
             Set-Content -Path $filePath -Value 'test'
             $file = Get-Item $filePath
             $result = Get-FileTypeInfo -File $file -RepoRoot $script:TempTestDir
@@ -127,7 +127,7 @@ Describe 'Get-FileTypeInfo' -Tag 'Unit' {
 
     Context 'Chatmode files' {
         It 'Identifies *.chatmode.md as chatmode file' {
-            $filePath = Join-Path $script:TempTestDir '.github/chatmodes/helper.chatmode.md'
+            $filePath = Join-Path $script:TempTestDir 'artifacts/chatmodes/helper.chatmode.md'
             Set-Content -Path $filePath -Value 'test'
             $file = Get-Item $filePath
             $result = Get-FileTypeInfo -File $file -RepoRoot $script:TempTestDir
@@ -297,22 +297,22 @@ Describe 'Get-SchemaForFile' -Tag 'Unit' {
         }
 
         It 'Returns instruction schema for instruction files' {
-            $result = Get-SchemaForFile -FilePath '.github/instructions/test.instructions.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
+            $result = Get-SchemaForFile -FilePath 'artifacts/instructions/test.instructions.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
             $result | Should -Match 'instruction-frontmatter\.schema\.json'
         }
 
         It 'Returns prompt schema for prompt files' {
-            $result = Get-SchemaForFile -FilePath '.github/prompts/build.prompt.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
+            $result = Get-SchemaForFile -FilePath 'artifacts/prompts/build.prompt.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
             $result | Should -Match 'prompt-frontmatter\.schema\.json'
         }
 
         It 'Returns chatmode schema for chatmode files' {
-            $result = Get-SchemaForFile -FilePath '.github/chatmodes/helper.chatmode.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
+            $result = Get-SchemaForFile -FilePath 'artifacts/chatmodes/helper.chatmode.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
             $result | Should -Match 'chatmode-frontmatter\.schema\.json'
         }
 
         It 'Returns agent schema for agent files' {
-            $result = Get-SchemaForFile -FilePath '.github/agents/worker.agent.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
+            $result = Get-SchemaForFile -FilePath 'artifacts/agents/worker.agent.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
             $result | Should -Match 'agent-frontmatter\.schema\.json'
         }
 
@@ -353,7 +353,7 @@ Describe 'Get-SchemaForFile' -Tag 'Unit' {
 
     Context 'Simple glob pattern matching' {
         It 'Matches skill file using simple glob pattern' {
-            $result = Get-SchemaForFile -FilePath '.github/skills/test-skill/SKILL.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
+            $result = Get-SchemaForFile -FilePath 'artifacts/skills/test-skill/SKILL.md' -SchemaDirectory $script:SchemaDir -RepoRoot $script:RepoRoot
             $result | Should -Match 'skill-frontmatter\.schema\.json'
         }
 
@@ -781,7 +781,7 @@ Describe 'Test-FrontmatterValidation' -Tag 'Integration' {
 
     BeforeEach {
         New-Item -Path "$script:TestRepoRoot/docs" -ItemType Directory -Force | Out-Null
-        New-Item -Path "$script:TestRepoRoot/.github/instructions" -ItemType Directory -Force | Out-Null
+        New-Item -Path "$script:TestRepoRoot/artifacts/instructions" -ItemType Directory -Force | Out-Null
         New-Item -Path "$script:TestRepoRoot/scripts/linting/schemas" -ItemType Directory -Force | Out-Null
 
         Copy-Item -Path "$script:SchemaDir/*" -Destination "$script:TestRepoRoot/scripts/linting/schemas/" -Force

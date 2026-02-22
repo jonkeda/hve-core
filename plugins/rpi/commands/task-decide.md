@@ -1,1 +1,0 @@
-../../../.github/prompts/task-decide.prompt.md

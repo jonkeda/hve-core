@@ -1,4 +1,6 @@
 ---
+category: 'GitHub'
+prompt: 'github-execute-backlog'
 description: 'Execution workflow for GitHub issue backlog management - consumes planning handoffs and executes issue operations'
 applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: stable

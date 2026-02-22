@@ -54,6 +54,18 @@ describe('inferDomain', () => {
     expect(inferDomain('security-plan-creator')).toBe('Security');
   });
 
+  it('maps -workflow suffix to Workflows', () => {
+    expect(inferDomain('fix-workflow')).toBe('Workflows');
+  });
+
+  it('maps exact workflow names to Workflows', () => {
+    expect(inferDomain('fix')).toBe('Workflows');
+    expect(inferDomain('steering')).toBe('Workflows');
+    expect(inferDomain('issue')).toBe('Workflows');
+    expect(inferDomain('backlog')).toBe('Workflows');
+    expect(inferDomain('todo')).toBe('Workflows');
+  });
+
   it('returns General for unmatched names', () => {
     expect(inferDomain('memory')).toBe('General');
   });

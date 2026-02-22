@@ -1,4 +1,5 @@
 ---
+category: 'Prompt Engineering'
 description: "Evaluates prompt engineering artifacts against quality criteria and reports findings - Brought to you by microsoft/hve-core"
 argument-hint: "file=..."
 maturity: stable

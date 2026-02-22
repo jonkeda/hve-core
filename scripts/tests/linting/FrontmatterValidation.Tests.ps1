@@ -1,4 +1,4 @@
-﻿# Copyright (c) Microsoft Corporation.
+# Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
 <#
@@ -752,7 +752,7 @@ Describe 'Test-GitHubResourceFileFields' -Tag 'Unit' {
         It 'Returns warning when description missing for agent file' {
             $frontmatter = @{ name = 'Test Agent' }
 
-            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath '.github/agents/test.agent.md' -FileTypeInfo $script:ChatModeInfo
+            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath 'artifacts/agents/test.agent.md' -FileTypeInfo $script:ChatModeInfo
 
             $issues.Count | Should -Be 1
             $issues[0].Type | Should -Be 'Warning'
@@ -762,7 +762,7 @@ Describe 'Test-GitHubResourceFileFields' -Tag 'Unit' {
         It 'Returns no issues when description present for agent file' {
             $frontmatter = @{ description = 'Agent description' }
 
-            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath '.github/agents/test.chatmode.md' -FileTypeInfo $script:ChatModeInfo
+            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath 'artifacts/agents/test.chatmode.md' -FileTypeInfo $script:ChatModeInfo
 
             $issues.Count | Should -Be 0
         }
@@ -772,7 +772,7 @@ Describe 'Test-GitHubResourceFileFields' -Tag 'Unit' {
         It 'Returns error when description missing for instruction file' {
             $frontmatter = @{ title = 'Test' }
 
-            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath '.github/instructions/test.instructions.md' -FileTypeInfo $script:InstructionInfo
+            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath 'artifacts/instructions/test.instructions.md' -FileTypeInfo $script:InstructionInfo
 
             $issues.Count | Should -Be 1
             $issues[0].Type | Should -Be 'Error'
@@ -782,7 +782,7 @@ Describe 'Test-GitHubResourceFileFields' -Tag 'Unit' {
         It 'Returns no issues when description present for instruction file' {
             $frontmatter = @{ description = 'Instruction description' }
 
-            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath '.github/instructions/test.instructions.md' -FileTypeInfo $script:InstructionInfo
+            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath 'artifacts/instructions/test.instructions.md' -FileTypeInfo $script:InstructionInfo
 
             $issues.Count | Should -Be 0
         }
@@ -792,7 +792,7 @@ Describe 'Test-GitHubResourceFileFields' -Tag 'Unit' {
         It 'Returns no issues for prompt files (freeform content)' {
             $frontmatter = @{}
 
-            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath '.github/prompts/test.prompt.md' -FileTypeInfo $script:PromptInfo
+            $issues = Test-GitHubResourceFileFields -Frontmatter $frontmatter -RelativePath 'artifacts/prompts/test.prompt.md' -FileTypeInfo $script:PromptInfo
 
             $issues.Count | Should -Be 0
         }
@@ -994,7 +994,7 @@ Content without footer.
         }
 
         It 'Returns instruction schema for .instructions.md files' {
-            $result = Get-SchemaForFile -FilePath '.github/instructions/test.instructions.md' -SchemaDirectory $script:SchemaDir
+            $result = Get-SchemaForFile -FilePath 'artifacts/instructions/test.instructions.md' -SchemaDirectory $script:SchemaDir
 
             $result | Should -Not -BeNullOrEmpty
             $result | Should -Match 'instruction'

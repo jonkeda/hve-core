@@ -1,4 +1,5 @@
 ---
+category: 'Data Science'
 description: "Develop a multi-page Streamlit dashboard - Brought to you by microsoft/hve-core"
 agent: 'gen-streamlit-dashboard'
 maturity: stable

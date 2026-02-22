@@ -25,6 +25,14 @@
       "enum": ["stable", "preview", "experimental", "deprecated"],
       "default": "stable",
       "description": "Maturity level affecting visibility in stable vs pre-release builds. Stable appears in all builds; preview/experimental only in pre-release."
+    },
+    "category": {
+      "type": "string",
+      "description": "Functional domain grouping for extension dashboard display (e.g., Azure DevOps, RPI, Git, Workflows)."
+    },
+    "prompt": {
+      "type": "string",
+      "description": "Name of the parent prompt this instruction supports, used to group related artifacts in the extension UI."
     }
   },
   "additionalProperties": false

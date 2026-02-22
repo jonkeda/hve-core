@@ -1,0 +1,1 @@
+../../../artifacts/prompts/pr-review.prompt.md

@@ -1,1 +1,1 @@
-../../../.github/agents/gen-jupyter-notebook.agent.md
+../../../artifacts/agents/gen-jupyter-notebook.agent.md

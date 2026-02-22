@@ -144,6 +144,9 @@ export class ArtifactManager {
       path: entry.relativePath,
       description: stripAttribution(entry.description),
       enabled,
+      category: entry.category,
+      agent: entry.agent,
+      prompt: entry.prompt,
     };
   }
 }

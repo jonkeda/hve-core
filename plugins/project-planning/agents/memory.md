@@ -1,1 +1,1 @@
-../../../.github/agents/memory.agent.md
+../../../artifacts/agents/memory.agent.md

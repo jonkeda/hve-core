@@ -114,16 +114,16 @@ Get started with RPI:
 
 * [Why the RPI Workflow Works](docs/rpi/why-rpi.md): the psychology behind constraint-based AI workflows
 * [Your First RPI Workflow](docs/getting-started/first-workflow.md): 15-minute hands-on tutorial
-* [rpi-agent](.github/agents/rpi-agent.agent.md): autonomous mode for simpler tasks that don't need strict phase separation
+* [rpi-agent](artifacts/agents/rpi-agent.agent.md): autonomous mode for simpler tasks that don't need strict phase separation
 
 ## What's Included
 
 | Component    | Count | Description                                                          | Documentation                                  |
 |--------------|-------|----------------------------------------------------------------------|------------------------------------------------|
 | Agents       | 18    | Specialized AI assistants for research, planning, and implementation | [Agents](.github/CUSTOM-AGENTS.md)             |
-| Instructions | 17+   | Repository-specific coding guidelines applied automatically          | [Instructions](.github/instructions/README.md) |
-| Prompts      | 18    | Reusable templates for common tasks like commits and PRs             | [Prompts](.github/prompts/README.md)           |
-| Skills       | 1     | Self-contained packages with cross-platform scripts and guidance     | [Skills](.github/skills/)                      |
+| Instructions | 17+   | Repository-specific coding guidelines applied automatically          | [Instructions](artifacts/instructions/README.md) |
+| Prompts      | 18    | Reusable templates for common tasks like commits and PRs             | [Prompts](artifacts/prompts/README.md)           |
+| Skills       | 1     | Self-contained packages with cross-platform scripts and guidance     | [Skills](artifacts/skills/)                      |
 | Scripts      | N/A   | Validation tools for linting, security, and quality                  | [Scripts](scripts/README.md)                   |
 
 ## Prompt Engineering Framework
@@ -169,11 +169,12 @@ Run `npm run lint:frontmatter` locally before committing changes.
 ## Project Structure
 
 ```text
-.github/
+artifacts/
 ├── agents/          # Specialized Copilot chat assistants
 ├── instructions/    # Repository-specific coding guidelines
 ├── prompts/         # Reusable prompt templates
-├── skills/          # Self-contained executable packages
+└── skills/          # Self-contained executable packages
+.github/
 └── workflows/       # CI/CD pipeline definitions
 docs/
 ├── getting-started/ # Installation and first workflow guides
@@ -202,7 +203,7 @@ We appreciate contributions! Whether you're fixing typos or adding new component
 | [RPI Workflow](docs/rpi/README.md)                       | Deep dive into Research, Plan, Implement        |
 | [Contributing](docs/contributing/README.md)              | Create custom agents, instructions, and prompts |
 | [Agents Reference](.github/CUSTOM-AGENTS.md)             | All available agents                            |
-| [Instructions Reference](.github/instructions/README.md) | All coding instructions                         |
+| [Instructions Reference](artifacts/instructions/README.md) | All coding instructions                         |
 
 ## Responsible AI
 

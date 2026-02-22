@@ -1,1 +1,1 @@
-../../../.github/prompts/checkpoint.prompt.md
+../../../artifacts/prompts/checkpoint.prompt.md

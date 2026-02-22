@@ -1,1 +1,1 @@
-../../../.github/prompts/ado-update-wit-items.prompt.md
+../../../artifacts/prompts/ado-update-wit-items.prompt.md

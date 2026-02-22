@@ -1,4 +1,6 @@
 ---
+category: 'GitHub'
+prompt: 'github-sprint-plan'
 description: 'Reference specification for GitHub backlog management tooling - planning files, search protocols, similarity assessment, and state persistence'
 applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: stable

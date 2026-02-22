@@ -85,7 +85,7 @@ Instructions answer the question "what standards apply to this context?" and ens
 
 ### Skills
 
-Skills (`.github/skills/<name>/SKILL.md`) provide executable utilities that agents invoke for specialized tasks. Unlike instructions (passive reference), skills contain actual scripts that perform operations.
+Skills (`artifacts/skills/<name>/SKILL.md`) provide executable utilities that agents invoke for specialized tasks. Unlike instructions (passive reference), skills contain actual scripts that perform operations.
 
 **Core characteristics:**
 
@@ -97,7 +97,7 @@ Skills (`.github/skills/<name>/SKILL.md`) provide executable utilities that agen
 **Directory structure:**
 
 ```text
-.github/skills/<skill-name>/
+artifacts/skills/<skill-name>/
 ├── SKILL.md           # Required entry point with frontmatter
 ├── scripts/
 │   ├── convert.sh     # Bash implementation
@@ -171,7 +171,7 @@ agent: 'pr-creator'
 ---
 ```
 
-The referenced agent file (`pr-creator.agent.md`) must exist in `.github/agents/`. When a user invokes the prompt, Copilot activates the specified agent with the prompt's context.
+The referenced agent file (`pr-creator.agent.md`) must exist in `artifacts/agents/`. When a user invokes the prompt, Copilot activates the specified agent with the prompt's context.
 
 ### Instruction Glob Patterns
 
@@ -190,7 +190,7 @@ Multiple instructions can apply to the same file. When patterns overlap, all mat
 Skills provide self-contained utilities through the `SKILL.md` file:
 
 ```text
-.github/skills/<skill-name>/
+artifacts/skills/<skill-name>/
 ├── SKILL.md                    # Entry point documentation
 ├── convert.sh                  # Bash implementation
 ├── convert.ps1                 # PowerShell implementation
@@ -208,10 +208,10 @@ The VS Code extension discovers and activates AI artifacts through contribution 
 
 The extension scans these directories at startup:
 
-* `.github/prompts/` for workflow entry points
-* `.github/agents/` for specialized behaviors
-* `.github/instructions/` for technology standards
-* `.github/skills/` for utility packages
+* `artifacts/prompts/` for workflow entry points
+* `artifacts/agents/` for specialized behaviors
+* `artifacts/instructions/` for technology standards
+* `artifacts/skills/` for utility packages
 
 Each artifact's `maturity:` field controls channel inclusion:
 

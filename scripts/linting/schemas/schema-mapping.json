@@ -15,34 +15,34 @@
       "description": "Documentation files in docs directory"
     },
     {
-      "pattern": ".github/**/*.instructions.md",
-      "scope": "github-instructions",
+      "pattern": "artifacts/**/*.instructions.md",
+      "scope": "instructions",
       "schema": "instruction-frontmatter.schema.json",
-      "description": "Instruction files in .github directory"
+      "description": "Instruction files in artifacts directory"
     },
     {
-      "pattern": ".github/**/*.chatmode.md",
-      "scope": "github-chatmodes",
+      "pattern": "artifacts/**/*.chatmode.md",
+      "scope": "chatmodes",
       "schema": "chatmode-frontmatter.schema.json",
-      "description": "ChatMode files in .github directory"
+      "description": "ChatMode files in artifacts directory"
     },
     {
-      "pattern": ".github/**/*.prompt.md",
-      "scope": "github-prompts",
+      "pattern": "artifacts/**/*.prompt.md",
+      "scope": "prompts",
       "schema": "prompt-frontmatter.schema.json",
-      "description": "Prompt files in .github directory"
+      "description": "Prompt files in artifacts directory"
     },
     {
-      "pattern": ".github/**/*.agent.md",
-      "scope": "github-agents",
+      "pattern": "artifacts/**/*.agent.md",
+      "scope": "agents",
       "schema": "agent-frontmatter.schema.json",
-      "description": "Agent files in .github directory"
+      "description": "Agent files in artifacts directory"
     },
     {
-      "pattern": ".github/skills/**/SKILL.md",
-      "scope": "github-skills",
+      "pattern": "artifacts/skills/**/SKILL.md",
+      "scope": "skills",
       "schema": "skill-frontmatter.schema.json",
-      "description": "Skill definition files in .github/skills directory"
+      "description": "Skill definition files in artifacts/skills directory"
     }
   ],
   "defaultSchema": "base-frontmatter.schema.json"

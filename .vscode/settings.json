@@ -6,15 +6,15 @@
   },
   "markdown.mermaid.theme": "default",
   "chat.instructionsFilesLocations": {
-    ".github/instructions/**/*.instructions.md": true,
-    ".github/prompts/**/*.prompt.md": true
+    "artifacts/instructions/**/*.instructions.md": true,
+    "artifacts/prompts/**/*.prompt.md": true
   },
   "chat.agentFilesLocations": {
-    ".github/agents": true
+    "artifacts/agents": true
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "file": ".github/instructions/commit-message.instructions.md"
+      "file": "artifacts/instructions/commit-message.instructions.md"
     }
   ],
   "yaml.schemas": {

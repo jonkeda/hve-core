@@ -1,0 +1,1 @@
+../../../artifacts/prompts/arch-diagram.prompt.md

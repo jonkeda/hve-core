@@ -1,1 +1,1 @@
-../../../.github/agents/test-streamlit-dashboard.agent.md
+../../../artifacts/agents/test-streamlit-dashboard.agent.md

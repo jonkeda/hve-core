@@ -1,4 +1,5 @@
 ---
+category: 'Document Builders'
 description: "Create Architecture Decision Records through guided discovery and research integration - Brought to you by microsoft/hve-core"
 agent: 'adr-creation'
 maturity: stable

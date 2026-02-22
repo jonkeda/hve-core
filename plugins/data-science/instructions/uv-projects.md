@@ -1,1 +1,1 @@
-../../../.github/instructions/uv-projects.instructions.md
+../../../artifacts/instructions/uv-projects.instructions.md

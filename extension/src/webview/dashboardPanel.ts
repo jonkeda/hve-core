@@ -40,7 +40,7 @@ export async function openDetailPanel(
     const { frontmatter, body } = parseFrontmatter(text);
     const renderedBody = await marked.parse(body, { gfm: true });
 
-    panel.webview.html = buildDetailHtml(panel.webview, artifact, frontmatter, renderedBody);
+    panel.webview.html = buildDetailHtml(panel.webview, context.extensionUri, artifact, frontmatter, renderedBody);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`[HVE Core] Failed to load artifact "${artifact.name}" from ${fileUri.toString()}: ${msg}`);
@@ -84,6 +84,9 @@ function parseFrontmatter(text: string): { frontmatter: ArtifactFrontmatter; bod
       case 'argument-hint':
         frontmatter.argumentHint = cleaned;
         break;
+      case 'category':
+        frontmatter.category = cleaned;
+        break;
     }
   }
 
@@ -111,7 +114,8 @@ function parseHandoffs(yaml: string): HandoffEntry[] {
       if (key === 'label') entry.label = cleaned;
       if (key === 'agent') entry.agent = cleaned;
       if (key === 'prompt') entry.prompt = cleaned;
-      if (key === 'send') entry.send = cleaned;
+      if (key === 'send') entry.send = cleaned === 'true';
+      if (key === 'keyword') entry.keyword = cleaned;
     }
     if (entry.label) entries.push(entry);
   }
@@ -122,11 +126,15 @@ function parseHandoffs(yaml: string): HandoffEntry[] {
 /** Builds the complete HTML for the detail webview panel. */
 function buildDetailHtml(
   webview: vscode.Webview,
+  extensionUri: vscode.Uri,
   artifact: ArtifactItem,
   frontmatter: ArtifactFrontmatter,
   renderedBody: string,
 ): string {
   const nonce = getNonce();
+  const mermaidScriptUri = webview.asWebviewUri(
+    vscode.Uri.joinPath(extensionUri, 'dist', 'mermaid.min.js'),
+  );
 
   const handoffButtons = (frontmatter.handoffs ?? [])
     .map((h) => {
@@ -135,7 +143,9 @@ function buildDetailHtml(
         : h.prompt
           ? `data-prompt="${escapeAttr(h.prompt)}"`
           : '';
-      return `<button class="handoff-btn" ${data}>${escapeHtml(h.label)}</button>`;
+      const keywordAttr = h.keyword ? ` data-keyword="${escapeAttr(h.keyword)}"` : '';
+      const keywordHint = h.keyword ? ` <span class="keyword-hint">/${escapeHtml(h.keyword)}</span>` : '';
+      return `<button class="handoff-btn" ${data}${keywordAttr}>${escapeHtml(h.label)}${keywordHint}</button>`;
     })
     .join('\n        ');
 
@@ -150,7 +160,7 @@ function buildDetailHtml(
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}'; script-src 'nonce-${nonce}';">
+    content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}' 'unsafe-inline'; script-src 'nonce-${nonce}' ${webview.cspSource}; img-src data:;">
   <style nonce="${nonce}">
     body {
       background: var(--vscode-editor-background);
@@ -208,6 +218,23 @@ function buildDetailHtml(
     .markdown-body a {
       color: var(--vscode-textLink-foreground);
     }
+    .mermaid-diagram {
+      background: var(--vscode-editor-background);
+      padding: 16px;
+      border-radius: 4px;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-diagram svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .keyword-hint {
+      font-size: 0.75em;
+      opacity: 0.6;
+      margin-left: 4px;
+      font-family: var(--vscode-editor-font-family);
+    }
   </style>
 </head>
 <body>
@@ -217,6 +244,7 @@ function buildDetailHtml(
     ${handoffButtons ? `<div class="handoffs">${handoffButtons}</div>` : ''}
   </div>
   <div class="markdown-body">${renderedBody}</div>
+  <script src="${mermaidScriptUri}" nonce="${nonce}"></script>
   <script nonce="${nonce}">
     (function() {
       const vscode = acquireVsCodeApi();
@@ -226,6 +254,19 @@ function buildDetailHtml(
           const prompt = btn.getAttribute('data-prompt');
           vscode.postMessage({ command: 'handoff', agent, prompt });
         });
+      });
+
+      const isDark = document.body.classList.contains('vscode-dark') ||
+        document.body.getAttribute('data-vscode-theme-kind') === 'vscode-dark';
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: isDark ? 'dark' : 'default',
+        securityLevel: 'strict',
+      });
+      document.querySelectorAll('code.language-mermaid').forEach(async (el, i) => {
+        const container = el.parentElement;
+        const { svg } = await mermaid.render('mermaid-' + i, el.textContent);
+        container.outerHTML = '<div class="mermaid-diagram">' + svg + '</div>';
       });
     })();
   </script>

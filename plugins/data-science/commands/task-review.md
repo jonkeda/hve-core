@@ -1,1 +1,1 @@
-../../../.github/prompts/task-review.prompt.md
+../../../artifacts/prompts/task-review.prompt.md

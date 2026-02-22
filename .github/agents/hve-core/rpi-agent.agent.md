@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Autonomous RPI orchestrator dispatching task-* agents through Research → Decide → Plan → Implement → Review → Discover phases - Brought to you by microsoft/hve-core'
 maturity: stable
 argument-hint: 'Autonomous RPI agent. Requires runSubagent tool.'

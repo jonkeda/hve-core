@@ -1,1 +1,1 @@
-../../../.github/prompts/incident-response.prompt.md
+../../../artifacts/prompts/incident-response.prompt.md

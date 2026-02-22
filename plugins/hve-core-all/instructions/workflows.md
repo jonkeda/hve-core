@@ -1,1 +1,1 @@
-../../../.github/instructions/hve-core/workflows.instructions.md
+../../../artifacts/instructions/workflows.instructions.md

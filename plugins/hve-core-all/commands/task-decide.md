@@ -1,1 +1,1 @@
-../../../.github/prompts/task-decide.prompt.md
+../../../artifacts/prompts/task-decide.prompt.md

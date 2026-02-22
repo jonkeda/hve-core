@@ -10,24 +10,24 @@ tags:
   - review
 items:
   # Agents
-  - path: .github/agents/rpi-agent.agent.md
+  - path: artifacts/agents/rpi-agent.agent.md
     kind: agent
     usage: |
       recommended
 
       Orchestrator agent for the full RPI lifecycle. Routes to specialized
       agents based on the current workflow phase.
-  - path: .github/agents/task-researcher.agent.md
+  - path: artifacts/agents/task-researcher.agent.md
     kind: agent
-  - path: .github/agents/task-planner.agent.md
+  - path: artifacts/agents/task-planner.agent.md
     kind: agent
-  - path: .github/agents/task-implementor.agent.md
+  - path: artifacts/agents/task-implementor.agent.md
     kind: agent
-  - path: .github/agents/task-reviewer.agent.md
+  - path: artifacts/agents/task-reviewer.agent.md
     kind: agent
-  - path: .github/agents/task-question.agent.md
+  - path: artifacts/agents/task-question.agent.md
     kind: agent
-  - path: .github/agents/memory.agent.md
+  - path: artifacts/agents/memory.agent.md
     kind: agent
     usage: |
       optional
@@ -35,39 +35,39 @@ items:
       Persistent memory agent for saving and loading context checkpoints
       across workflow phases.
   # Prompt Engineering agents
-  - path: .github/agents/prompt-builder.agent.md
+  - path: artifacts/agents/prompt-builder.agent.md
     kind: agent
   # Prompts
-  - path: .github/prompts/rpi.prompt.md
+  - path: artifacts/prompts/rpi.prompt.md
     kind: prompt
-  - path: .github/prompts/task-research.prompt.md
+  - path: artifacts/prompts/task-research.prompt.md
     kind: prompt
-  - path: .github/prompts/task-plan.prompt.md
+  - path: artifacts/prompts/task-plan.prompt.md
     kind: prompt
-  - path: .github/prompts/task-implement.prompt.md
+  - path: artifacts/prompts/task-implement.prompt.md
     kind: prompt
-  - path: .github/prompts/task-review.prompt.md
+  - path: artifacts/prompts/task-review.prompt.md
     kind: prompt
-  - path: .github/prompts/task-question.prompt.md
+  - path: artifacts/prompts/task-question.prompt.md
     kind: prompt
-  - path: .github/prompts/checkpoint.prompt.md
+  - path: artifacts/prompts/checkpoint.prompt.md
     kind: prompt
   # Prompt Engineering prompts
-  - path: .github/prompts/prompt-analyze.prompt.md
+  - path: artifacts/prompts/prompt-analyze.prompt.md
     kind: prompt
-  - path: .github/prompts/prompt-build.prompt.md
+  - path: artifacts/prompts/prompt-build.prompt.md
     kind: prompt
-  - path: .github/prompts/prompt-refactor.prompt.md
+  - path: artifacts/prompts/prompt-refactor.prompt.md
     kind: prompt
   # Common instructions
-  - path: .github/instructions/writing-style.instructions.md
+  - path: artifacts/instructions/writing-style.instructions.md
     kind: instruction
-  - path: .github/instructions/markdown.instructions.md
+  - path: artifacts/instructions/markdown.instructions.md
     kind: instruction
-  - path: .github/instructions/commit-message.instructions.md
+  - path: artifacts/instructions/commit-message.instructions.md
     kind: instruction
   # Prompt Engineering instructions
-  - path: .github/instructions/prompt-builder.instructions.md
+  - path: artifacts/instructions/prompt-builder.instructions.md
     kind: instruction
 display:
   ordering: manual

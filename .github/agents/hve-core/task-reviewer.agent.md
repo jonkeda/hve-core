@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Reviews completed implementation work for accuracy, completeness, and convention compliance - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

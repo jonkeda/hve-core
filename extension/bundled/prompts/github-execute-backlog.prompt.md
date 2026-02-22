@@ -1,4 +1,5 @@
 ---
+category: 'GitHub'
 description: 'Execute a GitHub backlog plan by creating, updating, linking, closing, and commenting on issues from a handoff file'
 agent: 'github-backlog-manager'
 argument-hint: "handoff=... [autonomy={full|partial|manual}] [dryRun={true|false}]"

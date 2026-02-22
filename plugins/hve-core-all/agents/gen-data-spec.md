@@ -1,1 +1,1 @@
-../../../.github/agents/gen-data-spec.agent.md
+../../../artifacts/agents/gen-data-spec.agent.md

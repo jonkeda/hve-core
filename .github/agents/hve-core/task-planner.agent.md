@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Implementation planner for creating actionable implementation plans - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

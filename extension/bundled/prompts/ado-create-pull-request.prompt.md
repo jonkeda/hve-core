@@ -1,4 +1,5 @@
 ---
+category: 'Azure DevOps'
 description: "Generate pull request description, discover related work items, identify reviewers, and create Azure DevOps pull request with all linkages."
 maturity: stable
 ---

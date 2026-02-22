@@ -1,1 +1,1 @@
-../../../.github/agents/task-researcher.agent.md
+../../../artifacts/agents/task-researcher.agent.md

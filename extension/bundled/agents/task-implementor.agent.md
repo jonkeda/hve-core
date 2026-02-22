@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Executes implementation plans from .copilot-tracking/Task/ with progressive tracking and change records'
 maturity: stable
 handoffs:

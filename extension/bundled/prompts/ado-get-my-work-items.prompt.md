@@ -1,4 +1,5 @@
 ---
+category: 'Azure DevOps'
 description: "Retrieve user's current Azure DevOps work items and organize them into planning file definitions"
 maturity: stable
 ---

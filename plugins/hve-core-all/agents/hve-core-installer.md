@@ -1,1 +1,1 @@
-../../../.github/agents/hve-core-installer.agent.md
+../../../artifacts/agents/hve-core-installer.agent.md

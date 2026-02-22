@@ -1,4 +1,5 @@
 ---
+category: 'Coding Standards'
 applyTo: '**/*.py'
 description: 'Instructions for Python scripting implementation - Brought to you by microsoft/hve-core'
 maturity: stable

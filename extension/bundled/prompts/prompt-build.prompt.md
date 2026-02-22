@@ -1,4 +1,5 @@
 ---
+category: 'Prompt Engineering'
 description: "Build or improve prompt engineering artifacts following quality criteria - Brought to you by microsoft/hve-core"
 agent: 'prompt-builder'
 argument-hint: "file=... [requirements=...]"

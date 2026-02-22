@@ -1,1 +1,1 @@
-../../../.github/agents/adr-creation.agent.md
+../../../artifacts/agents/adr-creation.agent.md

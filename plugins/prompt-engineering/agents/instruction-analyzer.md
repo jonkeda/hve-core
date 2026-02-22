@@ -1,1 +1,1 @@
-../../../.github/agents/instruction-analyzer.agent.md
+../../../artifacts/agents/instruction-analyzer.agent.md

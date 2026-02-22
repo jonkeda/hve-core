@@ -1,1 +1,1 @@
-../../../.github/instructions/bash/bash.instructions.md
+../../../artifacts/instructions/bash.instructions.md

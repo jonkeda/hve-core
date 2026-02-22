@@ -1,4 +1,6 @@
 ---
+category: 'GitHub'
+prompt: 'github-discover-issues'
 description: 'Discovery protocol for GitHub backlog management - artifact-driven, user-centric, and search-based issue discovery'
 applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: stable

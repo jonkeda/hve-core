@@ -1,1 +1,1 @@
-../../../.github/instructions/writing-style.instructions.md
+../../../artifacts/instructions/writing-style.instructions.md

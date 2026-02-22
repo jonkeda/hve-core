@@ -32,8 +32,8 @@ graph TD
 | Extension           | `extension/`               | VS Code extension providing contribution points for AI artifacts        |
 | Scripts             | `scripts/`                 | PowerShell automation for linting, security validation, and dev tools   |
 | Documentation       | `docs/`                    | User guides, architecture docs, and contribution guidelines             |
-| GitHub Assets       | `.github/`                 | Workflows, instructions, prompts, agents, and issue templates           |
-| Skills              | `.github/skills/`          | Self-contained packages combining scripts with domain-specific guidance |
+| Artifacts           | `artifacts/`               | Agents, prompts, instructions, and skills distributed by the extension  |
+| GitHub Configuration| `.github/`                 | Workflows, issue templates, and repository policies                     |
 | Dev Container       | `.devcontainer/`           | Codespaces and local container development environment                  |
 | Frontmatter Schema  | `scripts/linting/schemas/` | JSON schemas for AI artifact validation                                 |
 | GitHub Workflows    | `.github/workflows/`       | CI/CD pipelines for validation, security, and release automation        |
@@ -60,19 +60,23 @@ Automation scripts handle quality assurance and development workflows. The scrip
 
 User-facing documentation guides teams through installation, configuration, and effective use of the framework. The RPI (Researcher, Planner, Implementor) methodology documentation helps teams structure their AI-assisted development workflows. Contributing guides explain how to author AI artifacts that follow project conventions.
 
-### GitHub Assets
+### Artifacts
 
-The `.github/` directory contains workflow definitions, issue templates, and the AI artifacts that define Copilot behavior. Instructions files provide context-specific guidance that Copilot applies when working with certain file types or directories. Agents define specialized personas for different tasks. Prompts offer reusable starting points for common operations.
+The `artifacts/` directory contains all AI artifacts that define Copilot behavior. Instructions files provide context-specific guidance that Copilot applies when working with certain file types or directories. Agents define specialized personas for different tasks. Prompts offer reusable starting points for common operations.
 
 Skills package executable utilities with cross-platform scripts and domain-specific guidance; each skill is self-contained with a SKILL.md file describing capabilities and usage patterns.
 
+### GitHub Configuration
+
+The `.github/` directory contains workflow definitions, issue templates, and repository policies. Workflows orchestrate CI/CD pipelines for validation, security, and release automation.
+
 ## Package Relationships
 
-Components interact through well-defined boundaries. The extension registers contribution points for agents, prompts, and instructions, making them available to Copilot Chat. Skills use a separate discovery mechanism: Copilot scans `.github/skills/` for `SKILL.md` files that describe executable capabilities. Scripts operate independently of the extension but share configuration files like `PSScriptAnalyzer.psd1` and schema definitions in `scripts/linting/schemas/`.
+Components interact through well-defined boundaries. The extension registers contribution points for agents, prompts, and instructions, making them available to Copilot Chat. Skills use a separate discovery mechanism: Copilot scans `artifacts/skills/` for `SKILL.md` files that describe executable capabilities. Scripts operate independently of the extension but share configuration files like `PSScriptAnalyzer.psd1` and schema definitions in `scripts/linting/schemas/`.
 
 Documentation references both the extension capabilities and script utilities, providing guidance on how to use each component effectively. The tracking directory (`.copilot-tracking/`) serves as a workspace for AI-assisted workflows, storing work item discoveries, plan artifacts, and change records that bridge human and AI collaboration.
 
-GitHub workflows orchestrate script execution for continuous integration, running linting and security checks on pull requests. The extension packaging scripts prepare the VS Code extension for distribution, bundling required assets and generating the installable VSIX package.
+GitHub workflows orchestrate script execution for continuous integration, running linting and security checks on pull requests. The extension packaging scripts prepare the VS Code extension for distribution, bundling artifacts and generating the installable VSIX package.
 
 ## Further Reading
 

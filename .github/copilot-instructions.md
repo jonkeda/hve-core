@@ -38,11 +38,11 @@ This repository contains documentation, scripts, and tooling for the HVE (Hyper 
 
 The project is organized into these main areas:
 
+* Artifacts (`artifacts/`) - Agents, prompts, instructions, and skills distributed by the extension.
 * Documentation (`docs/`) - Getting started guides, templates, RPI workflow documentation, and contribution guidelines.
 * Scripts (`scripts/`) - Automation for linting, security validation, extension packaging, and development tools.
-* Skills (`.github/skills/`) - Self-contained skill packages with scripts and documentation.
 * Extension (`extension/`) - VS Code extension source and packaging.
-* GitHub Configuration (`.github/`) - Workflows, instructions, prompts, agents, and issue templates.
+* GitHub Configuration (`.github/`) - Workflows, issue templates, and repository policies.
 * Logs (`logs/`) - Output from validation and analysis scripts.
 
 ### Scripts Organization
@@ -83,7 +83,7 @@ The `.copilot-tracking/` directory (gitignored) contains AI-assisted workflow ar
 * Sandbox (`.copilot-tracking/Sandbox/`) - Prompt testing sandbox environments.
 * InstructionAnalysis (`.copilot-tracking/InstructionAnalysis/`) - Instruction file proposal checklists.
 
-All tracking files use markdown format with frontmatter and follow conventions from `.github/instructions/copilot-tracking-conventions.instructions.md`.
+All tracking files use markdown format with frontmatter and follow conventions from `artifacts/instructions/copilot-tracking-conventions.instructions.md`.
 <!-- </project-structure> -->
 
 <!-- <script-operations> -->

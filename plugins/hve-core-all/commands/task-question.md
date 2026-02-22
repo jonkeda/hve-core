@@ -1,1 +1,1 @@
-../../../.github/prompts/task-question.prompt.md
+../../../artifacts/prompts/task-question.prompt.md

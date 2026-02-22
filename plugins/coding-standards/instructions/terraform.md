@@ -1,1 +1,1 @@
-../../../.github/instructions/terraform/terraform.instructions.md
+../../../artifacts/instructions/terraform.instructions.md

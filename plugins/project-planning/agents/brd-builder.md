@@ -1,1 +1,1 @@
-../../../.github/agents/brd-builder.agent.md
+../../../artifacts/agents/brd-builder.agent.md

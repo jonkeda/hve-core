@@ -1,1 +1,1 @@
-../../../.github/prompts/instruction-files-from-source.prompt.md
+../../../artifacts/prompts/instruction-files-from-source.prompt.md

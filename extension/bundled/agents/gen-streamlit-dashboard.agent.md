@@ -1,4 +1,5 @@
 ---
+category: 'Data Science'
 description: 'Develop a multi-page Streamlit dashboard'
 maturity: stable
 ---

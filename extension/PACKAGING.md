@@ -119,9 +119,9 @@ npm run extension:prepare:prerelease
 
 The preparation script automatically:
 
-* Discovers and registers all chat agents from `.github/agents/`
-* Discovers and registers all prompts from `.github/prompts/`
-* Discovers and registers all instruction files from `.github/instructions/`
+* Discovers and registers all chat agents from `artifacts/agents/`
+* Discovers and registers all prompts from `artifacts/prompts/`
+* Discovers and registers all instruction files from `artifacts/instructions/`
 * Updates `package.json` with discovered components
 * Uses existing version from `package.json` (does not modify it)
 
@@ -206,9 +206,9 @@ vsce publish --packagePath "$VSIX_FILE"
 The `extension/.vscodeignore` file controls what gets packaged. Currently included:
 
 * `dist/extension.js` - Bundled extension entry point (produced by esbuild)
-* `.github/agents/**` - All custom agent definitions
-* `.github/prompts/**` - All prompt templates
-* `.github/instructions/**` - All instruction files
+* `artifacts/agents/**` - All custom agent definitions
+* `artifacts/prompts/**` - All prompt templates
+* `artifacts/instructions/**` - All instruction files
 * `docs/templates/**` - Document templates used by agents (ADR, BRD, Security Plan)
 * `scripts/dev-tools/**` - Developer utilities (PR reference generation)
 * `package.json` - Extension manifest

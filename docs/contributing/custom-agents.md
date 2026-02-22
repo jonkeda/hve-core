@@ -32,7 +32,7 @@ The following agent types will likely be **rejected or closed automatically** be
 
 * **Research or Discovery Agents**: Agents that search for, gather, or discover information
   * ❌ Reason: Existing agents already handle research and discovery workflows
-  * ✅ Alternative: Use existing research-focused agents in `.github/agents/`
+  * ✅ Alternative: Use existing research-focused agents in `artifacts/agents/`
 
 * **Indexing or Referencing Agents**: Agents that catalog, index, or create references to existing projects
   * ❌ Reason: Existing agents already provide indexing and referencing capabilities
@@ -41,7 +41,7 @@ The following agent types will likely be **rejected or closed automatically** be
 
 * **Planning Agents**: Agents that plan work, break down tasks, or organize backlog items
   * ❌ Reason: Existing agents already handle work planning and task organization
-  * ✅ Alternative: Use existing planning-focused agents in `.github/agents/`
+  * ✅ Alternative: Use existing planning-focused agents in `artifacts/agents/`
 
 * **Implementation Agents**: General-purpose coding agents that implement features
   * ❌ Reason: Existing agents already provide implementation guidance
@@ -61,7 +61,7 @@ These agent types are rejected because:
 When planning to submit an agent that falls into these categories:
 
 1. **Question necessity**: Does your use case truly require a new agent, or can existing agents meet your needs?
-2. **Review existing agents**: Examine `.github/agents/` to identify agents that already serve your purpose
+2. **Review existing agents**: Examine `artifacts/agents/` to identify agents that already serve your purpose
 3. **Check tool integration**: Verify whether the VS Code GitHub Copilot tools or MCP tools you need are already used by existing agents
 4. **Consider enhancement over creation**: If existing agents don't fully meet your requirements, evaluate whether your changes are:
    * **Generic enough** to benefit all users
@@ -95,7 +95,7 @@ All agents **MUST** target the **latest available models** from **Anthropic and 
 All agent files **MUST** be placed in:
 
 ```text
-.github/agents/
+artifacts/agents/
 └── your-agent-name.agent.md
 ```
 
@@ -460,7 +460,7 @@ All checks **MUST** pass before merge.
 
 ## Getting Help
 
-See [AI Artifacts Common Standards - Getting Help](ai-artifacts-common.md#getting-help) for support resources. For agent-specific assistance, review existing examples in `.github/agents/`.
+See [AI Artifacts Common Standards - Getting Help](ai-artifacts-common.md#getting-help) for support resources. For agent-specific assistance, review existing examples in `artifacts/agents/`.
 
 ---
 

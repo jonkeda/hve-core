@@ -28,14 +28,14 @@ Select all that apply:
 **AI Artifacts:**
 
 - [ ] Reviewed contribution with `prompt-builder` agent and addressed all feedback
-- [ ] Copilot instructions (`.github/instructions/*.instructions.md`)
-- [ ] Copilot prompt (`.github/prompts/*.prompt.md`)
-- [ ] Copilot agent (`.github/agents/*.agent.md`)
-- [ ] Copilot skill (`.github/skills/*/SKILL.md`)
+- [ ] Copilot instructions (`artifacts/instructions/*.instructions.md`)
+- [ ] Copilot prompt (`artifacts/prompts/*.prompt.md`)
+- [ ] Copilot agent (`artifacts/agents/*.agent.md`)
+- [ ] Copilot skill (`artifacts/skills/*/SKILL.md`)
 
 > **Note for AI Artifact Contributors**:
 >
-> - **Agents**: Research, indexing/referencing other project (using standard VS Code GitHub Copilot/MCP tools), planning, and general implementation agents likely already exist. Review `.github/agents/` before creating new ones.
+> - **Agents**: Research, indexing/referencing other project (using standard VS Code GitHub Copilot/MCP tools), planning, and general implementation agents likely already exist. Review `artifacts/agents/` before creating new ones.
 > - **Skills**: Must include both bash and PowerShell scripts. See [Skills](../docs/contributing/skills.md).
 > - **Model Versions**: Only contributions targeting the **latest Anthropic and OpenAI models** will be accepted. Older model versions (e.g., GPT-3.5, Claude 3) will be rejected.
 > - See [Agents Not Accepted](../docs/contributing/custom-agents.md#agents-not-accepted) and [Model Version Requirements](../docs/contributing/ai-artifacts-common.md#model-version-requirements).

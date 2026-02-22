@@ -1,1 +1,1 @@
-../../../.github/prompts/prompt-refactor.prompt.md
+../../../artifacts/prompts/prompt-refactor.prompt.md

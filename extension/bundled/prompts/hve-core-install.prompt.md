@@ -1,4 +1,5 @@
 ---
+category: 'General'
 description: "Decision-driven HVE-Core installation across multiple methods - Brought to you by microsoft/hve-core"
 agent: 'hve-core-installer'
 maturity: stable

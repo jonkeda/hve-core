@@ -111,7 +111,7 @@ Copy the scripts you need to your project's `scripts/` directory and adjust path
 - Try [Your First Workflow](first-workflow.md) for a quick start
 - Learn the [RPI Workflow](../rpi/README.md) for complex tasks
 - Explore [Agents](../../.github/CUSTOM-AGENTS.md) for available agents
-- Review [Instructions](../../.github/instructions/README.md) for coding guidelines
+- Review [Instructions](../../artifacts/instructions/README.md) for coding guidelines
 - Check the [README](../../README.md) for feature overview
 
 ---

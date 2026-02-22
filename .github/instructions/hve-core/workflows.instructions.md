@@ -1,4 +1,5 @@
 ---
+category: 'Workflows'
 description: "Required instructions for GitHub Actions workflow files in hve-core repository"
 applyTo: '**/.github/workflows/*.yml'
 

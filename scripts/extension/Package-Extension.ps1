@@ -464,8 +464,8 @@ function Get-PackagingDirectorySpec {
 
     return @(
         @{
-            Source      = Join-Path $RepoRoot ".github"
-            Destination = Join-Path $ExtensionDirectory ".github"
+            Source      = Join-Path $RepoRoot "artifacts"
+            Destination = Join-Path $ExtensionDirectory "artifacts"
             IsFile      = $false
         },
         @{
@@ -502,7 +502,7 @@ function Get-PackagingCleanupDirectories {
     [OutputType([string[]])]
     param()
 
-    return @(".github", "docs", "scripts")
+    return @("artifacts", "docs", "scripts")
 }
 
 #endregion Pure Functions
@@ -836,6 +836,22 @@ function Invoke-PackageExtension {
         }
 
         Write-Host "   ✅ Extension directory prepared" -ForegroundColor Green
+
+        # Discover artifacts and write bundled manifest
+        Write-Host ""
+        Write-Host "🔍 Discovering artifacts..." -ForegroundColor Yellow
+
+        $prepareScript = Join-Path $RepoRoot "scripts/extension/Prepare-Extension.ps1"
+        $prepareArgs = @()
+        if ($PreRelease) {
+            $prepareArgs += '-Channel', 'PreRelease'
+        }
+        $global:LASTEXITCODE = 0
+        & $prepareScript @prepareArgs
+        if ($LASTEXITCODE -ne 0) {
+            return New-PackagingResult -Success $false -ErrorMessage "Artifact preparation failed with exit code $LASTEXITCODE"
+        }
+        Write-Host "   ✅ Artifacts discovered and manifest written" -ForegroundColor Green
 
         # Build extension TypeScript source
         Write-Host ""

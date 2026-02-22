@@ -1,1 +1,1 @@
-../../../.github/agents/rpi-agent.agent.md
+../../../artifacts/agents/rpi-agent.agent.md

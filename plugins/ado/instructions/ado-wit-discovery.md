@@ -1,1 +1,1 @@
-../../../.github/instructions/ado-wit-discovery.instructions.md
+../../../artifacts/instructions/ado-wit-discovery.instructions.md

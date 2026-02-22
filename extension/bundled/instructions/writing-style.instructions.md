@@ -1,4 +1,5 @@
 ---
+category: 'General'
 description: "Required writing style conventions for voice, tone, and language in all markdown content"
 applyTo: '**/*.md'
 maturity: stable

@@ -99,9 +99,9 @@ Create or update `.vscode/settings.json`:
 
 ```json
 {
-  "chat.agentFilesLocations": { ".hve-core/.github/agents": true },
-  "chat.promptFilesLocations": { ".hve-core/.github/prompts": true },
-  "chat.instructionsFilesLocations": { ".hve-core/.github/instructions": true }
+  "chat.agentFilesLocations": { ".hve-core/artifacts/agents": true },
+  "chat.promptFilesLocations": { ".hve-core/artifacts/prompts": true },
+  "chat.instructionsFilesLocations": { ".hve-core/artifacts/instructions": true }
 }
 ```
 
@@ -136,9 +136,9 @@ Add to `.devcontainer/devcontainer.json` so HVE-Core is cloned on container crea
   "customizations": {
     "vscode": {
       "settings": {
-        "chat.agentFilesLocations": { ".hve-core/.github/agents": true },
-        "chat.promptFilesLocations": { ".hve-core/.github/prompts": true },
-        "chat.instructionsFilesLocations": { ".hve-core/.github/instructions": true }
+        "chat.agentFilesLocations": { ".hve-core/artifacts/agents": true },
+        "chat.promptFilesLocations": { ".hve-core/artifacts/prompts": true },
+        "chat.instructionsFilesLocations": { ".hve-core/artifacts/instructions": true }
       }
     }
   }
@@ -175,7 +175,7 @@ The `postCreateCommand` re-clones on each container creation. To update, rebuild
 **Check the folder exists:**
 
 ```bash
-ls .hve-core/.github/agents
+ls .hve-core/artifacts/agents
 ```
 
 **Check settings are applied:**

@@ -7,40 +7,6 @@ import { getNonce } from '../utils/paths';
 
 let activeSettingsPanel: vscode.WebviewPanel | undefined;
 
-/** Maps agent names to their primary prompt when the relationship is not derivable by name. */
-const AGENT_OVERRIDES: Record<string, string> = {
-  'adr-creation': 'adr-create',
-  'arch-diagram-builder': 'arch-diagram',
-  'brd-builder': 'brd-build',
-  'doc-ops': 'doc-ops-update',
-  'github-backlog-manager': 'github-discover-issues',
-  'hve-core-installer': 'hve-core-install',
-  'instruction-analyzer': 'instruction-files-from-source',
-  'instruction-generator': 'instruction-files-from-source',
-  'memory': 'checkpoint',
-  'prd-builder': 'prd-build',
-  'prompt-builder': 'prompt-build',
-  'rpi-agent': 'rpi',
-  'security-plan-creator': 'security-plan',
-  'task-implementor': 'task-implement',
-  'task-planner': 'task-plan',
-  'task-researcher': 'task-research',
-  'task-reviewer': 'task-review',
-};
-
-/** Maps instruction names to their primary prompt when suffix stripping fails. */
-const INSTRUCTION_OVERRIDES: Record<string, string> = {
-  'ado-wit-discovery-instructions': 'ado-get-my-work-items',
-  'ado-wit-planning-instructions': 'ado-process-my-work-items-for-task-planning',
-  'commit-message-instructions': 'git-commit-message',
-  'community-interaction-instructions': 'github-add-issue',
-  'github-backlog-discovery-instructions': 'github-discover-issues',
-  'github-backlog-planning-instructions': 'github-sprint-plan',
-  'github-backlog-triage-instructions': 'github-triage-issues',
-  'github-backlog-update-instructions': 'github-execute-backlog',
-  'prompt-builder-instructions': 'prompt-build',
-};
-
 interface ArtifactGroup {
   prompt: ArtifactItem;
   agents: ArtifactItem[];
@@ -142,18 +108,18 @@ function typeIcon(type: ArtifactType): string {
   }
 }
 
-/** Resolves an agent name to its parent prompt name. */
-function resolveAgentToPrompt(agentName: string, promptNames: Set<string>): string | undefined {
-  const override = AGENT_OVERRIDES[agentName];
-  if (override && promptNames.has(override)) return override;
+/** Resolves an agent name to its parent prompt name using the prompt agent field. */
+function resolveAgentToPrompt(agentName: string, promptNames: Set<string>, agentToPrompt: Map<string, string>): string | undefined {
+  const mapped = agentToPrompt.get(agentName);
+  if (mapped && promptNames.has(mapped)) return mapped;
   if (promptNames.has(agentName)) return agentName;
   return undefined;
 }
 
-/** Resolves an instruction name to its parent prompt name. */
-function resolveInstructionToPrompt(instrName: string, promptNames: Set<string>): string | undefined {
-  const override = INSTRUCTION_OVERRIDES[instrName];
-  if (override && promptNames.has(override)) return override;
+/** Resolves an instruction name to its parent prompt name using the prompt field. */
+function resolveInstructionToPrompt(instrName: string, promptNames: Set<string>, instrToPrompt: Map<string, string>): string | undefined {
+  const mapped = instrToPrompt.get(instrName);
+  if (mapped && promptNames.has(mapped)) return mapped;
   const stripped = instrName.replace(/-instructions$/, '');
   if (promptNames.has(stripped)) return stripped;
   return undefined;
@@ -169,11 +135,23 @@ function buildDomainSections(artifacts: ArtifactItem[]): DomainSection[] {
   const childMap = new Map<string, { agents: ArtifactItem[]; instructions: ArtifactItem[] }>();
   for (const p of prompts) childMap.set(p.name, { agents: [], instructions: [] });
 
+  // Build agentName→promptName map from prompt agent fields
+  const agentToPrompt = new Map<string, string>();
+  for (const p of prompts) {
+    if (p.agent) agentToPrompt.set(p.agent, p.name);
+  }
+
+  // Build instrName→promptName map from instruction prompt fields
+  const instrToPrompt = new Map<string, string>();
+  for (const i of instructions) {
+    if (i.prompt) instrToPrompt.set(i.name, i.prompt);
+  }
+
   const assignedAgents = new Set<string>();
   const assignedInstructions = new Set<string>();
 
   for (const agent of agents) {
-    const target = resolveAgentToPrompt(agent.name, promptNames);
+    const target = resolveAgentToPrompt(agent.name, promptNames, agentToPrompt);
     if (target) {
       childMap.get(target)!.agents.push(agent);
       assignedAgents.add(agent.name);
@@ -181,7 +159,7 @@ function buildDomainSections(artifacts: ArtifactItem[]): DomainSection[] {
   }
 
   for (const instr of instructions) {
-    const target = resolveInstructionToPrompt(instr.name, promptNames);
+    const target = resolveInstructionToPrompt(instr.name, promptNames, instrToPrompt);
     if (target) {
       childMap.get(target)!.instructions.push(instr);
       assignedInstructions.add(instr.name);
@@ -202,13 +180,13 @@ function buildDomainSections(artifacts: ArtifactItem[]): DomainSection[] {
   const domainMap = new Map<string, { groups: ArtifactGroup[]; orphans: ArtifactItem[] }>();
 
   for (const g of groups) {
-    const domain = inferDomain(g.prompt.name);
+    const domain = g.prompt.category ?? inferDomain(g.prompt.name);
     if (!domainMap.has(domain)) domainMap.set(domain, { groups: [], orphans: [] });
     domainMap.get(domain)!.groups.push(g);
   }
 
   for (const o of orphans) {
-    const domain = inferDomain(o.name);
+    const domain = o.category ?? inferDomain(o.name);
     if (!domainMap.has(domain)) domainMap.set(domain, { groups: [], orphans: [] });
     domainMap.get(domain)!.orphans.push(o);
   }

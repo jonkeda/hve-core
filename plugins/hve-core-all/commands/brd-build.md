@@ -1,0 +1,1 @@
+../../../artifacts/prompts/brd-build.prompt.md

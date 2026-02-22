@@ -81,15 +81,15 @@ Create or update `.vscode/settings.json`:
 ```jsonc
 {
   "chat.agentFilesLocations": {
-    "lib/hve-core/.github/agents": true,
+    "lib/hve-core/artifacts/agents": true,
     ".github/agents": true
   },
   "chat.promptFilesLocations": {
-    "lib/hve-core/.github/prompts": true,
+    "lib/hve-core/artifacts/prompts": true,
     ".github/prompts": true
   },
   "chat.instructionsFilesLocations": {
-    "lib/hve-core/.github/instructions": true,
+    "lib/hve-core/artifacts/instructions": true,
     ".github/instructions": true
   }
 }
@@ -212,7 +212,7 @@ git submodule update --init --recursive
 
 * **Check settings paths:** Verify `.vscode/settings.json` paths match submodule location
 * **Reload window:** `Ctrl+Shift+P` → "Developer: Reload Window"
-* **Verify submodule content:** `ls lib/hve-core/.github/agents/`
+* **Verify submodule content:** `ls lib/hve-core/artifacts/agents/`
 
 ### "Detached HEAD" warning in submodule
 

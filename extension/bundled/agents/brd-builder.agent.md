@@ -1,4 +1,5 @@
 ---
+category: 'Document Builders'
 description: "Business Requirements Document builder with guided Q&A and reference integration"
 maturity: stable
 ---

@@ -1,4 +1,5 @@
 ---
+category: 'Git'
 agent: 'agent'
 description: 'Interactive, verification-first Git configuration assistant (non-destructive)'
 maturity: stable

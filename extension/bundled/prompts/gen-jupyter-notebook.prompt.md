@@ -1,4 +1,5 @@
 ---
+category: 'Data Science'
 description: "Create structured exploratory data analysis Jupyter notebooks - Brought to you by microsoft/hve-core"
 agent: 'gen-jupyter-notebook'
 maturity: stable

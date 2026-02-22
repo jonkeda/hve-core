@@ -11,101 +11,125 @@ copilot plugin install hve-core-all@hve-core
 
 ## Agents
 
-| Agent                    | Description                                                                                                                                                                                                |
-|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ado-prd-to-wit           | Product Manager expert for analyzing PRDs and planning Azure DevOps work item hierarchies                                                                                                                  |
-| adr-creation             | Interactive AI coaching for collaborative architectural decision record creation with guided discovery, research integration, and progressive documentation building - Brought to you by microsoft/edge-ai |
-| arch-diagram-builder     | Architecture diagram builder agent that builds high quality ASCII-art diagrams - Brought to you by microsoft/hve-core                                                                                      |
-| brd-builder              | Business Requirements Document builder with guided Q&A and reference integration                                                                                                                           |
-| doc-ops                  | Autonomous documentation operations agent for pattern compliance, accuracy verification, and gap detection - Brought to you by microsoft/hve-core                                                          |
-| gen-data-spec            | Generate comprehensive data dictionaries, machine-readable data profiles, and objective summaries for downstream analysis (EDA notebooks, dashboards) through guided discovery                             |
-| gen-jupyter-notebook     | Create structured exploratory data analysis Jupyter notebooks from available data sources and generated data dictionaries                                                                                  |
-| gen-streamlit-dashboard  | Develop a multi-page Streamlit dashboard                                                                                                                                                                   |
-| github-backlog-manager   | Orchestrator agent for GitHub backlog management workflows including triage, discovery, sprint planning, and execution - Brought to you by microsoft/hve-core                                              |
-| hve-core-installer       | Decision-driven installer for HVE-Core with 6 installation methods for local, devcontainer, and Codespaces environments - Brought to you by microsoft/hve-core                                             |
-| instruction-analyzer     | Analysis agent for proposing instruction files from source patterns with confidence scoring and clarification gating - Brought to you by microsoft/hve-core                                                |
-| instruction-generator    | Generation agent for selected instruction files with handoff validation and fail-fast execution - Brought to you by microsoft/hve-core                                                                     |
-| memory                   | Conversation memory persistence for session continuity - Brought to you by microsoft/hve-core                                                                                                              |
-| pr-review                | Comprehensive Pull Request review assistant ensuring code quality, security, and convention compliance - Brought to you by microsoft/hve-core                                                              |
-| prd-builder              | Product Requirements Document builder with guided Q&A and reference integration                                                                                                                            |
-| prompt-builder           | Prompt engineering assistant with phase-based workflow for creating and validating prompts, agents, and instructions files - Brought to you by microsoft/hve-core                                          |
-| rpi-agent                | Autonomous RPI orchestrator dispatching task-* agents through Research → Plan → Implement → Review → Discover phases - Brought to you by microsoft/hve-core                                                |
-| security-plan-creator    | Expert security architect for creating comprehensive cloud security plans - Brought to you by microsoft/hve-core                                                                                           |
-| task-implementor         | Executes implementation plans from .copilot-tracking/plans with progressive tracking and change records                                                                                                    |
-| task-planner             | Implementation planner for creating actionable implementation plans - Brought to you by microsoft/hve-core                                                                                                 |
-| task-question            | Pre-research question framing for defining research scope through interactive task-list documents - Brought to you by microsoft/hve-core                                                                   |
-| task-researcher          | Task research specialist for comprehensive project analysis - Brought to you by microsoft/hve-core                                                                                                         |
-| task-reviewer            | Reviews completed implementation work for accuracy, completeness, and convention compliance - Brought to you by microsoft/hve-core                                                                         |
-| test-streamlit-dashboard | Automated testing for Streamlit dashboards using Playwright with issue tracking and reporting                                                                                                              |
+| Agent | Description |
+| ----- | ----------- |
+| ado-prd-to-wit | Product Manager expert for analyzing PRDs and planning Azure DevOps work item hierarchies |
+| adr-creation | Interactive AI coaching for collaborative architectural decision record creation with guided discovery, research integration, and progressive documentation building - Brought to you by microsoft/edge-ai |
+| arch-diagram-builder | Architecture diagram builder agent that builds high quality ASCII-art diagrams - Brought to you by microsoft/hve-core |
+| backlog-workflow | Three-phase backlog workflow for capturing, refining, and readying backlog items using 3Cs pattern - Brought to you by microsoft/hve-core |
+| brd-builder | Business Requirements Document builder with guided Q&A and reference integration |
+| create-workflow | Three-phase workflow creator for generating new agent, prompt, and template sets from requirements - Brought to you by microsoft/hve-core |
+| doc-ops | Autonomous documentation operations agent for pattern compliance, accuracy verification, and gap detection - Brought to you by microsoft/hve-core |
+| fix-workflow | Two-phase fix workflow for documenting and resolving software issues - Brought to you by microsoft/hve-core |
+| gen-data-spec | Generate comprehensive data dictionaries, machine-readable data profiles, and objective summaries for downstream analysis (EDA notebooks, dashboards) through guided discovery |
+| gen-jupyter-notebook | Create structured exploratory data analysis Jupyter notebooks from available data sources and generated data dictionaries |
+| gen-streamlit-dashboard | Develop a multi-page Streamlit dashboard |
+| github-backlog-manager | Orchestrator agent for GitHub backlog management workflows including triage, discovery, sprint planning, and execution - Brought to you by microsoft/hve-core |
+| hve-core-installer | Decision-driven installer for HVE-Core with 6 installation methods for local, devcontainer, and Codespaces environments - Brought to you by microsoft/hve-core |
+| instruction-analyzer | Analysis agent for proposing instruction files from source patterns with confidence scoring and clarification gating - Brought to you by microsoft/hve-core |
+| instruction-generator | Generation agent for selected instruction files with handoff validation and fail-fast execution - Brought to you by microsoft/hve-core |
+| issue-workflow | Four-phase issue tracking workflow for documenting, investigating, resolving, and closing issues - Brought to you by microsoft/hve-core |
+| memory | Conversation memory persistence for session continuity - Brought to you by microsoft/hve-core |
+| pr-review | Comprehensive Pull Request review assistant ensuring code quality, security, and convention compliance - Brought to you by microsoft/hve-core |
+| prd-builder | Product Requirements Document builder with guided Q&A and reference integration |
+| prompt-builder | Prompt engineering assistant with phase-based workflow for creating and validating prompts, agents, and instructions files - Brought to you by microsoft/hve-core |
+| rpi-agent | Autonomous RPI orchestrator dispatching task-* agents through Research → Decide → Plan → Implement → Review → Discover phases - Brought to you by microsoft/hve-core |
+| security-plan-creator | Expert security architect for creating comprehensive cloud security plans - Brought to you by microsoft/hve-core |
+| steering-workflow | Three-phase steering workflow for creating product, tech, and structure documents - Brought to you by microsoft/hve-core |
+| task-implementor | Executes implementation plans from .copilot-tracking/Task/ with progressive tracking and change records |
+| task-planner | Implementation planner for creating actionable implementation plans - Brought to you by microsoft/hve-core |
+| task-question | Pre-research question framing for defining research scope through interactive task-list documents - Brought to you by microsoft/hve-core |
+| task-researcher | Task research specialist for comprehensive project analysis - Brought to you by microsoft/hve-core |
+| task-reviewer | Reviews completed implementation work for accuracy, completeness, and convention compliance - Brought to you by microsoft/hve-core |
+| test-streamlit-dashboard | Automated testing for Streamlit dashboards using Playwright with issue tracking and reporting |
 
 ## Commands
 
-| Command                                     | Description                                                                                                                                      |
-|---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| ado-create-pull-request                     | Generate pull request description, discover related work items, identify reviewers, and create Azure DevOps pull request with all linkages.      |
-| ado-get-build-info                          | Retrieve Azure DevOps build information for a Pull Request or specific Build Number.                                                             |
-| ado-get-my-work-items                       | Retrieve user's current Azure DevOps work items and organize them into planning file definitions                                                 |
-| ado-process-my-work-items-for-task-planning | Process retrieved work items for task planning and generate task-planning-logs.md handoff file                                                   |
-| ado-update-wit-items                        | Prompt to update work items based on planning files                                                                                              |
-| checkpoint                                  | Save or restore conversation context using memory files - Brought to you by microsoft/hve-core                                                   |
-| doc-ops-update                              | Invoke doc-ops agent for documentation quality assurance and updates                                                                             |
-| git-commit-message                          | Generates a commit message following the commit-message.instructions.md rules based on all changes in the branch                                 |
-| git-commit                                  | Stages all changes, generates a conventional commit message, shows it to the user, and commits using only git add/commit                         |
-| git-merge                                   | Coordinate Git merge, rebase, and rebase --onto workflows with consistent conflict handling.                                                     |
-| git-setup                                   | Interactive, verification-first Git configuration assistant (non-destructive)                                                                    |
-| github-add-issue                            | Create a GitHub issue using discovered repository templates and conversational field collection                                                  |
-| github-discover-issues                      | Discover GitHub issues through user-centric queries, artifact-driven analysis, or search-based exploration and produce planning files for review |
-| github-execute-backlog                      | Execute a GitHub backlog plan by creating, updating, linking, closing, and commenting on issues from a handoff file                              |
-| github-sprint-plan                          | Plan a GitHub milestone sprint by analyzing issue coverage, identifying gaps, and organizing work into a prioritized sprint backlog              |
-| github-triage-issues                        | Triage GitHub issues not yet triaged with automated label suggestions, milestone assignment, and duplicate detection                             |
-| incident-response                           | Incident response workflow for Azure operations scenarios - Brought to you by microsoft/hve-core                                                 |
-| instruction-files-from-source               | Analyze source code and propose instruction files for selection - Brought to you by microsoft/hve-core                                           |
-| prompt-analyze                              | Evaluates prompt engineering artifacts against quality criteria and reports findings - Brought to you by microsoft/hve-core                      |
-| prompt-build                                | Build or improve prompt engineering artifacts following quality criteria - Brought to you by microsoft/hve-core                                  |
-| prompt-refactor                             | Refactors and cleans up prompt engineering artifacts through iterative improvement - Brought to you by microsoft/hve-core                        |
-| pull-request                                | Provides prompt instructions for pull request (PR) generation - Brought to you by microsoft/edge-ai                                              |
-| risk-register                               | Creates a concise and well-structured qualitative risk register using a Probability × Impact (P×I) risk matrix.                                  |
-| rpi                                         | Autonomous Research-Plan-Implement-Review-Discover workflow for completing tasks - Brought to you by microsoft/hve-core                          |
-| task-implement                              | Locates and executes implementation plans using task-implementor mode - Brought to you by microsoft/hve-core                                     |
-| task-plan                                   | Initiates implementation planning based on user context or research documents - Brought to you by microsoft/hve-core                             |
-| task-question                               | Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core        |
-| task-research                               | Initiates research for implementation planning based on user requirements - Brought to you by microsoft/hve-core                                 |
-| task-decide                                 | Review and finalize research decisions before implementation planning - Brought to you by microsoft/hve-core                                     |
-| task-review                                 | Initiates implementation review based on user context or automatic artifact discovery - Brought to you by microsoft/hve-core                     |
+| Command | Description |
+| ------- | ----------- |
+| ado-create-pull-request | Generate pull request description, discover related work items, identify reviewers, and create Azure DevOps pull request with all linkages. |
+| ado-get-build-info | Retrieve Azure DevOps build information for a Pull Request or specific Build Number. |
+| ado-get-my-work-items | Retrieve user's current Azure DevOps work items and organize them into planning file definitions |
+| ado-prd-to-wit | Analyze PRDs and plan Azure DevOps work item hierarchies - Brought to you by microsoft/hve-core |
+| ado-process-my-work-items-for-task-planning | Process retrieved work items for task planning and generate task-planning-logs.md handoff file |
+| ado-update-wit-items | Prompt to update work items based on planning files |
+| adr-create | Create Architecture Decision Records through guided discovery and research integration - Brought to you by microsoft/hve-core |
+| arch-diagram | Build architecture diagrams from codebase analysis - Brought to you by microsoft/hve-core |
+| backlog | Capture, refine, and ready backlog items with a 3-phase workflow - Brought to you by microsoft/hve-core |
+| brd-build | Build Business Requirements Documents with guided Q&A and reference integration - Brought to you by microsoft/hve-core |
+| checkpoint | Save or restore conversation context using memory files - Brought to you by microsoft/hve-core |
+| create-workflow | Create new workflow agents from requirements using a guided 3-phase process - Brought to you by microsoft/hve-core |
+| doc-ops-update | Invoke doc-ops agent for documentation quality assurance and updates |
+| fix | Document and resolve software issues with a 2-phase fix workflow - Brought to you by microsoft/hve-core |
+| gen-data-spec | Generate data dictionaries, machine-readable data profiles, and objective summaries - Brought to you by microsoft/hve-core |
+| gen-jupyter-notebook | Create structured exploratory data analysis Jupyter notebooks - Brought to you by microsoft/hve-core |
+| gen-streamlit-dashboard | Develop a multi-page Streamlit dashboard - Brought to you by microsoft/hve-core |
+| git-commit-message | Generates a commit message following the commit-message.instructions.md rules based on all changes in the branch |
+| git-commit | Stages all changes, generates a conventional commit message, shows it to the user, and commits using only git add/commit |
+| git-merge | Coordinate Git merge, rebase, and rebase --onto workflows with consistent conflict handling. |
+| git-setup | Interactive, verification-first Git configuration assistant (non-destructive) |
+| github-add-issue | Create a GitHub issue using discovered repository templates and conversational field collection |
+| github-discover-issues | Discover GitHub issues through user-centric queries, artifact-driven analysis, or search-based exploration and produce planning files for review |
+| github-execute-backlog | Execute a GitHub backlog plan by creating, updating, linking, closing, and commenting on issues from a handoff file |
+| github-sprint-plan | Plan a GitHub milestone sprint by analyzing issue coverage, identifying gaps, and organizing work into a prioritized sprint backlog |
+| github-triage-issues | Triage GitHub issues not yet triaged with automated label suggestions, milestone assignment, and duplicate detection |
+| hve-core-install | Decision-driven HVE-Core installation across multiple methods - Brought to you by microsoft/hve-core |
+| incident-response | Incident response workflow for Azure operations scenarios - Brought to you by microsoft/hve-core |
+| instruction-files-from-source | Analyze source code and propose instruction files for selection - Brought to you by microsoft/hve-core |
+| issue | Track and resolve software issues through a 4-phase workflow - Brought to you by microsoft/hve-core |
+| pr-review | Comprehensive Pull Request review for code quality, security, and convention compliance - Brought to you by microsoft/hve-core |
+| prd-build | Build Product Requirements Documents with guided Q&A and reference integration - Brought to you by microsoft/hve-core |
+| prompt-analyze | Evaluates prompt engineering artifacts against quality criteria and reports findings - Brought to you by microsoft/hve-core |
+| prompt-build | Build or improve prompt engineering artifacts following quality criteria - Brought to you by microsoft/hve-core |
+| prompt-refactor | Refactors and cleans up prompt engineering artifacts through iterative improvement - Brought to you by microsoft/hve-core |
+| pull-request | Provides prompt instructions for pull request (PR) generation - Brought to you by microsoft/edge-ai |
+| risk-register | Creates a concise and well-structured qualitative risk register using a Probability × Impact (P×I) risk matrix. |
+| rpi | Autonomous Research-Plan-Implement-Review-Discover workflow for completing tasks - Brought to you by microsoft/hve-core |
+| security-plan | Create comprehensive cloud security plans - Brought to you by microsoft/hve-core |
+| steering | Create project steering documentation with product, tech, and structure documents - Brought to you by microsoft/hve-core |
+| task-decide | Review and finalize research decisions before implementation planning - Brought to you by microsoft/hve-core |
+| task-implement | Locates and executes implementation plans using task-implementor mode - Brought to you by microsoft/hve-core |
+| task-plan | Initiates implementation planning based on user context or research documents - Brought to you by microsoft/hve-core |
+| task-question | Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core |
+| task-research | Initiates research for implementation planning based on user requirements - Brought to you by microsoft/hve-core |
+| task-review | Initiates implementation review based on user context or automatic artifact discovery - Brought to you by microsoft/hve-core |
+| test-streamlit-dashboard | Automated Streamlit dashboard testing with Playwright - Brought to you by microsoft/hve-core |
+| todo | Quick todo capture and tracking - Brought to you by microsoft/hve-core |
 
 ## Instructions
 
-| Instruction              | Description                                                                                                                                                                                                                                                 |
-|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ado-create-pull-request  | Required protocol for creating Azure DevOps pull requests with work item discovery, reviewer identification, and automated linking.                                                                                                                         |
-| ado-get-build-info       | Required instructions for anything related to Azure Devops or ado build information including status, logs, or details from provided pullrequest (PR), build Id, or branch name.                                                                            |
-| ado-update-wit-items     | Work item creation and update protocol using MCP ADO tools with handoff tracking                                                                                                                                                                            |
-| ado-wit-discovery        | Protocol for discovering Azure DevOps work items via user assignment or artifact analysis with planning file output                                                                                                                                         |
-| ado-wit-planning         | Reference specification for Azure DevOps work item planning files, templates, field definitions, and search protocols                                                                                                                                       |
-| bash                     | Instructions for bash script implementation - Brought to you by microsoft/edge-ai                                                                                                                                                                           |
-| bicep                    | Instructions for Bicep infrastructure as code implementation - Brought to you by microsoft/hve-core                                                                                                                                                         |
-| commit-message           | Required instructions for creating all commit messages - Brought to you by microsoft/hve-core                                                                                                                                                               |
-| community-interaction    | Community interaction voice, tone, and response templates for GitHub-facing agents and prompts                                                                                                                                                              |
-| csharp-tests             | Required instructions for C# (CSharp) test code research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core                                                                                                             |
-| csharp                   | Required instructions for C# (CSharp) research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core                                                                                                                       |
-| git-merge                | Required protocol for Git merge, rebase, and rebase --onto workflows with conflict handling and stop controls.                                                                                                                                              |
-| github-backlog-discovery | Discovery protocol for GitHub backlog management - artifact-driven, user-centric, and search-based issue discovery                                                                                                                                          |
-| github-backlog-planning  | Reference specification for GitHub backlog management tooling - planning files, search protocols, similarity assessment, and state persistence                                                                                                              |
-| github-backlog-triage    | Triage workflow for GitHub issue backlog management - automated label suggestion, milestone assignment, and duplicate detection                                                                                                                             |
-| github-backlog-update    | Execution workflow for GitHub issue backlog management - consumes planning handoffs and executes issue operations                                                                                                                                           |
-| hve-core-location        | Important: hve-core is the repository containing this instruction file; Guidance: if a referenced prompt, instructions, agent, or script is missing in the current directory, fall back to this hve-core location by walking up this file's directory tree. |
-| workflows                | Required instructions for GitHub Actions workflow files in hve-core repository                                                                                                                                                                              |
-| markdown                 | Required instructions for creating or editing any Markdown (.md) files                                                                                                                                                                                      |
-| prompt-builder           | Authoring standards for prompt engineering artifacts including file types, protocol patterns, writing style, and quality criteria - Brought to you by microsoft/hve-core                                                                                    |
-| python-script            | Instructions for Python scripting implementation - Brought to you by microsoft/hve-core                                                                                                                                                                     |
-| terraform                | Instructions for Terraform infrastructure as code implementation - Brought to you by microsoft/hve-core                                                                                                                                                     |
-| uv-projects              | Create and manage Python virtual environments using uv commands                                                                                                                                                                                             |
-| writing-style            | Required writing style conventions for voice, tone, and language in all markdown content                                                                                                                                                                    |
+| Instruction | Description |
+| ----------- | ----------- |
+| ado-create-pull-request | Required protocol for creating Azure DevOps pull requests with work item discovery, reviewer identification, and automated linking. |
+| ado-get-build-info | Required instructions for anything related to Azure Devops or ado build information including status, logs, or details from provided pullrequest (PR), build Id, or branch name. |
+| ado-update-wit-items | Work item creation and update protocol using MCP ADO tools with handoff tracking |
+| ado-wit-discovery | Protocol for discovering Azure DevOps work items via user assignment or artifact analysis with planning file output |
+| ado-wit-planning | Reference specification for Azure DevOps work item planning files, templates, field definitions, and search protocols |
+| bash | Instructions for bash script implementation - Brought to you by microsoft/edge-ai |
+| bicep | Instructions for Bicep infrastructure as code implementation - Brought to you by microsoft/hve-core |
+| commit-message | Required instructions for creating all commit messages - Brought to you by microsoft/hve-core |
+| community-interaction | Community interaction voice, tone, and response templates for GitHub-facing agents and prompts |
+| copilot-tracking-conventions | Shared naming and folder conventions for all .copilot-tracking/ categories |
+| csharp-tests | Required instructions for C# (CSharp) test code research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core |
+| csharp | Required instructions for C# (CSharp) research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core |
+| git-merge | Required protocol for Git merge, rebase, and rebase --onto workflows with conflict handling and stop controls. |
+| github-backlog-discovery | Discovery protocol for GitHub backlog management - artifact-driven, user-centric, and search-based issue discovery |
+| github-backlog-planning | Reference specification for GitHub backlog management tooling - planning files, search protocols, similarity assessment, and state persistence |
+| github-backlog-triage | Triage workflow for GitHub issue backlog management - automated label suggestion, milestone assignment, and duplicate detection |
+| github-backlog-update | Execution workflow for GitHub issue backlog management - consumes planning handoffs and executes issue operations |
+| hve-core-location | Important: hve-core is the repository containing this instruction file; Guidance: if a referenced prompt, instructions, agent, or script is missing in the current directory, fall back to this hve-core location by walking up this file's directory tree. |
+| markdown | Required instructions for creating or editing any Markdown (.md) files |
+| prompt-builder | Authoring standards for prompt engineering artifacts including file types, protocol patterns, writing style, and quality criteria - Brought to you by microsoft/hve-core |
+| python-script | Instructions for Python scripting implementation - Brought to you by microsoft/hve-core |
+| terraform | Instructions for Terraform infrastructure as code implementation - Brought to you by microsoft/hve-core |
+| uv-projects | Create and manage Python virtual environments using uv commands |
+| workflows | Required instructions for GitHub Actions workflow files in hve-core repository |
+| writing-style | Required writing style conventions for voice, tone, and language in all markdown content |
 
 ## Skills
 
-| Skill        | Description  |
-|--------------|--------------|
+| Skill | Description |
+| ----- | ----------- |
 | video-to-gif | video-to-gif |
 
 ---

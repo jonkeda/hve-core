@@ -55,7 +55,7 @@ The repository contains no runtime services, databases, or user data storage. Pr
 
 HVE Core contains four primary component categories:
 
-1. **Prompt Engineering Artifacts** (`.github/instructions/`, `.github/prompts/`, `.github/agents/`, `.github/skills/`)
+1. **Prompt Engineering Artifacts** (`artifacts/instructions/`, `artifacts/prompts/`, `artifacts/agents/`, `artifacts/skills/`)
    - Markdown files with YAML frontmatter
    - Consumed by GitHub Copilot during development sessions
    - No executable code execution within prompts

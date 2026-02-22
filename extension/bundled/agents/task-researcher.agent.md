@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: 'Task research specialist for comprehensive project analysis - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

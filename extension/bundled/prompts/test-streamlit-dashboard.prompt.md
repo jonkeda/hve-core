@@ -1,4 +1,5 @@
 ---
+category: 'Data Science'
 description: "Automated Streamlit dashboard testing with Playwright - Brought to you by microsoft/hve-core"
 agent: 'test-streamlit-dashboard'
 maturity: stable

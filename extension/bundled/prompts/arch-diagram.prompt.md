@@ -1,4 +1,5 @@
 ---
+category: 'Document Builders'
 description: "Build architecture diagrams from codebase analysis - Brought to you by microsoft/hve-core"
 agent: 'arch-diagram-builder'
 maturity: stable

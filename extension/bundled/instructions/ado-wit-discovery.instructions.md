@@ -1,4 +1,6 @@
 ---
+category: 'Azure DevOps'
+prompt: 'ado-get-my-work-items'
 description: 'Protocol for discovering Azure DevOps work items via user assignment or artifact analysis with planning file output'
 applyTo: '**/.copilot-tracking/WorkItem/**'
 maturity: stable

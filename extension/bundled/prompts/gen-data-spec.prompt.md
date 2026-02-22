@@ -1,4 +1,5 @@
 ---
+category: 'Data Science'
 description: "Generate data dictionaries, machine-readable data profiles, and objective summaries - Brought to you by microsoft/hve-core"
 agent: 'gen-data-spec'
 maturity: stable

@@ -1,0 +1,1 @@
+../../../artifacts/prompts/gen-data-spec.prompt.md

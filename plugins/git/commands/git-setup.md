@@ -1,1 +1,1 @@
-../../../.github/prompts/git-setup.prompt.md
+../../../artifacts/prompts/git-setup.prompt.md

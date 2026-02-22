@@ -51,7 +51,7 @@ The following skill types will likely be **rejected**:
 All skill files **MUST** be placed in:
 
 ```text
-.github/skills/<skill-name>/
+artifacts/skills/<skill-name>/
 ├── SKILL.md                    # Main skill definition (required)
 ├── convert.sh                  # Bash script (required for cross-platform)
 ├── convert.ps1                 # PowerShell script (required for cross-platform)
@@ -152,7 +152,7 @@ Shows basic usage with default settings:
 ## Quick Start
 
 \`\`\`bash
-./.github/skills/video-to-gif/convert.sh input.mp4
+./artifacts/skills/video-to-gif/convert.sh input.mp4
 \`\`\`
 ```
 
@@ -222,7 +222,7 @@ Bash scripts **MUST**:
 * Check for required dependencies
 * Handle platform differences (macOS vs Linux)
 
-See [bash.instructions.md](../../.github/instructions/bash/bash.instructions.md) for complete standards.
+See [bash.instructions.md](../../artifacts/instructions/bash/bash.instructions.md) for complete standards.
 
 ### PowerShell Scripts
 
@@ -249,7 +249,7 @@ Before submitting your skill, verify:
 
 ### Structure
 
-* [ ] Directory at `.github/skills/<skill-name>/`
+* [ ] Directory at `artifacts/skills/<skill-name>/`
 * [ ] SKILL.md present with valid frontmatter
 * [ ] Bash script present for macOS/Linux
 * [ ] PowerShell script present for Windows

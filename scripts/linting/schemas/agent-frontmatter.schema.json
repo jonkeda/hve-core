@@ -48,6 +48,10 @@
       },
       "description": "Optional list of Model Context Protocol (MCP) server config json to use with custom agents in GitHub Copilot"
     },
+    "category": {
+      "type": "string",
+      "description": "Functional domain grouping for extension dashboard display (e.g., Azure DevOps, RPI, Git, Workflows)."
+    },
     "handoffs": {
       "type": "array",
       "items": {

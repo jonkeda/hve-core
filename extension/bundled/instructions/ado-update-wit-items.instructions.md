@@ -1,4 +1,5 @@
 ---
+category: 'Azure DevOps'
 description: 'Work item creation and update protocol using MCP ADO tools with handoff tracking'
 applyTo: '**/.copilot-tracking/WorkItem/**/05-handoff-logs.md'
 maturity: stable

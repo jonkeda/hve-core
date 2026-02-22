@@ -1,4 +1,5 @@
 ---
+category: 'RPI'
 description: "Autonomous Research-Plan-Implement-Review-Discover workflow for completing tasks - Brought to you by microsoft/hve-core"
 agent: 'rpi-agent'
 maturity: stable

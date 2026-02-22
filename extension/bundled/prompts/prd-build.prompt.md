@@ -1,4 +1,5 @@
 ---
+category: 'Document Builders'
 description: "Build Product Requirements Documents with guided Q&A and reference integration - Brought to you by microsoft/hve-core"
 agent: 'prd-builder'
 maturity: stable

@@ -1,1 +1,1 @@
-../../../.github/prompts/ado-get-my-work-items.prompt.md
+../../../artifacts/prompts/ado-get-my-work-items.prompt.md

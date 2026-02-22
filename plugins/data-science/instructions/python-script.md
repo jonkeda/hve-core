@@ -1,1 +1,1 @@
-../../../.github/instructions/python-script.instructions.md
+../../../artifacts/instructions/python-script.instructions.md

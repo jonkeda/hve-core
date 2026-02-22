@@ -1,4 +1,5 @@
 ---
+category: 'GitHub'
 description: "Comprehensive Pull Request review for code quality, security, and convention compliance - Brought to you by microsoft/hve-core"
 agent: 'pr-review'
 maturity: stable

@@ -79,8 +79,8 @@ export class ArtifactTreeProvider implements vscode.TreeDataProvider<TreeElement
         .map((t) => ({ kind: 'category' as const, label: t.label }));
     }
 
-    // Domain-based grouping
-    const domains = [...new Set(all.map((a) => inferDomain(a.name)))];
+    // Domain-based grouping — prefer explicit category from manifest, fall back to inferDomain
+    const domains = [...new Set(all.map((a) => a.category ?? inferDomain(a.name)))];
     return domains.sort().map((label) => ({ kind: 'category' as const, label }));
   }
 
@@ -101,9 +101,9 @@ export class ArtifactTreeProvider implements vscode.TreeDataProvider<TreeElement
         .map((item) => ({ kind: 'artifact' as const, item }));
     }
 
-    // Domain grouping
+    // Domain grouping — prefer explicit category from manifest, fall back to inferDomain
     return all
-      .filter((a) => inferDomain(a.name) === categoryLabel)
+      .filter((a) => (a.category ?? inferDomain(a.name)) === categoryLabel)
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((item) => ({ kind: 'artifact' as const, item }));
   }

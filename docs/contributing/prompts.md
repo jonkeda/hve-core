@@ -31,7 +31,7 @@ Create a prompt when you need to:
 All prompt files **MUST** be placed in:
 
 ```text
-.github/prompts/
+artifacts/prompts/
 └── your-prompt-name.prompt.md
 ```
 
@@ -510,7 +510,7 @@ All checks **MUST** pass before merge.
 
 ## Getting Help
 
-See [AI Artifacts Common Standards - Getting Help](ai-artifacts-common.md#getting-help) for support resources. For prompt-specific assistance, review existing examples in `.github/prompts/`.
+See [AI Artifacts Common Standards - Getting Help](ai-artifacts-common.md#getting-help) for support resources. For prompt-specific assistance, review existing examples in `artifacts/prompts/`.
 
 ---
 

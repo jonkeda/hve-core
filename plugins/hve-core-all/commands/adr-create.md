@@ -1,0 +1,1 @@
+../../../artifacts/prompts/adr-create.prompt.md

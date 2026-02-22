@@ -1,4 +1,5 @@
 ---
+category: 'Security'
 description: "Create comprehensive cloud security plans - Brought to you by microsoft/hve-core"
 agent: 'security-plan-creator'
 maturity: stable

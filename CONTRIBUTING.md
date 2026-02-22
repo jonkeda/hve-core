@@ -214,10 +214,10 @@ Before contributing AI artifacts, review these resources:
 
 ### Quick Reference
 
-- Agents directory: [`.github/agents/`](./.github/agents/)
-- Instructions directory: [`.github/instructions/`](./.github/instructions/)
-- Prompts directory: [`.github/prompts/`](./.github/prompts/)
-- Skills directory: [`.github/skills/`](./.github/skills/)
+- Agents directory: [`artifacts/agents/`](./artifacts/agents/)
+- Instructions directory: [`artifacts/instructions/`](./artifacts/instructions/)
+- Prompts directory: [`artifacts/prompts/`](./artifacts/prompts/)
+- Skills directory: [`artifacts/skills/`](./artifacts/skills/)
 
 ## Pull Request Inactivity Policy
 
@@ -279,7 +279,7 @@ Refer to the [DevContainer README](./.devcontainer/README.md) for detailed infor
 
 ### Coding Conventions
 
-- Follow the markdown style guide defined in `.github/instructions/markdown.instructions.md`
+- Follow the markdown style guide defined in `artifacts/instructions/markdown.instructions.md`
 - Use consistent formatting as enforced by markdownlint
 - Run spell checking before committing changes
 - Format tables using the markdown-table-formatter tool
@@ -332,7 +332,7 @@ This project uses [release-please](https://github.com/googleapis/release-please)
 
 ### How Releases Work
 
-1. **Commit with Conventional Commits** - All commits to `main` must follow conventional commit format (see [commit message instructions](./.github/instructions/commit-message.instructions.md))
+1. **Commit with Conventional Commits** - All commits to `main` must follow conventional commit format (see [commit message instructions](./artifacts/instructions/commit-message.instructions.md))
 2. **Release PR Creation** - After commits are pushed to `main`, release-please automatically creates or updates a "release PR"
 3. **Review Release PR** - Maintainers review the release PR to verify version bump and changelog accuracy
 4. **Merge to Release** - When the release PR is merged, a git tag and GitHub Release are automatically created
@@ -366,7 +366,7 @@ git commit -m "feat!: redesign prompt file structure
 BREAKING CHANGE: prompt files now require category frontmatter field"
 ```
 
-For complete commit message format requirements, see [commit-message.instructions.md](./.github/instructions/commit-message.instructions.md).
+For complete commit message format requirements, see [commit-message.instructions.md](./artifacts/instructions/commit-message.instructions.md).
 
 For complete release process documentation including extension publishing, maturity lifecycle, and detailed version calculation workflows, see the [Release Process Guide](./docs/contributing/release-process.md).
 

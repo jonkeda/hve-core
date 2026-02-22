@@ -1,4 +1,5 @@
 ---
+category: 'Instruction Generation'
 description: 'Generation agent for selected instruction files with handoff validation and fail-fast execution - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

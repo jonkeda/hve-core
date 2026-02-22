@@ -32,7 +32,7 @@ Create an instructions file when you need to:
 All instruction files **MUST** be placed in:
 
 ```text
-.github/instructions/
+artifacts/instructions/
 ├── language-name.instructions.md        # Language-specific
 ├── framework-name.instructions.md       # Framework-specific
 ├── workflow-name.instructions.md        # Workflow-specific
@@ -42,10 +42,10 @@ All instruction files **MUST** be placed in:
 
 **Examples**:
 
-* `.github/instructions/python-script.instructions.md`
-* `.github/instructions/markdown.instructions.md`
-* `.github/instructions/csharp/csharp.instructions.md`
-* `.github/instructions/bash/bash.instructions.md`
+* `artifacts/instructions/python-script.instructions.md`
+* `artifacts/instructions/markdown.instructions.md`
+* `artifacts/instructions/csharp/csharp.instructions.md`
+* `artifacts/instructions/bash/bash.instructions.md`
 
 ### Naming Convention
 
@@ -609,7 +609,7 @@ All checks **MUST** pass before merge.
 
 See [AI Artifacts Common Standards - Getting Help](ai-artifacts-common.md#getting-help) for support resources. For instructions-specific assistance:
 
-* Review existing examples in `.github/instructions/`
+* Review existing examples in `artifacts/instructions/`
 * Test glob patterns using file search commands
 * Use `prompt-builder.agent.md` agent for assistance
 

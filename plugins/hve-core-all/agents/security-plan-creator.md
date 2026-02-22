@@ -1,1 +1,1 @@
-../../../.github/agents/security-plan-creator.agent.md
+../../../artifacts/agents/security-plan-creator.agent.md

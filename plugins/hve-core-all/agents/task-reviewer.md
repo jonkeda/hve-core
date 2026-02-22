@@ -1,1 +1,1 @@
-../../../.github/agents/task-reviewer.agent.md
+../../../artifacts/agents/task-reviewer.agent.md

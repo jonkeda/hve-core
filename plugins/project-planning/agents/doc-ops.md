@@ -1,1 +1,1 @@
-../../../.github/agents/doc-ops.agent.md
+../../../artifacts/agents/doc-ops.agent.md

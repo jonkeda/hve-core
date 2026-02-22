@@ -1,4 +1,5 @@
 ---
+category: 'Instruction Generation'
 description: 'Analysis agent for proposing instruction files from source patterns with confidence scoring and clarification gating - Brought to you by microsoft/hve-core'
 maturity: stable
 handoffs:

@@ -1,0 +1,58 @@
+id: workflows
+name: Workflow Automation
+description: Multi-phase workflow agents and prompts for fix, steering, issue, backlog, todo tracking, and workflow creation
+tags:
+  - workflow
+  - fix
+  - steering
+  - issue
+  - backlog
+  - todo
+
+items:
+  # Agents
+  - path: artifacts/agents/fix-workflow.agent.md
+    kind: agent
+    usage: |
+      recommended
+      2-phase fix workflow: document → implement
+  - path: artifacts/agents/steering-workflow.agent.md
+    kind: agent
+    usage: |
+      recommended
+      3-phase steering docs: product → tech → structure
+  - path: artifacts/agents/issue-workflow.agent.md
+    kind: agent
+    usage: |
+      recommended
+      4-phase issue tracking: document → investigate → resolve → close
+  - path: artifacts/agents/backlog-workflow.agent.md
+    kind: agent
+    usage: |
+      recommended
+      3-phase backlog: capture → refine → ready
+  - path: artifacts/agents/create-workflow.agent.md
+    kind: agent
+    usage: |
+      recommended
+      3-phase workflow creator: discover → clarify → generate
+
+  # Prompts
+  - path: artifacts/prompts/fix.prompt.md
+    kind: prompt
+  - path: artifacts/prompts/steering.prompt.md
+    kind: prompt
+  - path: artifacts/prompts/issue.prompt.md
+    kind: prompt
+  - path: artifacts/prompts/backlog.prompt.md
+    kind: prompt
+  - path: artifacts/prompts/todo.prompt.md
+    kind: prompt
+    usage: |
+      recommended
+      Single-phase quick todo capture
+  - path: artifacts/prompts/create-workflow.prompt.md
+    kind: prompt
+
+display:
+  ordering: manual

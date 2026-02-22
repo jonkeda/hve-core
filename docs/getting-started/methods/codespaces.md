@@ -80,9 +80,9 @@ Add the clone command and VS Code settings:
   "customizations": {
     "vscode": {
       "settings": {
-        "chat.agentFilesLocations": { "/workspaces/hve-core/.github/agents": true },
-        "chat.promptFilesLocations": { "/workspaces/hve-core/.github/prompts": true },
-        "chat.instructionsFilesLocations": { "/workspaces/hve-core/.github/instructions": true }
+        "chat.agentFilesLocations": { "/workspaces/hve-core/artifacts/agents": true },
+        "chat.promptFilesLocations": { "/workspaces/hve-core/artifacts/prompts": true },
+        "chat.instructionsFilesLocations": { "/workspaces/hve-core/artifacts/instructions": true }
       }
     }
   }
@@ -122,9 +122,9 @@ git push
   "customizations": {
     "vscode": {
       "settings": {
-        "chat.agentFilesLocations": { "/workspaces/hve-core/.github/agents": true },
-        "chat.promptFilesLocations": { "/workspaces/hve-core/.github/prompts": true },
-        "chat.instructionsFilesLocations": { "/workspaces/hve-core/.github/instructions": true }
+        "chat.agentFilesLocations": { "/workspaces/hve-core/artifacts/agents": true },
+        "chat.promptFilesLocations": { "/workspaces/hve-core/artifacts/prompts": true },
+        "chat.instructionsFilesLocations": { "/workspaces/hve-core/artifacts/instructions": true }
       }
     }
   }
@@ -145,7 +145,7 @@ git push
   
   "postCreateCommand": {
     "clone-hve-core": "if [ ! -d /workspaces/hve-core ]; then git clone --depth 1 https://github.com/microsoft/hve-core.git /workspaces/hve-core && echo '✅ HVE-Core cloned'; else echo '✅ HVE-Core present'; fi",
-    "verify": "test -d /workspaces/hve-core/.github/agents && echo '✅ Verified' || echo '⚠️ Missing'"
+    "verify": "test -d /workspaces/hve-core/artifacts/agents && echo '✅ Verified' || echo '⚠️ Missing'"
   },
   
   "updateContentCommand": "cd /workspaces/hve-core && git pull --ff-only 2>/dev/null || echo 'Update skipped'",
@@ -154,15 +154,15 @@ git push
     "vscode": {
       "settings": {
         "chat.promptFilesLocations": {
-          "/workspaces/hve-core/.github/prompts": true,
+          "/workspaces/hve-core/artifacts/prompts": true,
           ".github/prompts": true
         },
         "chat.instructionsFilesLocations": {
-          "/workspaces/hve-core/.github/instructions": true,
+          "/workspaces/hve-core/artifacts/instructions": true,
           ".github/instructions": true
         },
         "chat.agentFilesLocations": {
-          "/workspaces/hve-core/.github/agents": true,
+          "/workspaces/hve-core/artifacts/agents": true,
           ".github/agents": true
         }
       }
@@ -193,16 +193,16 @@ For projects needing HVE-Core in both local devcontainers and Codespaces:
       "settings": {
         // Both paths - VS Code ignores non-existent paths
         "chat.promptFilesLocations": {
-          "/workspaces/hve-core/.github/prompts": true,
-          "../hve-core/.github/prompts": true
+          "/workspaces/hve-core/artifacts/prompts": true,
+          "../hve-core/artifacts/prompts": true
         },
         "chat.instructionsFilesLocations": {
-          "/workspaces/hve-core/.github/instructions": true,
-          "../hve-core/.github/instructions": true
+          "/workspaces/hve-core/artifacts/instructions": true,
+          "../hve-core/artifacts/instructions": true
         },
         "chat.agentFilesLocations": {
-          "/workspaces/hve-core/.github/agents": true,
-          "../hve-core/.github/agents": true
+          "/workspaces/hve-core/artifacts/agents": true,
+          "../hve-core/artifacts/agents": true
         }
       }
     }
@@ -250,7 +250,7 @@ To always get the latest version on rebuild:
 **Check HVE-Core was cloned:**
 
 ```bash
-ls /workspaces/hve-core/.github/agents
+ls /workspaces/hve-core/artifacts/agents
 ```
 
 **Check postCreateCommand ran:**

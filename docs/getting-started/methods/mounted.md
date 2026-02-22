@@ -160,9 +160,9 @@ After rebuild, update `.vscode/settings.json`:
 
 ```json
 {
-  "chat.agentFilesLocations": { "/workspaces/hve-core/.github/agents": true },
-  "chat.promptFilesLocations": { "/workspaces/hve-core/.github/prompts": true },
-  "chat.instructionsFilesLocations": { "/workspaces/hve-core/.github/instructions": true }
+  "chat.agentFilesLocations": { "/workspaces/hve-core/artifacts/agents": true },
+  "chat.promptFilesLocations": { "/workspaces/hve-core/artifacts/prompts": true },
+  "chat.instructionsFilesLocations": { "/workspaces/hve-core/artifacts/instructions": true }
 }
 ```
 
@@ -173,9 +173,9 @@ After rebuild, update `.vscode/settings.json`:
   "customizations": {
     "vscode": {
       "settings": {
-        "chat.agentFilesLocations": { "/workspaces/hve-core/.github/agents": true },
-        "chat.promptFilesLocations": { "/workspaces/hve-core/.github/prompts": true },
-        "chat.instructionsFilesLocations": { "/workspaces/hve-core/.github/instructions": true }
+        "chat.agentFilesLocations": { "/workspaces/hve-core/artifacts/agents": true },
+        "chat.promptFilesLocations": { "/workspaces/hve-core/artifacts/prompts": true },
+        "chat.instructionsFilesLocations": { "/workspaces/hve-core/artifacts/instructions": true }
       }
     }
   }
@@ -191,7 +191,7 @@ After rebuild, update `.vscode/settings.json`:
 **Verify mount from container terminal:**
 
 ```bash
-ls /workspaces/hve-core/.github/agents
+ls /workspaces/hve-core/artifacts/agents
 ```
 
 ## Complete Devcontainer Example
@@ -208,9 +208,9 @@ ls /workspaces/hve-core/.github/agents
   "customizations": {
     "vscode": {
       "settings": {
-        "chat.agentFilesLocations": { "/workspaces/hve-core/.github/agents": true },
-        "chat.promptFilesLocations": { "/workspaces/hve-core/.github/prompts": true },
-        "chat.instructionsFilesLocations": { "/workspaces/hve-core/.github/instructions": true }
+        "chat.agentFilesLocations": { "/workspaces/hve-core/artifacts/agents": true },
+        "chat.promptFilesLocations": { "/workspaces/hve-core/artifacts/prompts": true },
+        "chat.instructionsFilesLocations": { "/workspaces/hve-core/artifacts/instructions": true }
       }
     }
   }
@@ -265,7 +265,7 @@ ls /path/to/projects/hve-core/.github
 
 ```bash
 # Inside container
-ls /workspaces/hve-core/.github/agents
+ls /workspaces/hve-core/artifacts/agents
 ```
 
 **Check settings paths match:**

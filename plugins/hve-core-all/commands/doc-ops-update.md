@@ -1,1 +1,1 @@
-../../../.github/prompts/doc-ops-update.prompt.md
+../../../artifacts/prompts/doc-ops-update.prompt.md

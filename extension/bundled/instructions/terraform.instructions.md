@@ -1,4 +1,5 @@
 ---
+category: 'Coding Standards'
 applyTo: '**/*.tf, **/*.tfvars, **/terraform/**'
 description: 'Instructions for Terraform infrastructure as code implementation - Brought to you by microsoft/hve-core'
 maturity: stable

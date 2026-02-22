@@ -1,4 +1,5 @@
 ---
+category: 'General'
 description: 'Shared naming and folder conventions for all .copilot-tracking/ categories'
 applyTo: '**/.copilot-tracking/**'
 maturity: stable

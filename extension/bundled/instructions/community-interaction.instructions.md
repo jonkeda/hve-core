@@ -1,4 +1,6 @@
 ---
+category: 'GitHub'
+prompt: 'github-add-issue'
 description: 'Community interaction voice, tone, and response templates for GitHub-facing agents and prompts'
 applyTo: '**/.github/instructions/github-backlog-*.instructions.md'
 maturity: stable

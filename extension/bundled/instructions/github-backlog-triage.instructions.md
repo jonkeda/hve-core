@@ -1,4 +1,6 @@
 ---
+category: 'GitHub'
+prompt: 'github-triage-issues'
 description: 'Triage workflow for GitHub issue backlog management - automated label suggestion, milestone assignment, and duplicate detection'
 applyTo: '**/.copilot-tracking/GitHubIssue/**'
 maturity: stable

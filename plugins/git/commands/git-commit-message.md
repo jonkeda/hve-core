@@ -1,1 +1,1 @@
-../../../.github/prompts/git-commit-message.prompt.md
+../../../artifacts/prompts/git-commit-message.prompt.md

@@ -1,4 +1,5 @@
 ---
+category: 'Azure DevOps'
 description: "Analyze PRDs and plan Azure DevOps work item hierarchies - Brought to you by microsoft/hve-core"
 agent: 'ado-prd-to-wit'
 maturity: stable

@@ -1,1 +1,1 @@
-../../../.github/prompts/git-commit.prompt.md
+../../../artifacts/prompts/git-commit.prompt.md

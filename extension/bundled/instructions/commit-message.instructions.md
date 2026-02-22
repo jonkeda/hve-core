@@ -1,4 +1,6 @@
 ---
+category: 'Git'
+prompt: 'git-commit-message'
 description: 'Required instructions for creating all commit messages - Brought to you by microsoft/hve-core'
 maturity: stable
 ---

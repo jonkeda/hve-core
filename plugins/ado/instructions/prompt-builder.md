@@ -1,1 +1,1 @@
-../../../.github/instructions/prompt-builder.instructions.md
+../../../artifacts/instructions/prompt-builder.instructions.md

@@ -1,0 +1,1 @@
+../../../artifacts/prompts/security-plan.prompt.md

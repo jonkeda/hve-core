@@ -1,1 +1,1 @@
-../../../.github/prompts/task-implement.prompt.md
+../../../artifacts/prompts/task-implement.prompt.md

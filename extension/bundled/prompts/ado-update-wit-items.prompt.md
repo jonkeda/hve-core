@@ -1,4 +1,5 @@
 ---
+category: 'Azure DevOps'
 description: "Prompt to update work items based on planning files"
 maturity: stable
 ---

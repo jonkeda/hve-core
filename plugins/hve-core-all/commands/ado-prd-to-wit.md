@@ -1,0 +1,1 @@
+../../../artifacts/prompts/ado-prd-to-wit.prompt.md

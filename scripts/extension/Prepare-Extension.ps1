@@ -115,6 +115,9 @@ function Get-FrontmatterData {
     $content = Get-Content -Path $FilePath -Raw
     $description = ""
     $maturity = "stable"
+    $category = ""
+    $agent = ""
+    $prompt = ""
 
     if ($content -match '(?s)^---\s*\r?\n(.*?)\r?\n---') {
         $yamlContent = $Matches[1] -replace '\r\n', "`n" -replace '\r', "`n"
@@ -126,6 +129,15 @@ function Get-FrontmatterData {
             if ($data.ContainsKey('maturity')) {
                 $maturity = $data.maturity
             }
+            if ($data.ContainsKey('category')) {
+                $category = $data.category
+            }
+            if ($data.ContainsKey('agent')) {
+                $agent = $data.agent
+            }
+            if ($data.ContainsKey('prompt')) {
+                $prompt = $data.prompt
+            }
         }
         catch {
             Write-Warning "Failed to parse YAML frontmatter in $(Split-Path -Leaf $FilePath): $_"
@@ -135,6 +147,9 @@ function Get-FrontmatterData {
     return @{
         description = if ($description) { $description } else { $FallbackDescription }
         maturity    = $maturity
+        category    = $category
+        agent       = $agent
+        prompt      = $prompt
     }
 }
 
@@ -144,13 +159,13 @@ function Test-PathsExist {
         Validates that required paths exist for extension preparation.
     .DESCRIPTION
         Validation function that checks whether extension directory, package.json,
-        and .github directory exist at the specified locations.
+        and artifacts directory exist at the specified locations.
     .PARAMETER ExtensionDir
         Path to the extension directory.
     .PARAMETER PackageJsonPath
         Path to package.json file.
-    .PARAMETER GitHubDir
-        Path to .github directory.
+    .PARAMETER ArtifactsDir
+        Path to artifacts directory.
     .OUTPUTS
         [hashtable] With IsValid bool, MissingPaths array, and ErrorMessages array.
     #>
@@ -164,7 +179,7 @@ function Test-PathsExist {
         [string]$PackageJsonPath,
 
         [Parameter(Mandatory = $true)]
-        [string]$GitHubDir
+        [string]$ArtifactsDir
     )
 
     $missingPaths = @()
@@ -178,9 +193,9 @@ function Test-PathsExist {
         $missingPaths += $PackageJsonPath
         $errorMessages += "package.json not found: $PackageJsonPath"
     }
-    if (-not (Test-Path $GitHubDir)) {
-        $missingPaths += $GitHubDir
-        $errorMessages += ".github directory not found: $GitHubDir"
+    if (-not (Test-Path $ArtifactsDir)) {
+        $missingPaths += $ArtifactsDir
+        $errorMessages += "artifacts directory not found: $ArtifactsDir"
     }
 
     return @{
@@ -250,8 +265,9 @@ function Get-DiscoveredAgents {
 
         $result.Agents += [PSCustomObject]@{
             name        = $agentName
-            path        = "./.github/agents/$($agentFile.Name)"
+            path        = "./artifacts/agents/$($agentFile.Name)"
             description = $frontmatter.description
+            category    = $frontmatter.category
         }
     }
 
@@ -268,8 +284,6 @@ function Get-DiscoveredPrompts {
         prompt objects with relative paths.
     .PARAMETER PromptsDir
         Path to the prompts directory.
-    .PARAMETER GitHubDir
-        Path to the .github directory for relative path calculation.
     .PARAMETER AllowedMaturities
         Array of maturity levels to include.
     .OUTPUTS
@@ -280,9 +294,6 @@ function Get-DiscoveredPrompts {
     param(
         [Parameter(Mandatory = $true)]
         [string]$PromptsDir,
-
-        [Parameter(Mandatory = $true)]
-        [string]$GitHubDir,
 
         [Parameter(Mandatory = $true)]
         [string[]]$AllowedMaturities
@@ -298,17 +309,10 @@ function Get-DiscoveredPrompts {
         return $result
     }
 
-    $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md" -Recurse | Sort-Object Name
-    $seenPromptNames = @{}
+    $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md" | Sort-Object Name
 
     foreach ($promptFile in $promptFiles) {
         $promptName = $promptFile.BaseName -replace '\.prompt$', ''
-
-        # Skip duplicates from subdirectories (e.g., hve-core/)
-        if ($seenPromptNames.ContainsKey($promptName)) {
-            continue
-        }
-        $seenPromptNames[$promptName] = $true
 
         $displayName = ($promptName -replace '-', ' ') -replace '(\b\w)', { $_.Groups[1].Value.ToUpper() }
         $frontmatter = Get-FrontmatterData -FilePath $promptFile.FullName -FallbackDescription "Prompt for $displayName"
@@ -319,12 +323,12 @@ function Get-DiscoveredPrompts {
             continue
         }
 
-        $relativePath = [System.IO.Path]::GetRelativePath($GitHubDir, $promptFile.FullName) -replace '\\', '/'
-
         $result.Prompts += [PSCustomObject]@{
             name        = $promptName
-            path        = "./.github/$relativePath"
+            path        = "./artifacts/prompts/$($promptFile.Name)"
             description = $frontmatter.description
+            category    = $frontmatter.category
+            agent       = $frontmatter.agent
         }
     }
 
@@ -341,8 +345,6 @@ function Get-DiscoveredInstructions {
         instruction objects with normalized paths.
     .PARAMETER InstructionsDir
         Path to the instructions directory.
-    .PARAMETER GitHubDir
-        Path to the .github directory for relative path calculation.
     .PARAMETER AllowedMaturities
         Array of maturity levels to include.
     .OUTPUTS
@@ -353,9 +355,6 @@ function Get-DiscoveredInstructions {
     param(
         [Parameter(Mandatory = $true)]
         [string]$InstructionsDir,
-
-        [Parameter(Mandatory = $true)]
-        [string]$GitHubDir,
 
         [Parameter(Mandatory = $true)]
         [string[]]$AllowedMaturities
@@ -371,18 +370,11 @@ function Get-DiscoveredInstructions {
         return $result
     }
 
-    $instructionFiles = Get-ChildItem -Path $InstructionsDir -Filter "*.instructions.md" -Recurse | Sort-Object Name
-    $seenInstrNames = @{}
+    $instructionFiles = Get-ChildItem -Path $InstructionsDir -Filter "*.instructions.md" | Sort-Object Name
 
     foreach ($instrFile in $instructionFiles) {
         $baseName = $instrFile.BaseName -replace '\.instructions$', ''
         $instrName = "$baseName-instructions"
-
-        # Skip duplicates from subdirectories (e.g., hve-core/)
-        if ($seenInstrNames.ContainsKey($instrName)) {
-            continue
-        }
-        $seenInstrNames[$instrName] = $true
 
         $displayName = ($baseName -replace '-', ' ') -replace '(\b\w)', { $_.Groups[1].Value.ToUpper() }
         $frontmatter = Get-FrontmatterData -FilePath $instrFile.FullName -FallbackDescription "Instructions for $displayName"
@@ -393,13 +385,12 @@ function Get-DiscoveredInstructions {
             continue
         }
 
-        $relativePathFromGitHub = [System.IO.Path]::GetRelativePath($GitHubDir, $instrFile.FullName)
-        $normalizedRelativePath = (Join-Path ".github" $relativePathFromGitHub) -replace '\\', '/'
-
         $result.Instructions += [PSCustomObject]@{
             name        = $instrName
-            path        = "./$normalizedRelativePath"
+            path        = "./artifacts/instructions/$($instrFile.Name)"
             description = $frontmatter.description
+            category    = $frontmatter.category
+            prompt      = $frontmatter.prompt
         }
     }
 
@@ -452,8 +443,8 @@ function Write-BundledManifest {
         each artifact .md file into the extension/bundled/ directory organized by type.
     .PARAMETER ExtensionDirectory
         Absolute path to the extension directory.
-    .PARAMETER GitHubDir
-        Absolute path to the .github directory (source of artifact files).
+    .PARAMETER ArtifactsDir
+        Absolute path to the artifacts directory (source of artifact files).
     .PARAMETER Agents
         Array of discovered agent objects with name, path, and description.
     .PARAMETER Prompts
@@ -472,7 +463,7 @@ function Write-BundledManifest {
         [string]$ExtensionDirectory,
 
         [Parameter(Mandatory = $true)]
-        [string]$GitHubDir,
+        [string]$ArtifactsDir,
 
         [Parameter(Mandatory = $true)]
         [AllowEmptyCollection()]
@@ -500,19 +491,23 @@ function Write-BundledManifest {
     foreach ($agent in $Agents) {
         $filename = Split-Path $agent.path -Leaf
         $relativePath = "agents/$filename"
-        $manifestEntries += [PSCustomObject]@{
+        $entry = [PSCustomObject]@{
             name         = $agent.name
             type         = "agent"
             relativePath = $relativePath
             description  = $agent.description
         }
+        if ($agent.category) {
+            $entry | Add-Member -NotePropertyName 'category' -NotePropertyValue $agent.category
+        }
+        $manifestEntries += $entry
 
         if (-not $DryRun) {
             $destDir = Join-Path $bundledDir "agents"
             if (-not (Test-Path $destDir)) {
                 New-Item -Path $destDir -ItemType Directory -Force | Out-Null
             }
-            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($agent.path -replace '^\.\/', '')
+            $sourcePath = Join-Path (Split-Path $ArtifactsDir -Parent) ($agent.path -replace '^\.\/', '')
             Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
         }
     }
@@ -521,19 +516,26 @@ function Write-BundledManifest {
     foreach ($prompt in $Prompts) {
         $filename = Split-Path $prompt.path -Leaf
         $relativePath = "prompts/$filename"
-        $manifestEntries += [PSCustomObject]@{
+        $entry = [PSCustomObject]@{
             name         = $prompt.name
             type         = "prompt"
             relativePath = $relativePath
             description  = $prompt.description
         }
+        if ($prompt.category) {
+            $entry | Add-Member -NotePropertyName 'category' -NotePropertyValue $prompt.category
+        }
+        if ($prompt.agent) {
+            $entry | Add-Member -NotePropertyName 'agent' -NotePropertyValue $prompt.agent
+        }
+        $manifestEntries += $entry
 
         if (-not $DryRun) {
             $destDir = Join-Path $bundledDir "prompts"
             if (-not (Test-Path $destDir)) {
                 New-Item -Path $destDir -ItemType Directory -Force | Out-Null
             }
-            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($prompt.path -replace '^\.\/', '')
+            $sourcePath = Join-Path (Split-Path $ArtifactsDir -Parent) ($prompt.path -replace '^\.\/', '')
             Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
         }
     }
@@ -542,19 +544,26 @@ function Write-BundledManifest {
     foreach ($instr in $Instructions) {
         $filename = Split-Path $instr.path -Leaf
         $relativePath = "instructions/$filename"
-        $manifestEntries += [PSCustomObject]@{
+        $entry = [PSCustomObject]@{
             name         = $instr.name
             type         = "instruction"
             relativePath = $relativePath
             description  = $instr.description
         }
+        if ($instr.category) {
+            $entry | Add-Member -NotePropertyName 'category' -NotePropertyValue $instr.category
+        }
+        if ($instr.prompt) {
+            $entry | Add-Member -NotePropertyName 'prompt' -NotePropertyValue $instr.prompt
+        }
+        $manifestEntries += $entry
 
         if (-not $DryRun) {
             $destDir = Join-Path $bundledDir "instructions"
             if (-not (Test-Path $destDir)) {
                 New-Item -Path $destDir -ItemType Directory -Force | Out-Null
             }
-            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($instr.path -replace '^\.\/', '')
+            $sourcePath = Join-Path (Split-Path $ArtifactsDir -Parent) ($instr.path -replace '^\.\/', '')
             Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
         }
     }
@@ -674,13 +683,13 @@ function Invoke-PrepareExtension {
     )
 
     # Derive paths
-    $GitHubDir = Join-Path $RepoRoot ".github"
+    $ArtifactsDir = Join-Path $RepoRoot "artifacts"
     $PackageJsonPath = Join-Path $ExtensionDirectory "package.json"
 
     # Validate required paths exist
     $pathValidation = Test-PathsExist -ExtensionDir $ExtensionDirectory `
         -PackageJsonPath $PackageJsonPath `
-        -GitHubDir $GitHubDir
+        -ArtifactsDir $ArtifactsDir
     if (-not $pathValidation.IsValid) {
         $missingPaths = $pathValidation.MissingPaths -join ', '
         return New-PrepareResult -Success $false -ErrorMessage "Required paths not found: $missingPaths"
@@ -718,7 +727,7 @@ function Invoke-PrepareExtension {
     }
 
     # Discover agents
-    $agentsDir = Join-Path $GitHubDir "agents"
+    $agentsDir = Join-Path $ArtifactsDir "agents"
     $agentResult = Get-DiscoveredAgents -AgentsDir $agentsDir -AllowedMaturities $allowedMaturities -ExcludedAgents @()
     $chatAgents = $agentResult.Agents
     $excludedAgents = $agentResult.Skipped
@@ -730,8 +739,8 @@ function Invoke-PrepareExtension {
     }
 
     # Discover prompts
-    $promptsDir = Join-Path $GitHubDir "prompts"
-    $promptResult = Get-DiscoveredPrompts -PromptsDir $promptsDir -GitHubDir $GitHubDir -AllowedMaturities $allowedMaturities
+    $promptsDir = Join-Path $ArtifactsDir "prompts"
+    $promptResult = Get-DiscoveredPrompts -PromptsDir $promptsDir -AllowedMaturities $allowedMaturities
     $chatPrompts = $promptResult.Prompts
     $excludedPrompts = $promptResult.Skipped
 
@@ -742,8 +751,8 @@ function Invoke-PrepareExtension {
     }
 
     # Discover instructions
-    $instructionsDir = Join-Path $GitHubDir "instructions"
-    $instructionResult = Get-DiscoveredInstructions -InstructionsDir $instructionsDir -GitHubDir $GitHubDir -AllowedMaturities $allowedMaturities
+    $instructionsDir = Join-Path $ArtifactsDir "instructions"
+    $instructionResult = Get-DiscoveredInstructions -InstructionsDir $instructionsDir -AllowedMaturities $allowedMaturities
     $chatInstructions = $instructionResult.Instructions
     $excludedInstructions = $instructionResult.Skipped
 
@@ -757,7 +766,7 @@ function Invoke-PrepareExtension {
     Write-Host "`n--- Bundled Manifest ---" -ForegroundColor Green
     $bundledResult = Write-BundledManifest `
         -ExtensionDirectory $ExtensionDirectory `
-        -GitHubDir $GitHubDir `
+        -ArtifactsDir $ArtifactsDir `
         -Agents $chatAgents `
         -Prompts $chatPrompts `
         -Instructions $chatInstructions `

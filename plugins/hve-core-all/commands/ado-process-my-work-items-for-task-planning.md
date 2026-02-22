@@ -1,1 +1,1 @@
-../../../.github/prompts/ado-process-my-work-items-for-task-planning.prompt.md
+../../../artifacts/prompts/ado-process-my-work-items-for-task-planning.prompt.md

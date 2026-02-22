@@ -1,4 +1,5 @@
 ---
+category: 'Instruction Generation'
 description: "Analyze source code and propose instruction files for selection - Brought to you by microsoft/hve-core"
 agent: 'instruction-analyzer'
 argument-hint: "topic=... [sourceFolders=folder1,folder2] [chat={true|false}]"

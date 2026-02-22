@@ -1,1 +1,1 @@
-../../../.github/agents/pr-review.agent.md
+../../../artifacts/agents/pr-review.agent.md

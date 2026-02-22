@@ -84,9 +84,9 @@ Create or update `.vscode/settings.json` in your project:
 
 ```json
 {
-  "chat.agentFilesLocations": { "../hve-core/.github/agents": true },
-  "chat.promptFilesLocations": { "../hve-core/.github/prompts": true },
-  "chat.instructionsFilesLocations": { "../hve-core/.github/instructions": true }
+  "chat.agentFilesLocations": { "../hve-core/artifacts/agents": true },
+  "chat.promptFilesLocations": { "../hve-core/artifacts/prompts": true },
+  "chat.instructionsFilesLocations": { "../hve-core/artifacts/instructions": true }
 }
 ```
 
@@ -95,7 +95,7 @@ Create or update `.vscode/settings.json` in your project:
 Verify HVE-Core directories are accessible:
 
 ```bash
-ls ../hve-core/.github/agents
+ls ../hve-core/artifacts/agents
 ```
 
 You should see `.agent.md` files. Then validate in VS Code:
@@ -124,7 +124,7 @@ No VS Code restart required. Changes take effect immediately.
 
 ```bash
 # From your project directory
-ls ../hve-core/.github/agents
+ls ../hve-core/artifacts/agents
 ```
 
 If the path doesn't resolve, verify:

@@ -1,0 +1,1 @@
+../../../artifacts/prompts/hve-core-install.prompt.md

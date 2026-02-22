@@ -27,4 +27,19 @@ describe('domain grouping', () => {
     const domains = [...new Set(sampleArtifacts.map((a) => inferDomain(a.name)))].sort();
     expect(domains).toEqual(['Azure DevOps', 'General', 'Git', 'RPI']);
   });
+
+  it('prefers explicit category over inferDomain', () => {
+    const artifacts: ArtifactItem[] = [
+      { name: 'memory', type: 'agent', path: './', description: '', enabled: true, category: 'Custom' },
+      { name: 'git-commit', type: 'prompt', path: './', description: '', enabled: true, category: 'Overridden' },
+      { name: 'ado-prd-to-wit', type: 'agent', path: './', description: '', enabled: true },
+    ];
+    const domains = [...new Set(artifacts.map((a) => a.category ?? inferDomain(a.name)))].sort();
+    expect(domains).toEqual(['Azure DevOps', 'Custom', 'Overridden']);
+  });
+
+  it('falls back to inferDomain when category is undefined', () => {
+    const artifact: ArtifactItem = { name: 'git-commit', type: 'prompt', path: './', description: '', enabled: true };
+    expect(artifact.category ?? inferDomain(artifact.name)).toBe('Git');
+  });
 });

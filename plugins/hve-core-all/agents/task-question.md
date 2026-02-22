@@ -1,1 +1,1 @@
-../../../.github/agents/task-question.agent.md
+../../../artifacts/agents/task-question.agent.md

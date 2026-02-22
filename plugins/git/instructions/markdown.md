@@ -1,1 +1,1 @@
-../../../.github/instructions/markdown.instructions.md
+../../../artifacts/instructions/markdown.instructions.md

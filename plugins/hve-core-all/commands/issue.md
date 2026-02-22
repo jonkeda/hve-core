@@ -1,0 +1,1 @@
+../../../artifacts/prompts/issue.prompt.md

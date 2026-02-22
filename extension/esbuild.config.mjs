@@ -1,4 +1,5 @@
 import * as esbuild from 'esbuild';
+import { cpSync, mkdirSync } from 'fs';
 
 const isWatch = process.argv.includes('--watch');
 const isProduction = process.argv.includes('--production');
@@ -23,4 +24,12 @@ if (isWatch) {
   await ctx.watch();
 } else {
   await esbuild.build(buildOptions);
+}
+
+// Copy mermaid browser bundle for webview usage
+mkdirSync('dist', { recursive: true });
+try {
+  cpSync('node_modules/mermaid/dist/mermaid.min.js', 'dist/mermaid.min.js');
+} catch {
+  console.warn('[HVE Core] mermaid.min.js not found — Mermaid diagrams disabled in detail panel');
 }
