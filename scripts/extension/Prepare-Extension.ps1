@@ -299,9 +299,17 @@ function Get-DiscoveredPrompts {
     }
 
     $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md" -Recurse | Sort-Object Name
+    $seenPromptNames = @{}
 
     foreach ($promptFile in $promptFiles) {
         $promptName = $promptFile.BaseName -replace '\.prompt$', ''
+
+        # Skip duplicates from subdirectories (e.g., hve-core/)
+        if ($seenPromptNames.ContainsKey($promptName)) {
+            continue
+        }
+        $seenPromptNames[$promptName] = $true
+
         $displayName = ($promptName -replace '-', ' ') -replace '(\b\w)', { $_.Groups[1].Value.ToUpper() }
         $frontmatter = Get-FrontmatterData -FilePath $promptFile.FullName -FallbackDescription "Prompt for $displayName"
         $maturity = $frontmatter.maturity
@@ -364,10 +372,18 @@ function Get-DiscoveredInstructions {
     }
 
     $instructionFiles = Get-ChildItem -Path $InstructionsDir -Filter "*.instructions.md" -Recurse | Sort-Object Name
+    $seenInstrNames = @{}
 
     foreach ($instrFile in $instructionFiles) {
         $baseName = $instrFile.BaseName -replace '\.instructions$', ''
         $instrName = "$baseName-instructions"
+
+        # Skip duplicates from subdirectories (e.g., hve-core/)
+        if ($seenInstrNames.ContainsKey($instrName)) {
+            continue
+        }
+        $seenInstrNames[$instrName] = $true
+
         $displayName = ($baseName -replace '-', ' ') -replace '(\b\w)', { $_.Groups[1].Value.ToUpper() }
         $frontmatter = Get-FrontmatterData -FilePath $instrFile.FullName -FallbackDescription "Instructions for $displayName"
         $maturity = $frontmatter.maturity
@@ -393,68 +409,169 @@ function Get-DiscoveredInstructions {
 function Update-PackageJsonContributes {
     <#
     .SYNOPSIS
-        Updates package.json contributes section with discovered components.
+        Removes chatAgents, chatPromptFiles, and chatInstructions from package.json contributes.
     .DESCRIPTION
-        Pure function that takes a package.json object and discovered components,
-        returning a new object with the contributes section updated.
+        Pure function that takes a package.json object and removes artifact contribution
+        points. Artifacts are now bundled separately and managed at runtime via workspace
+        file operations rather than static extension contribution points.
     .PARAMETER PackageJson
         The package.json object to update.
-    .PARAMETER ChatAgents
-        Array of discovered chat agent objects.
-    .PARAMETER ChatPromptFiles
-        Array of discovered prompt objects.
-    .PARAMETER ChatInstructions
-        Array of discovered instruction objects.
     .OUTPUTS
-        [PSCustomObject] Updated package.json object.
+        [PSCustomObject] Updated package.json object with artifact contributes removed.
     #>
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
     param(
         [Parameter(Mandatory = $true)]
-        [PSCustomObject]$PackageJson,
-
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyCollection()]
-        [array]$ChatAgents,
-
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyCollection()]
-        [array]$ChatPromptFiles,
-
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyCollection()]
-        [array]$ChatInstructions
+        [PSCustomObject]$PackageJson
     )
 
     # Clone the object to avoid modifying the original
     $updated = $PackageJson | ConvertTo-Json -Depth 10 | ConvertFrom-Json
 
-    # Ensure contributes section exists
     if (-not $updated.contributes) {
-        $updated | Add-Member -NotePropertyName "contributes" -NotePropertyValue ([PSCustomObject]@{})
+        return $updated
     }
 
-    # Add or update contributes properties
-    if ($null -eq $updated.contributes.chatAgents) {
-        $updated.contributes | Add-Member -NotePropertyName "chatAgents" -NotePropertyValue $ChatAgents -Force
-    } else {
-        $updated.contributes.chatAgents = $ChatAgents
-    }
-
-    if ($null -eq $updated.contributes.chatPromptFiles) {
-        $updated.contributes | Add-Member -NotePropertyName "chatPromptFiles" -NotePropertyValue $ChatPromptFiles -Force
-    } else {
-        $updated.contributes.chatPromptFiles = $ChatPromptFiles
-    }
-
-    if ($null -eq $updated.contributes.chatInstructions) {
-        $updated.contributes | Add-Member -NotePropertyName "chatInstructions" -NotePropertyValue $ChatInstructions -Force
-    } else {
-        $updated.contributes.chatInstructions = $ChatInstructions
+    # Remove artifact contribution points — these are now managed via bundled-manifest.json
+    foreach ($prop in @('chatAgents', 'chatPromptFiles', 'chatInstructions')) {
+        if ($updated.contributes.PSObject.Properties[$prop]) {
+            $updated.contributes.PSObject.Properties.Remove($prop)
+        }
     }
 
     return $updated
+}
+
+function Write-BundledManifest {
+    <#
+    .SYNOPSIS
+        Writes bundled-manifest.json and copies artifact files to the bundled directory.
+    .DESCRIPTION
+        Creates the bundled manifest JSON file listing all discovered artifacts and copies
+        each artifact .md file into the extension/bundled/ directory organized by type.
+    .PARAMETER ExtensionDirectory
+        Absolute path to the extension directory.
+    .PARAMETER GitHubDir
+        Absolute path to the .github directory (source of artifact files).
+    .PARAMETER Agents
+        Array of discovered agent objects with name, path, and description.
+    .PARAMETER Prompts
+        Array of discovered prompt objects with name, path, and description.
+    .PARAMETER Instructions
+        Array of discovered instruction objects with name, path, and description.
+    .PARAMETER DryRun
+        When specified, shows what would be done without making changes.
+    .OUTPUTS
+        [hashtable] With ManifestPath and ArtifactCount properties.
+    #>
+    [CmdletBinding()]
+    [OutputType([hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ExtensionDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$GitHubDir,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [array]$Agents,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [array]$Prompts,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [array]$Instructions,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$DryRun
+    )
+
+    $bundledDir = Join-Path $ExtensionDirectory "bundled"
+    $manifestPath = Join-Path $ExtensionDirectory "bundled-manifest.json"
+
+    # Build manifest entries and copy files
+    $manifestEntries = @()
+
+    # Process agents
+    foreach ($agent in $Agents) {
+        $filename = Split-Path $agent.path -Leaf
+        $relativePath = "agents/$filename"
+        $manifestEntries += [PSCustomObject]@{
+            name         = $agent.name
+            type         = "agent"
+            relativePath = $relativePath
+            description  = $agent.description
+        }
+
+        if (-not $DryRun) {
+            $destDir = Join-Path $bundledDir "agents"
+            if (-not (Test-Path $destDir)) {
+                New-Item -Path $destDir -ItemType Directory -Force | Out-Null
+            }
+            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($agent.path -replace '^\.\/', '')
+            Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
+        }
+    }
+
+    # Process prompts
+    foreach ($prompt in $Prompts) {
+        $filename = Split-Path $prompt.path -Leaf
+        $relativePath = "prompts/$filename"
+        $manifestEntries += [PSCustomObject]@{
+            name         = $prompt.name
+            type         = "prompt"
+            relativePath = $relativePath
+            description  = $prompt.description
+        }
+
+        if (-not $DryRun) {
+            $destDir = Join-Path $bundledDir "prompts"
+            if (-not (Test-Path $destDir)) {
+                New-Item -Path $destDir -ItemType Directory -Force | Out-Null
+            }
+            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($prompt.path -replace '^\.\/', '')
+            Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
+        }
+    }
+
+    # Process instructions
+    foreach ($instr in $Instructions) {
+        $filename = Split-Path $instr.path -Leaf
+        $relativePath = "instructions/$filename"
+        $manifestEntries += [PSCustomObject]@{
+            name         = $instr.name
+            type         = "instruction"
+            relativePath = $relativePath
+            description  = $instr.description
+        }
+
+        if (-not $DryRun) {
+            $destDir = Join-Path $bundledDir "instructions"
+            if (-not (Test-Path $destDir)) {
+                New-Item -Path $destDir -ItemType Directory -Force | Out-Null
+            }
+            $sourcePath = Join-Path (Split-Path $GitHubDir -Parent) ($instr.path -replace '^\.\/', '')
+            Copy-Item -Path $sourcePath -Destination (Join-Path $destDir $filename) -Force
+        }
+    }
+
+    # Write manifest JSON
+    $manifest = [PSCustomObject]@{
+        artifacts = $manifestEntries
+    }
+
+    if (-not $DryRun) {
+        $manifest | ConvertTo-Json -Depth 5 | Set-Content -Path $manifestPath -Encoding UTF8NoBOM
+    }
+
+    return @{
+        ManifestPath  = $manifestPath
+        ArtifactCount = $manifestEntries.Count
+    }
 }
 
 function New-PrepareResult {
@@ -636,19 +753,33 @@ function Invoke-PrepareExtension {
         Write-Host "Excluded $($excludedInstructions.Count) instruction(s) due to maturity filter" -ForegroundColor Yellow
     }
 
-    # Update package.json
-    $packageJson = Update-PackageJsonContributes -PackageJson $packageJson `
-        -ChatAgents $chatAgents `
-        -ChatPromptFiles $chatPrompts `
-        -ChatInstructions $chatInstructions
+    # Write bundled manifest and copy artifact files
+    Write-Host "`n--- Bundled Manifest ---" -ForegroundColor Green
+    $bundledResult = Write-BundledManifest `
+        -ExtensionDirectory $ExtensionDirectory `
+        -GitHubDir $GitHubDir `
+        -Agents $chatAgents `
+        -Prompts $chatPrompts `
+        -Instructions $chatInstructions `
+        -DryRun:$DryRun
+
+    if (-not $DryRun) {
+        Write-Host "Wrote bundled-manifest.json with $($bundledResult.ArtifactCount) artifact(s)" -ForegroundColor Green
+    }
+    else {
+        Write-Host "[DRY RUN] Would write bundled-manifest.json with $($bundledResult.ArtifactCount) artifact(s)" -ForegroundColor Yellow
+    }
+
+    # Remove artifact contribution points from package.json
+    $packageJson = Update-PackageJsonContributes -PackageJson $packageJson
 
     # Write updated package.json
     if (-not $DryRun) {
         $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $PackageJsonPath -Encoding UTF8NoBOM
-        Write-Host "`nUpdated package.json with discovered artifacts" -ForegroundColor Green
+        Write-Host "Updated package.json (removed artifact contribution points)" -ForegroundColor Green
     }
     else {
-        Write-Host "`n[DRY RUN] Would update package.json with discovered artifacts" -ForegroundColor Yellow
+        Write-Host "[DRY RUN] Would update package.json (remove artifact contribution points)" -ForegroundColor Yellow
     }
 
     # Handle changelog

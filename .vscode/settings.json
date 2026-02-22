@@ -29,5 +29,6 @@
     "./scripts/linting/schemas/docs-frontmatter.schema.json": [
       "docs/**/*.md"
     ]
-  }
+  },
+  "hveCore.artifacts.initialized": true
 }

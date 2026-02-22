@@ -21,6 +21,11 @@
     "extension:prepare:prerelease": "pwsh ./scripts/extension/Prepare-Extension.ps1 -Channel PreRelease",
     "extension:package": "pwsh ./scripts/extension/Package-Extension.ps1",
     "extension:package:prerelease": "pwsh ./scripts/extension/Package-Extension.ps1 -PreRelease",
+    "extension:build": "cd extension && npm run build",
+    "extension:build:dev": "cd extension && npm run build:dev",
+    "extension:watch": "cd extension && npm run watch",
+    "extension:typecheck": "cd extension && npm run typecheck",
+    "extension:test": "cd extension && npm run test",
     "validate:copyright": "pwsh -File scripts/linting/Test-CopyrightHeaders.ps1",
     "plugin:generate": "pwsh -File scripts/plugins/Generate-Plugins.ps1 && npm run lint:md:fix && npm run format:tables",
     "plugin:validate": "pwsh -File scripts/plugins/Validate-Collections.ps1"

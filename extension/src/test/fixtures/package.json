@@ -1,0 +1,15 @@
+{
+  "name": "test-fixture",
+  "version": "0.0.0",
+  "contributes": {
+    "chatAgents": [
+      { "name": "test-agent", "path": "./.github/agents/test-agent.agent.md", "description": "Test agent" }
+    ],
+    "chatPromptFiles": [
+      { "name": "test-prompt", "path": "./.github/prompts/test-prompt.prompt.md", "description": "Test prompt" }
+    ],
+    "chatInstructions": [
+      { "name": "test-instruction", "path": "./.github/instructions/test.instructions.md", "description": "Test instruction" }
+    ]
+  }
+}

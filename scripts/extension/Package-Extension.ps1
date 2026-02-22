@@ -23,6 +23,11 @@
 .PARAMETER ChangelogPath
     Optional. Path to a changelog file to include in the package.
 
+.PARAMETER BumpPatch
+    Optional. When specified, automatically increments the patch version in package.json
+    before packaging (e.g., 2.2.0 -> 2.2.1). The updated version persists in package.json
+    after packaging completes.
+
 .PARAMETER PreRelease
     Optional. When specified, packages the extension for VS Code Marketplace pre-release channel.
     Uses vsce --pre-release flag which marks the extension for the pre-release track.
@@ -30,6 +35,10 @@
 .EXAMPLE
     ./Package-Extension.ps1
     # Packages using version from package.json
+
+.EXAMPLE
+    ./Package-Extension.ps1 -BumpPatch
+    # Increments patch version (e.g., 2.2.0 -> 2.2.1) and packages
 
 .EXAMPLE
     ./Package-Extension.ps1 -Version "2.0.0"
@@ -66,6 +75,9 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$ChangelogPath = "",
+
+    [Parameter(Mandatory = $false)]
+    [switch]$BumpPatch,
 
     [Parameter(Mandatory = $false)]
     [switch]$PreRelease
@@ -268,6 +280,30 @@ function New-PackagingResult {
     }
 }
 
+function Get-BumpedPatchVersion {
+    <#
+    .SYNOPSIS
+        Increments the patch component of a semantic version string.
+    .PARAMETER Version
+        Semantic version string (e.g., "2.2.0").
+    .OUTPUTS
+        String with incremented patch (e.g., "2.2.1").
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^\d+\.\d+\.\d+')]
+        [string]$Version
+    )
+
+    $Version -match '^(\d+)\.(\d+)\.(\d+)' | Out-Null
+    $major = [int]$Matches[1]
+    $minor = [int]$Matches[2]
+    $patch = [int]$Matches[3] + 1
+    return "$major.$minor.$patch"
+}
+
 function Get-ResolvedPackageVersion {
     <#
     .SYNOPSIS
@@ -278,6 +314,8 @@ function Get-ResolvedPackageVersion {
         Version from the package.json manifest.
     .PARAMETER DevPatchNumber
         Optional dev patch number to append.
+    .PARAMETER BumpPatch
+        When true, increments the patch version before resolving.
     .OUTPUTS
         Hashtable with IsValid, BaseVersion, PackageVersion, and ErrorMessage.
     #>
@@ -291,7 +329,10 @@ function Get-ResolvedPackageVersion {
         [string]$ManifestVersion,
 
         [Parameter(Mandatory = $false)]
-        [string]$DevPatchNumber = ""
+        [string]$DevPatchNumber = "",
+
+        [Parameter(Mandatory = $false)]
+        [switch]$BumpPatch
     )
 
     $baseVersion = ""
@@ -320,6 +361,11 @@ function Get-ResolvedPackageVersion {
         # Extract base version
         $ManifestVersion -match '^(\d+\.\d+\.\d+)' | Out-Null
         $baseVersion = $Matches[1]
+    }
+
+    # Apply patch bump if requested
+    if ($BumpPatch) {
+        $baseVersion = Get-BumpedPatchVersion -Version $baseVersion
     }
 
     # Apply dev patch number if provided
@@ -440,6 +486,25 @@ function Get-PackagingDirectorySpec {
     )
 }
 
+function Get-PackagingCleanupDirectories {
+    <#
+    .SYNOPSIS
+        Returns directory names to clean up after packaging.
+    .DESCRIPTION
+        Pure function that lists directories copied into the extension folder during
+        packaging that should be removed after vsce completes. The bundled/ directory
+        and bundled-manifest.json are produced by Prepare-Extension.ps1 and are NOT
+        cleaned up here — they persist for the extension to use at runtime.
+    .OUTPUTS
+        [string[]] Array of directory names to remove from the extension directory.
+    #>
+    [CmdletBinding()]
+    [OutputType([string[]])]
+    param()
+
+    return @(".github", "docs", "scripts")
+}
+
 #endregion Pure Functions
 
 #region I/O Functions
@@ -530,6 +595,33 @@ function Remove-PackagingArtifacts {
     }
 }
 
+function Remove-OldVsixFiles {
+    <#
+    .SYNOPSIS
+        Removes old .vsix files from the extension directory, keeping only the current version.
+    .PARAMETER ExtensionDirectory
+        Absolute path to the extension directory.
+    .PARAMETER CurrentVsixName
+        Filename of the newly packaged .vsix to keep.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ExtensionDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$CurrentVsixName
+    )
+
+    $oldFiles = Get-ChildItem -Path $ExtensionDirectory -Filter "*.vsix" |
+        Where-Object { $_.Name -ne $CurrentVsixName }
+
+    foreach ($file in $oldFiles) {
+        Remove-Item -Path $file.FullName -Force
+        Write-Host "   Removed old VSIX: $($file.Name)" -ForegroundColor Gray
+    }
+}
+
 function Restore-PackageJsonVersion {
     <#
     .SYNOPSIS
@@ -595,6 +687,9 @@ function Invoke-PackageExtension {
         Optional dev build patch number for pre-release versions.
     .PARAMETER ChangelogPath
         Optional path to changelog file to include in package.
+    .PARAMETER BumpPatch
+        When specified, increments the patch version (e.g., 2.2.0 -> 2.2.1) and persists
+        the new version in package.json after packaging.
     .PARAMETER PreRelease
         Switch to mark the package as a pre-release version.
     .OUTPUTS
@@ -621,15 +716,19 @@ function Invoke-PackageExtension {
         [string]$ChangelogPath = "",
 
         [Parameter(Mandatory = $false)]
+        [switch]$BumpPatch,
+
+        [Parameter(Mandatory = $false)]
         [switch]$PreRelease
     )
 
-    $dirsToClean = @(".github", "docs", "scripts")
+    $dirsToClean = Get-PackagingCleanupDirectories
     $originalVersion = $null
     $packageJson = $null
     $PackageJsonPath = $null
     $packageVersion = $null
     $versionWasModified = $false
+    $persistVersion = $false
 
     try {
         # Validate all inputs using pure function
@@ -662,7 +761,8 @@ function Invoke-PackageExtension {
         $versionResult = Get-ResolvedPackageVersion `
             -SpecifiedVersion $Version `
             -ManifestVersion $packageJson.version `
-            -DevPatchNumber $DevPatchNumber
+            -DevPatchNumber $DevPatchNumber `
+            -BumpPatch:$BumpPatch
 
         if (-not $versionResult.IsValid) {
             return New-PackagingResult -Success $false -ErrorMessage $versionResult.ErrorMessage
@@ -676,7 +776,12 @@ function Invoke-PackageExtension {
 
         if ($packageVersion -ne $originalVersion) {
             Write-Host ""
-            Write-Host "📝 Temporarily updating package.json version..." -ForegroundColor Yellow
+            if ($BumpPatch) {
+                Write-Host "📝 Bumping patch version in package.json..." -ForegroundColor Yellow
+                $persistVersion = $true
+            } else {
+                Write-Host "📝 Temporarily updating package.json version..." -ForegroundColor Yellow
+            }
             $packageJson.version = $packageVersion
             $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $PackageJsonPath -Encoding UTF8NoBOM
             Write-Host "   Version: $originalVersion -> $packageVersion" -ForegroundColor Green
@@ -732,6 +837,29 @@ function Invoke-PackageExtension {
 
         Write-Host "   ✅ Extension directory prepared" -ForegroundColor Green
 
+        # Build extension TypeScript source
+        Write-Host ""
+        Write-Host "🔨 Building extension..." -ForegroundColor Yellow
+
+        Push-Location $ExtensionDirectory
+        try {
+            $global:LASTEXITCODE = 0
+            npm run build
+            if ($LASTEXITCODE -ne 0) {
+                return New-PackagingResult -Success $false -ErrorMessage "Extension build failed with exit code $LASTEXITCODE"
+            }
+
+            $distFile = Join-Path $ExtensionDirectory "dist/extension.js"
+            if (-not (Test-Path $distFile)) {
+                return New-PackagingResult -Success $false -ErrorMessage "Build output not found: $distFile"
+            }
+
+            Write-Host "   ✅ Build complete" -ForegroundColor Green
+        }
+        finally {
+            Pop-Location
+        }
+
         # Check vsce availability using pure function
         $vsceAvailability = Test-VsceAvailable
         if (-not $vsceAvailability.IsAvailable) {
@@ -776,6 +904,9 @@ function Invoke-PackageExtension {
         Write-Host "   Size: $([math]::Round($vsixFile.Length / 1KB, 2)) KB" -ForegroundColor Cyan
         Write-Host "   Version: $packageVersion" -ForegroundColor Cyan
 
+        # Remove old .vsix files
+        Remove-OldVsixFiles -ExtensionDirectory $ExtensionDirectory -CurrentVsixName $vsixFile.Name
+
         # Output for CI/CD consumption
         Set-CIOutput -Name 'version' -Value $packageVersion
         Set-CIOutput -Name 'vsix-file' -Value $vsixFile.Name
@@ -796,11 +927,14 @@ function Invoke-PackageExtension {
         Write-Host "🧹 Cleaning up..." -ForegroundColor Yellow
         Remove-PackagingArtifacts -ExtensionDirectory $ExtensionDirectory -DirectoryNames $dirsToClean
 
-        # Restore original version if it was changed using I/O function
-        if ($versionWasModified) {
+        # Restore original version if it was changed temporarily (not for -BumpPatch)
+        if ($versionWasModified -and -not $persistVersion) {
             Write-Host ""
             Write-Host "🔄 Restoring original package.json version..." -ForegroundColor Yellow
             Restore-PackageJsonVersion -PackageJsonPath $PackageJsonPath -PackageJson $packageJson -OriginalVersion $originalVersion
+        } elseif ($persistVersion) {
+            Write-Host ""
+            Write-Host "📌 Version $packageVersion persisted in package.json" -ForegroundColor Green
         }
     }
 }
@@ -820,6 +954,7 @@ if ($MyInvocation.InvocationName -ne '.') {
             -Version $Version `
             -DevPatchNumber $DevPatchNumber `
             -ChangelogPath $ChangelogPath `
+            -BumpPatch:$BumpPatch `
             -PreRelease:$PreRelease
 
         if (-not $result.Success) {

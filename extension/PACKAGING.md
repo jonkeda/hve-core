@@ -12,11 +12,17 @@ This folder contains the VS Code extension configuration for HVE Core.
 
 ```plaintext
 extension/
+├── src/                  # TypeScript source (extension entry point, treeview, webview)
+├── dist/                 # Bundled output (extension.js, produced by esbuild)
 ├── .github/              # Temporarily copied during packaging (removed after)
 ├── docs/templates/       # Temporarily copied during packaging (removed after)
 ├── scripts/dev-tools/    # Temporarily copied during packaging (removed after)
 ├── package.json          # Extension manifest with VS Code configuration
+├── tsconfig.json         # TypeScript compiler configuration
+├── esbuild.config.mjs    # esbuild bundler configuration
+├── vitest.config.ts      # Unit test runner configuration
 ├── .vscodeignore         # Controls what gets packaged into the .vsix
+├── .gitignore            # Excludes dist/, node_modules/, etc.
 ├── README.md             # Extension marketplace description
 ├── LICENSE               # Copy of root LICENSE
 ├── CHANGELOG.md          # Copy of root CHANGELOG
@@ -34,7 +40,36 @@ The extension is configured with `"extensionKind": ["workspace", "ui"]` in `pack
 
 Access to files in the user's project workspace always uses the standard VS Code workspace APIs and is independent of the extension kind. Both modes use the same packaged extension assets and differ only in execution context (local UI versus remote/workspace). This bundling approach ensures GitHub Copilot can reliably access instruction files and scripts regardless of cross-platform path resolution issues (for example, Windows/WSL environments).
 
-This is a declarative extension: it contributes configuration and file paths, and VS Code (together with the GitHub Copilot extension) resolves those paths based on the selected extension host and the extension installation location; it does not implement any custom runtime fallback mechanism between workspace and bundled files.
+This is an active TypeScript extension: it contributes configuration, file paths, and runtime UI (sidebar treeview, webview detail panels, run commands). VS Code (together with the GitHub Copilot extension) resolves contributed paths based on the selected extension host and the extension installation location.
+
+## Building the Extension
+
+The extension uses esbuild to bundle TypeScript source into a single `dist/extension.js` file.
+
+```bash
+# Production build
+npm run build
+
+# Development build (no minification)
+npm run build:dev
+
+# Watch mode (rebuilds on file changes)
+npm run watch
+
+# Type checking only (no output)
+npm run typecheck
+
+# Run unit tests
+npm run test
+```
+
+All commands run from the `extension/` directory. Root-level convenience scripts are also available:
+
+```bash
+npm run extension:build
+npm run extension:typecheck
+npm run extension:test
+```
 
 ## Prerequisites
 
@@ -170,6 +205,7 @@ vsce publish --packagePath "$VSIX_FILE"
 
 The `extension/.vscodeignore` file controls what gets packaged. Currently included:
 
+* `dist/extension.js` - Bundled extension entry point (produced by esbuild)
 * `.github/agents/**` - All custom agent definitions
 * `.github/prompts/**` - All prompt templates
 * `.github/instructions/**` - All instruction files

@@ -243,16 +243,16 @@ Ready for commit.
 
 After completing RPI, you have:
 
-| Artifact  | Location                      | Purpose                           |
-|-----------|-------------------------------|-----------------------------------|
-| Questions | `.copilot-tracking/questions/`| Task-list document with proposals |
-| Brief     | `.copilot-tracking/research/` | Validated scope contract          |
-| Research  | `.copilot-tracking/research/` | Evidence and recommendations      |
-| Plan      | `.copilot-tracking/plans/`    | Checkboxes and phases             |
-| Details   | `.copilot-tracking/details/`  | Task specifications               |
-| Changes   | `.copilot-tracking/changes/`  | Change log                        |
-| Review    | `.copilot-tracking/reviews/`  | Validation findings               |
-| Code      | Your source directories       | Working implementation            |
+| Artifact  | Location                       | Purpose                           |
+|-----------|--------------------------------|-----------------------------------|
+| Questions | `.copilot-tracking/questions/` | Task-list document with proposals |
+| Brief     | `.copilot-tracking/research/`  | Validated scope contract          |
+| Research  | `.copilot-tracking/research/`  | Evidence and recommendations      |
+| Plan      | `.copilot-tracking/plans/`     | Checkboxes and phases             |
+| Details   | `.copilot-tracking/details/`   | Task specifications               |
+| Changes   | `.copilot-tracking/changes/`   | Change log                        |
+| Review    | `.copilot-tracking/reviews/`   | Validation findings               |
+| Code      | Your source directories        | Working implementation            |
 
 ## Common Patterns
 
@@ -293,11 +293,11 @@ The Review phase can trigger iteration back to earlier phases when findings reve
 
 Each phase transition offers a review and steering opportunity. Gate behavior depends on the autonomy mode:
 
-| Mode    | Gate Behavior                                                       |
-|---------|---------------------------------------------------------------------|
-| Full    | Logs a summary and proceeds automatically                           |
-| Partial | Presents summary with continue/steer options, then proceeds        |
-| Manual  | Presents detailed review and waits for explicit approval            |
+| Mode    | Gate Behavior                                               |
+|---------|-------------------------------------------------------------|
+| Full    | Logs a summary and proceeds automatically                   |
+| Partial | Presents summary with continue/steer options, then proceeds |
+| Manual  | Presents detailed review and waits for explicit approval    |
 
 At any gate, reply with feedback to redirect, or continue to proceed to the next phase.
 
@@ -333,13 +333,13 @@ When Task Reviewer identifies research or planning gaps:
 
 ## Quick Reference
 
-| Phase     | Invoke With                        | Agent               | Output                    |
-|-----------|------------------------------------|----------------------|---------------------------|
-| Frame     | `/task-question <topic>`           | Task Question        | questions.md, brief.md    |
-| Research  | `/task-research <topic>`           | Task Researcher      | research.md               |
-| Plan      | `/task-plan [research-path]`       | Task Planner         | plan.md, details.md       |
-| Implement | `/task-implement`                  | Task Implementor     | code + changes.md         |
-| Review    | `/task-review [scope]`             | Task Reviewer        | review.md                 |
+| Phase     | Invoke With                  | Agent            | Output                 |
+|-----------|------------------------------|------------------|------------------------|
+| Frame     | `/task-question <topic>`     | Task Question    | questions.md, brief.md |
+| Research  | `/task-research <topic>`     | Task Researcher  | research.md            |
+| Plan      | `/task-plan [research-path]` | Task Planner     | plan.md, details.md    |
+| Implement | `/task-implement`            | Task Implementor | code + changes.md      |
+| Review    | `/task-review [scope]`       | Task Reviewer    | review.md              |
 
 > [!TIP]
 > `/task-question`, `/task-research`, `/task-plan`, `/task-implement`, and `/task-review` all automatically switch to the appropriate custom agent.

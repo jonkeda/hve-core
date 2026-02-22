@@ -189,12 +189,12 @@ When responding:
 
 When questioning is sufficient, provide a structured handoff:
 
-| 📊 Summary              |                                    |
-|-------------------------|------------------------------------|
-| **Questions Document**  | Path to question file              |
-| **Research Brief**      | Path to research brief             |
-| **Rounds Completed**    | Number of Q&A rounds               |
-| **Questions Answered**  | Count of checked answers           |
+| 📊 Summary             |                          |
+|------------------------|--------------------------|
+| **Questions Document** | Path to question file    |
+| **Research Brief**     | Path to research brief   |
+| **Rounds Completed**   | Number of Q&A rounds     |
+| **Questions Answered** | Count of checked answers |
 
 ### Ready for Research
 

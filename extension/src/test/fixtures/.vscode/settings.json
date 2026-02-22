@@ -1,0 +1,6 @@
+{
+  "hveCore.artifacts.agents.enabled": true,
+  "hveCore.artifacts.prompts.enabled": true,
+  "hveCore.artifacts.instructions.enabled": true,
+  "hveCore.treeView.groupByType": true
+}

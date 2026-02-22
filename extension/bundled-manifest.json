@@ -1,0 +1,550 @@
+{
+  "artifacts": [
+    {
+      "name": "ado-prd-to-wit",
+      "type": "agent",
+      "relativePath": "agents/ado-prd-to-wit.agent.md",
+      "description": "Product Manager expert for analyzing PRDs and planning Azure DevOps work item hierarchies"
+    },
+    {
+      "name": "adr-creation",
+      "type": "agent",
+      "relativePath": "agents/adr-creation.agent.md",
+      "description": "Interactive AI coaching for collaborative architectural decision record creation with guided discovery, research integration, and progressive documentation building - Brought to you by microsoft/edge-ai"
+    },
+    {
+      "name": "arch-diagram-builder",
+      "type": "agent",
+      "relativePath": "agents/arch-diagram-builder.agent.md",
+      "description": "Architecture diagram builder agent that builds high quality ASCII-art diagrams - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "brd-builder",
+      "type": "agent",
+      "relativePath": "agents/brd-builder.agent.md",
+      "description": "Business Requirements Document builder with guided Q&A and reference integration"
+    },
+    {
+      "name": "doc-ops",
+      "type": "agent",
+      "relativePath": "agents/doc-ops.agent.md",
+      "description": "Autonomous documentation operations agent for pattern compliance, accuracy verification, and gap detection - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "gen-data-spec",
+      "type": "agent",
+      "relativePath": "agents/gen-data-spec.agent.md",
+      "description": "Generate comprehensive data dictionaries, machine-readable data profiles, and objective summaries for downstream analysis (EDA notebooks, dashboards) through guided discovery"
+    },
+    {
+      "name": "gen-jupyter-notebook",
+      "type": "agent",
+      "relativePath": "agents/gen-jupyter-notebook.agent.md",
+      "description": "Create structured exploratory data analysis Jupyter notebooks from available data sources and generated data dictionaries"
+    },
+    {
+      "name": "gen-streamlit-dashboard",
+      "type": "agent",
+      "relativePath": "agents/gen-streamlit-dashboard.agent.md",
+      "description": "Develop a multi-page Streamlit dashboard"
+    },
+    {
+      "name": "github-backlog-manager",
+      "type": "agent",
+      "relativePath": "agents/github-backlog-manager.agent.md",
+      "description": "Orchestrator agent for GitHub backlog management workflows including triage, discovery, sprint planning, and execution - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "hve-core-installer",
+      "type": "agent",
+      "relativePath": "agents/hve-core-installer.agent.md",
+      "description": "Decision-driven installer for HVE-Core with 6 installation methods for local, devcontainer, and Codespaces environments - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "instruction-analyzer",
+      "type": "agent",
+      "relativePath": "agents/instruction-analyzer.agent.md",
+      "description": "Analysis agent for proposing instruction files from source patterns with confidence scoring and clarification gating - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "instruction-generator",
+      "type": "agent",
+      "relativePath": "agents/instruction-generator.agent.md",
+      "description": "Generation agent for selected instruction files with handoff validation and fail-fast execution - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "memory",
+      "type": "agent",
+      "relativePath": "agents/memory.agent.md",
+      "description": "Conversation memory persistence for session continuity - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "pr-review",
+      "type": "agent",
+      "relativePath": "agents/pr-review.agent.md",
+      "description": "Comprehensive Pull Request review assistant ensuring code quality, security, and convention compliance - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "prd-builder",
+      "type": "agent",
+      "relativePath": "agents/prd-builder.agent.md",
+      "description": "Product Requirements Document builder with guided Q&A and reference integration"
+    },
+    {
+      "name": "prompt-builder",
+      "type": "agent",
+      "relativePath": "agents/prompt-builder.agent.md",
+      "description": "Prompt engineering assistant with phase-based workflow for creating and validating prompts, agents, and instructions files - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "rpi-agent",
+      "type": "agent",
+      "relativePath": "agents/rpi-agent.agent.md",
+      "description": "Autonomous RPI orchestrator dispatching task-* agents through Research → Decide → Plan → Implement → Review → Discover phases - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "security-plan-creator",
+      "type": "agent",
+      "relativePath": "agents/security-plan-creator.agent.md",
+      "description": "Expert security architect for creating comprehensive cloud security plans - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-implementor",
+      "type": "agent",
+      "relativePath": "agents/task-implementor.agent.md",
+      "description": "Executes implementation plans from .copilot-tracking/Task/ with progressive tracking and change records"
+    },
+    {
+      "name": "task-planner",
+      "type": "agent",
+      "relativePath": "agents/task-planner.agent.md",
+      "description": "Implementation planner for creating actionable implementation plans - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-question",
+      "type": "agent",
+      "relativePath": "agents/task-question.agent.md",
+      "description": "Pre-research question framing for defining research scope through interactive task-list documents - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-researcher",
+      "type": "agent",
+      "relativePath": "agents/task-researcher.agent.md",
+      "description": "Task research specialist for comprehensive project analysis - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-reviewer",
+      "type": "agent",
+      "relativePath": "agents/task-reviewer.agent.md",
+      "description": "Reviews completed implementation work for accuracy, completeness, and convention compliance - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "test-streamlit-dashboard",
+      "type": "agent",
+      "relativePath": "agents/test-streamlit-dashboard.agent.md",
+      "description": "Automated testing for Streamlit dashboards using Playwright with issue tracking and reporting"
+    },
+    {
+      "name": "ado-create-pull-request",
+      "type": "prompt",
+      "relativePath": "prompts/ado-create-pull-request.prompt.md",
+      "description": "Generate pull request description, discover related work items, identify reviewers, and create Azure DevOps pull request with all linkages."
+    },
+    {
+      "name": "ado-get-build-info",
+      "type": "prompt",
+      "relativePath": "prompts/ado-get-build-info.prompt.md",
+      "description": "Retrieve Azure DevOps build information for a Pull Request or specific Build Number."
+    },
+    {
+      "name": "ado-get-my-work-items",
+      "type": "prompt",
+      "relativePath": "prompts/ado-get-my-work-items.prompt.md",
+      "description": "Retrieve user's current Azure DevOps work items and organize them into planning file definitions"
+    },
+    {
+      "name": "ado-prd-to-wit",
+      "type": "prompt",
+      "relativePath": "prompts/ado-prd-to-wit.prompt.md",
+      "description": "Analyze PRDs and plan Azure DevOps work item hierarchies - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "ado-process-my-work-items-for-task-planning",
+      "type": "prompt",
+      "relativePath": "prompts/ado-process-my-work-items-for-task-planning.prompt.md",
+      "description": "Process retrieved work items for task planning and generate task-planning-logs.md handoff file"
+    },
+    {
+      "name": "ado-update-wit-items",
+      "type": "prompt",
+      "relativePath": "prompts/ado-update-wit-items.prompt.md",
+      "description": "Prompt to update work items based on planning files"
+    },
+    {
+      "name": "adr-create",
+      "type": "prompt",
+      "relativePath": "prompts/adr-create.prompt.md",
+      "description": "Create Architecture Decision Records through guided discovery and research integration - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "arch-diagram",
+      "type": "prompt",
+      "relativePath": "prompts/arch-diagram.prompt.md",
+      "description": "Build architecture diagrams from codebase analysis - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "brd-build",
+      "type": "prompt",
+      "relativePath": "prompts/brd-build.prompt.md",
+      "description": "Build Business Requirements Documents with guided Q&A and reference integration - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "checkpoint",
+      "type": "prompt",
+      "relativePath": "prompts/checkpoint.prompt.md",
+      "description": "Save or restore conversation context using memory files - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "doc-ops-update",
+      "type": "prompt",
+      "relativePath": "prompts/doc-ops-update.prompt.md",
+      "description": "Invoke doc-ops agent for documentation quality assurance and updates"
+    },
+    {
+      "name": "gen-data-spec",
+      "type": "prompt",
+      "relativePath": "prompts/gen-data-spec.prompt.md",
+      "description": "Generate data dictionaries, machine-readable data profiles, and objective summaries - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "gen-jupyter-notebook",
+      "type": "prompt",
+      "relativePath": "prompts/gen-jupyter-notebook.prompt.md",
+      "description": "Create structured exploratory data analysis Jupyter notebooks - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "gen-streamlit-dashboard",
+      "type": "prompt",
+      "relativePath": "prompts/gen-streamlit-dashboard.prompt.md",
+      "description": "Develop a multi-page Streamlit dashboard - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "git-commit-message",
+      "type": "prompt",
+      "relativePath": "prompts/git-commit-message.prompt.md",
+      "description": "Generates a commit message following the commit-message.instructions.md rules based on all changes in the branch"
+    },
+    {
+      "name": "git-commit",
+      "type": "prompt",
+      "relativePath": "prompts/git-commit.prompt.md",
+      "description": "Stages all changes, generates a conventional commit message, shows it to the user, and commits using only git add/commit"
+    },
+    {
+      "name": "git-merge",
+      "type": "prompt",
+      "relativePath": "prompts/git-merge.prompt.md",
+      "description": "Coordinate Git merge, rebase, and rebase --onto workflows with consistent conflict handling."
+    },
+    {
+      "name": "git-setup",
+      "type": "prompt",
+      "relativePath": "prompts/git-setup.prompt.md",
+      "description": "Interactive, verification-first Git configuration assistant (non-destructive)"
+    },
+    {
+      "name": "github-add-issue",
+      "type": "prompt",
+      "relativePath": "prompts/github-add-issue.prompt.md",
+      "description": "Create a GitHub issue using discovered repository templates and conversational field collection"
+    },
+    {
+      "name": "github-discover-issues",
+      "type": "prompt",
+      "relativePath": "prompts/github-discover-issues.prompt.md",
+      "description": "Discover GitHub issues through user-centric queries, artifact-driven analysis, or search-based exploration and produce planning files for review"
+    },
+    {
+      "name": "github-execute-backlog",
+      "type": "prompt",
+      "relativePath": "prompts/github-execute-backlog.prompt.md",
+      "description": "Execute a GitHub backlog plan by creating, updating, linking, closing, and commenting on issues from a handoff file"
+    },
+    {
+      "name": "github-sprint-plan",
+      "type": "prompt",
+      "relativePath": "prompts/github-sprint-plan.prompt.md",
+      "description": "Plan a GitHub milestone sprint by analyzing issue coverage, identifying gaps, and organizing work into a prioritized sprint backlog"
+    },
+    {
+      "name": "github-triage-issues",
+      "type": "prompt",
+      "relativePath": "prompts/github-triage-issues.prompt.md",
+      "description": "Triage GitHub issues not yet triaged with automated label suggestions, milestone assignment, and duplicate detection"
+    },
+    {
+      "name": "hve-core-install",
+      "type": "prompt",
+      "relativePath": "prompts/hve-core-install.prompt.md",
+      "description": "Decision-driven HVE-Core installation across multiple methods - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "incident-response",
+      "type": "prompt",
+      "relativePath": "prompts/incident-response.prompt.md",
+      "description": "Incident response workflow for Azure operations scenarios - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "instruction-files-from-source",
+      "type": "prompt",
+      "relativePath": "prompts/instruction-files-from-source.prompt.md",
+      "description": "Analyze source code and propose instruction files for selection - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "pr-review",
+      "type": "prompt",
+      "relativePath": "prompts/pr-review.prompt.md",
+      "description": "Comprehensive Pull Request review for code quality, security, and convention compliance - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "prd-build",
+      "type": "prompt",
+      "relativePath": "prompts/prd-build.prompt.md",
+      "description": "Build Product Requirements Documents with guided Q&A and reference integration - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "prompt-analyze",
+      "type": "prompt",
+      "relativePath": "prompts/prompt-analyze.prompt.md",
+      "description": "Evaluates prompt engineering artifacts against quality criteria and reports findings - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "prompt-build",
+      "type": "prompt",
+      "relativePath": "prompts/prompt-build.prompt.md",
+      "description": "Build or improve prompt engineering artifacts following quality criteria - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "prompt-refactor",
+      "type": "prompt",
+      "relativePath": "prompts/prompt-refactor.prompt.md",
+      "description": "Refactors and cleans up prompt engineering artifacts through iterative improvement - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "pull-request",
+      "type": "prompt",
+      "relativePath": "prompts/pull-request.prompt.md",
+      "description": "Provides prompt instructions for pull request (PR) generation - Brought to you by microsoft/edge-ai"
+    },
+    {
+      "name": "risk-register",
+      "type": "prompt",
+      "relativePath": "prompts/risk-register.prompt.md",
+      "description": "Creates a concise and well-structured qualitative risk register using a Probability × Impact (P×I) risk matrix."
+    },
+    {
+      "name": "rpi",
+      "type": "prompt",
+      "relativePath": "prompts/rpi.prompt.md",
+      "description": "Autonomous Research-Plan-Implement-Review-Discover workflow for completing tasks - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "security-plan",
+      "type": "prompt",
+      "relativePath": "prompts/security-plan.prompt.md",
+      "description": "Create comprehensive cloud security plans - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-decide",
+      "type": "prompt",
+      "relativePath": "prompts/task-decide.prompt.md",
+      "description": "Review and finalize research decisions before implementation planning - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-implement",
+      "type": "prompt",
+      "relativePath": "prompts/task-implement.prompt.md",
+      "description": "Locates and executes implementation plans using task-implementor mode - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-plan",
+      "type": "prompt",
+      "relativePath": "prompts/task-plan.prompt.md",
+      "description": "Initiates implementation planning based on user context or research documents - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-question",
+      "type": "prompt",
+      "relativePath": "prompts/task-question.prompt.md",
+      "description": "Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-research",
+      "type": "prompt",
+      "relativePath": "prompts/task-research.prompt.md",
+      "description": "Initiates research for implementation planning based on user requirements - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "task-review",
+      "type": "prompt",
+      "relativePath": "prompts/task-review.prompt.md",
+      "description": "Initiates implementation review based on user context or automatic artifact discovery - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "test-streamlit-dashboard",
+      "type": "prompt",
+      "relativePath": "prompts/test-streamlit-dashboard.prompt.md",
+      "description": "Automated Streamlit dashboard testing with Playwright - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "ado-create-pull-request-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/ado-create-pull-request.instructions.md",
+      "description": "Required protocol for creating Azure DevOps pull requests with work item discovery, reviewer identification, and automated linking."
+    },
+    {
+      "name": "ado-get-build-info-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/ado-get-build-info.instructions.md",
+      "description": "Required instructions for anything related to Azure Devops or ado build information including status, logs, or details from provided pullrequest (PR), build Id, or branch name."
+    },
+    {
+      "name": "ado-update-wit-items-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/ado-update-wit-items.instructions.md",
+      "description": "Work item creation and update protocol using MCP ADO tools with handoff tracking"
+    },
+    {
+      "name": "ado-wit-discovery-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/ado-wit-discovery.instructions.md",
+      "description": "Protocol for discovering Azure DevOps work items via user assignment or artifact analysis with planning file output"
+    },
+    {
+      "name": "ado-wit-planning-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/ado-wit-planning.instructions.md",
+      "description": "Reference specification for Azure DevOps work item planning files, templates, field definitions, and search protocols"
+    },
+    {
+      "name": "bash-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/bash.instructions.md",
+      "description": "Instructions for bash script implementation - Brought to you by microsoft/edge-ai"
+    },
+    {
+      "name": "bicep-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/bicep.instructions.md",
+      "description": "Instructions for Bicep infrastructure as code implementation - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "commit-message-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/commit-message.instructions.md",
+      "description": "Required instructions for creating all commit messages - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "community-interaction-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/community-interaction.instructions.md",
+      "description": "Community interaction voice, tone, and response templates for GitHub-facing agents and prompts"
+    },
+    {
+      "name": "copilot-tracking-conventions-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/copilot-tracking-conventions.instructions.md",
+      "description": "Shared naming and folder conventions for all .copilot-tracking/ categories"
+    },
+    {
+      "name": "csharp-tests-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/csharp-tests.instructions.md",
+      "description": "Required instructions for C# (CSharp) test code research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "csharp-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/csharp.instructions.md",
+      "description": "Required instructions for C# (CSharp) research, planning, implementation, editing, or creating - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "git-merge-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/git-merge.instructions.md",
+      "description": "Required protocol for Git merge, rebase, and rebase --onto workflows with conflict handling and stop controls."
+    },
+    {
+      "name": "github-backlog-discovery-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/github-backlog-discovery.instructions.md",
+      "description": "Discovery protocol for GitHub backlog management - artifact-driven, user-centric, and search-based issue discovery"
+    },
+    {
+      "name": "github-backlog-planning-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/github-backlog-planning.instructions.md",
+      "description": "Reference specification for GitHub backlog management tooling - planning files, search protocols, similarity assessment, and state persistence"
+    },
+    {
+      "name": "github-backlog-triage-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/github-backlog-triage.instructions.md",
+      "description": "Triage workflow for GitHub issue backlog management - automated label suggestion, milestone assignment, and duplicate detection"
+    },
+    {
+      "name": "github-backlog-update-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/github-backlog-update.instructions.md",
+      "description": "Execution workflow for GitHub issue backlog management - consumes planning handoffs and executes issue operations"
+    },
+    {
+      "name": "hve-core-location-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/hve-core-location.instructions.md",
+      "description": "Important: hve-core is the repository containing this instruction file; Guidance: if a referenced prompt, instructions, agent, or script is missing in the current directory, fall back to this hve-core location by walking up this file's directory tree."
+    },
+    {
+      "name": "markdown-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/markdown.instructions.md",
+      "description": "Required instructions for creating or editing any Markdown (.md) files"
+    },
+    {
+      "name": "prompt-builder-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/prompt-builder.instructions.md",
+      "description": "Authoring standards for prompt engineering artifacts including file types, protocol patterns, writing style, and quality criteria - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "python-script-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/python-script.instructions.md",
+      "description": "Instructions for Python scripting implementation - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "terraform-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/terraform.instructions.md",
+      "description": "Instructions for Terraform infrastructure as code implementation - Brought to you by microsoft/hve-core"
+    },
+    {
+      "name": "uv-projects-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/uv-projects.instructions.md",
+      "description": "Create and manage Python virtual environments using uv commands"
+    },
+    {
+      "name": "workflows-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/workflows.instructions.md",
+      "description": "Required instructions for GitHub Actions workflow files in hve-core repository"
+    },
+    {
+      "name": "writing-style-instructions",
+      "type": "instruction",
+      "relativePath": "instructions/writing-style.instructions.md",
+      "description": "Required writing style conventions for voice, tone, and language in all markdown content"
+    }
+  ]
+}
