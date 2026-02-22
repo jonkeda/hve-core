@@ -35,8 +35,8 @@ export class ArtifactManager {
   }
 
   /** Copies a bundled artifact to the workspace, enabling it. */
-  async enableArtifact(name: string): Promise<void> {
-    const entry = this.findEntry(name);
+  async enableArtifact(name: string, type?: ArtifactType): Promise<void> {
+    const entry = this.findEntry(name, type);
     if (!entry) return;
 
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
@@ -55,8 +55,8 @@ export class ArtifactManager {
   }
 
   /** Removes an artifact from the workspace, disabling it. */
-  async disableArtifact(name: string): Promise<void> {
-    const entry = this.findEntry(name);
+  async disableArtifact(name: string, type?: ArtifactType): Promise<void> {
+    const entry = this.findEntry(name, type);
     if (!entry) return;
 
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
@@ -117,7 +117,8 @@ export class ArtifactManager {
     }
   }
 
-  private findEntry(name: string): ManifestEntry | undefined {
+  private findEntry(name: string, type?: ArtifactType): ManifestEntry | undefined {
+    if (type) return this.manifest.artifacts.find((e) => e.name === name && e.type === type);
     return this.manifest.artifacts.find((e) => e.name === name);
   }
 

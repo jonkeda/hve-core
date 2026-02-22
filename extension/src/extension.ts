@@ -102,9 +102,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand(COMMANDS.toggleArtifact, async (element: TreeElement) => {
       if (element.kind !== 'artifact') return;
       if (element.item.enabled) {
-        await manager.disableArtifact(element.item.name);
+        await manager.disableArtifact(element.item.name, element.item.type);
       } else {
-        await manager.enableArtifact(element.item.name);
+        await manager.enableArtifact(element.item.name, element.item.type);
       }
       await refreshTree();
       await refreshSettingsPanel(manager);

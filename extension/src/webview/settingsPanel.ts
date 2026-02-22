@@ -84,27 +84,27 @@ export async function openSettingsPanel(
     await onDidToggle();
   };
 
-  panel.webview.onDidReceiveMessage(async (msg: { command: string; name?: string; names?: string[] }) => {
-    if (msg.command === 'toggle' && msg.name) {
-      const current = artifacts.find((a) => a.name === msg.name);
+  panel.webview.onDidReceiveMessage(async (msg: { command: string; name?: string; type?: string; items?: { name: string; type: string }[] }) => {
+    if (msg.command === 'toggle' && msg.name && msg.type) {
+      const current = artifacts.find((a) => a.name === msg.name && a.type === msg.type);
       if (current?.enabled) {
-        await manager.disableArtifact(msg.name);
+        await manager.disableArtifact(msg.name, msg.type as ArtifactType);
       } else {
-        await manager.enableArtifact(msg.name);
+        await manager.enableArtifact(msg.name, msg.type as ArtifactType);
       }
       await refreshAndNotify();
-    } else if (msg.command === 'enableNames' && msg.names) {
-      for (const name of msg.names) {
-        await manager.enableArtifact(name);
+    } else if (msg.command === 'enableItems' && msg.items) {
+      for (const item of msg.items) {
+        await manager.enableArtifact(item.name, item.type as ArtifactType);
       }
       await refreshAndNotify();
-    } else if (msg.command === 'disableNames' && msg.names) {
-      for (const name of msg.names) {
-        await manager.disableArtifact(name);
+    } else if (msg.command === 'disableItems' && msg.items) {
+      for (const item of msg.items) {
+        await manager.disableArtifact(item.name, item.type as ArtifactType);
       }
       await refreshAndNotify();
     } else if (msg.command === 'openDetail' && msg.name) {
-      const artifact = artifacts.find((a) => a.name === msg.name);
+      const artifact = artifacts.find((a) => a.name === msg.name && (!msg.type || a.type === msg.type));
       if (artifact) {
         await openDetailPanel(context, artifact);
       }
@@ -225,9 +225,9 @@ function collectDomainItems(section: DomainSection): ArtifactItem[] {
 function renderChildRow(item: ArtifactItem, domain: string): string {
   return `<div class="child-row">
                 <span class="type-badge">${typeIcon(item.type)}</span>
-                <input type="checkbox" data-name="${escapeHtml(item.name)}" data-domain="${escapeHtml(domain)}" ${item.enabled ? 'checked' : ''} />
+                <input type="checkbox" data-name="${escapeHtml(item.name)}" data-type="${item.type}" data-domain="${escapeHtml(domain)}" ${item.enabled ? 'checked' : ''} />
                 <span class="artifact-name">${escapeHtml(item.name)}</span>
-                <button class="open-btn" data-open="${escapeHtml(item.name)}" title="View details">\u{1F4C4}</button>
+                <button class="open-btn" data-open="${escapeHtml(item.name)}" data-open-type="${item.type}" title="View details">\u{1F4C4}</button>
               </div>`;
 }
 
@@ -254,9 +254,9 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
           <details class="prompt-group${hasChildren ? '' : ' prompt-leaf'}">
             <summary>
               <span class="type-badge">${typeIcon('prompt')}</span>
-              <input type="checkbox" data-name="${escapeHtml(g.prompt.name)}" data-domain="${escapeHtml(section.domain)}" ${g.prompt.enabled ? 'checked' : ''} />
+              <input type="checkbox" data-name="${escapeHtml(g.prompt.name)}" data-type="prompt" data-domain="${escapeHtml(section.domain)}" ${g.prompt.enabled ? 'checked' : ''} />
               <span class="artifact-name">${escapeHtml(g.prompt.name)}</span>
-              <button class="open-btn" data-open="${escapeHtml(g.prompt.name)}" title="View details">\u{1F4C4}</button>
+              <button class="open-btn" data-open="${escapeHtml(g.prompt.name)}" data-open-type="prompt" title="View details">\u{1F4C4}</button>
             </summary>${bodyHtml}
           </details>`;
     }).join('');
@@ -450,13 +450,10 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();
 
-    /* Prevent details toggle when clicking controls inside summary */
-    document.querySelectorAll('details > summary').forEach(function(s) {
-      s.addEventListener('click', function(e) {
-        var t = e.target;
-        if (t.tagName === 'INPUT' || t.tagName === 'BUTTON' || t.closest('button')) {
-          e.preventDefault();
-        }
+    /* Stop propagation from controls inside summary so details does not toggle */
+    document.querySelectorAll('details > summary input, details > summary button').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
       });
     });
 
@@ -466,11 +463,11 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
         var group = cb.closest('.prompt-group');
         var isSummaryCheckbox = group && cb.closest('summary');
         if (isSummaryCheckbox) {
-          var allInGroup = Array.from(group.querySelectorAll('input[type="checkbox"][data-name]')).map(function(c) { return c.dataset.name; });
-          var cmd = cb.checked ? 'enableNames' : 'disableNames';
-          vscode.postMessage({ command: cmd, names: allInGroup });
+          var allInGroup = Array.from(group.querySelectorAll('input[type="checkbox"][data-name]')).map(function(c) { return { name: c.dataset.name, type: c.dataset.type }; });
+          var cmd = cb.checked ? 'enableItems' : 'disableItems';
+          vscode.postMessage({ command: cmd, items: allInGroup });
         } else {
-          vscode.postMessage({ command: 'toggle', name: cb.dataset.name });
+          vscode.postMessage({ command: 'toggle', name: cb.dataset.name, type: cb.dataset.type });
         }
       });
     });
@@ -479,8 +476,8 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
     document.querySelectorAll('[data-enable-domain]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var domain = btn.dataset.enableDomain;
-        var names = Array.from(document.querySelectorAll('input[data-domain="' + domain + '"]')).map(function(c) { return c.dataset.name; });
-        vscode.postMessage({ command: 'enableNames', names: names });
+        var items = Array.from(document.querySelectorAll('input[data-domain="' + domain + '"]')).map(function(c) { return { name: c.dataset.name, type: c.dataset.type }; });
+        vscode.postMessage({ command: 'enableItems', items: items });
       });
     });
 
@@ -488,15 +485,15 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
     document.querySelectorAll('[data-disable-domain]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var domain = btn.dataset.disableDomain;
-        var names = Array.from(document.querySelectorAll('input[data-domain="' + domain + '"]')).map(function(c) { return c.dataset.name; });
-        vscode.postMessage({ command: 'disableNames', names: names });
+        var items = Array.from(document.querySelectorAll('input[data-domain="' + domain + '"]')).map(function(c) { return { name: c.dataset.name, type: c.dataset.type }; });
+        vscode.postMessage({ command: 'disableItems', items: items });
       });
     });
 
     /* Open detail button */
     document.querySelectorAll('[data-open]').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        vscode.postMessage({ command: 'openDetail', name: btn.dataset.open });
+        vscode.postMessage({ command: 'openDetail', name: btn.dataset.open, type: btn.dataset.openType });
       });
     });
 
@@ -506,7 +503,7 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
       if (msg.command === 'update') {
         var artifacts = msg.artifacts;
         document.querySelectorAll('input[type="checkbox"][data-name]').forEach(function(cb) {
-          var a = artifacts.find(function(x) { return x.name === cb.dataset.name; });
+          var a = artifacts.find(function(x) { return x.name === cb.dataset.name && x.type === cb.dataset.type; });
           if (a) cb.checked = a.enabled;
         });
         var counts = {};
