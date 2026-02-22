@@ -5,7 +5,7 @@
     "workspace",
     "ui"
   ],
-  "version": "2.2.29",
+  "version": "2.2.32",
   "description": "AI-powered chat agents, prompts, and instructions for hybrid virtual environments",
   "publisher": "ise-hve-essentials",
   "repository": {
@@ -131,22 +131,22 @@
         {
           "command": "hveCore.runArtifact",
           "when": "view == hveCore.artifactExplorer && viewItem =~ /^(prompt|agent)/",
-          "group": "inline"
+          "group": "inline@1"
         },
         {
           "command": "hveCore.openDetail",
           "when": "view == hveCore.artifactExplorer && viewItem =~ /^(prompt|agent|instruction)/",
-          "group": "inline"
+          "group": "inline@2"
         },
         {
           "command": "hveCore.addFavorite",
           "when": "view == hveCore.artifactExplorer && viewItem == prompt",
-          "group": "inline"
+          "group": "inline@3"
         },
         {
           "command": "hveCore.removeFavorite",
           "when": "view == hveCore.artifactExplorer && viewItem == prompt-fav",
-          "group": "inline"
+          "group": "inline@3"
         }
       ],
       "commandPalette": [

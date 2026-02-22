@@ -37,7 +37,7 @@ export async function openRunPanel(
 
   // No parameters found — run directly in chat
   if (params.length === 0) {
-    const query = artifact.type === 'agent' ? `@${artifact.name} ` : `/${artifact.name} `;
+    const query = artifact.type === 'agent' ? `@${artifact.name} ` : `#prompt:${artifact.name}`;
     await vscode.commands.executeCommand('workbench.action.chat.open', { query });
     return;
   }
@@ -213,7 +213,7 @@ function buildRunHtml(
   params: PromptParam[],
 ): string {
   const nonce = getNonce();
-  const prefix = artifact.type === 'agent' ? `@${artifact.name} ` : `/${artifact.name} `;
+  const prefix = artifact.type === 'agent' ? `@${artifact.name} ` : `#prompt:${artifact.name} `;
 
   const paramFields = params
     .map((p) => {

@@ -133,6 +133,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (!favs.includes(element.item.name)) {
         favs.push(element.item.name);
         await setFavorites(favs);
+        await copyPromptToRoot(element.item.name);
         await refreshSettingsPanel(manager);
       }
     }),
@@ -144,6 +145,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (idx >= 0) {
         favs.splice(idx, 1);
         await setFavorites(favs);
+        await removePromptFromRoot(element.item.name);
         await refreshSettingsPanel(manager);
       }
     }),
@@ -159,7 +161,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       const cmdId = `hveCore.runFavorite.${name}`;
       const d = vscode.commands.registerCommand(cmdId, () =>
         vscode.commands.executeCommand('workbench.action.chat.open', {
-          query: `/${name} `,
+          query: `#prompt:${name}`,
           isPartialQuery: true,
         }),
       );
@@ -168,6 +170,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   };
 
   registerFavoriteCommands();
+  // Restore root prompt copies for existing favorites
+  for (const name of getFavorites()) {
+    await copyPromptToRoot(name);
+  }
   context.subscriptions.push({ dispose: () => favoriteDisposables.forEach((d) => d.dispose()) });
 
   // Re-register favorite commands and refresh tree when favorites change
@@ -193,6 +199,28 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
 export function deactivate(): void {
   // Cleanup handled by disposables registered in context.subscriptions
+}
+
+/** Copies a prompt file to .github/prompts/ root for /slash-command discovery. */
+export async function copyPromptToRoot(name: string): Promise<void> {
+  const ws = vscode.workspace.workspaceFolders?.[0];
+  if (!ws) return;
+  const source = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', 'hve-core', `${name}.prompt.md`);
+  const target = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', `${name}.prompt.md`);
+  try {
+    const content = await vscode.workspace.fs.readFile(source);
+    await vscode.workspace.fs.writeFile(target, content);
+  } catch { /* source not found — prompt not enabled */ }
+}
+
+/** Removes a prompt file from .github/prompts/ root. */
+export async function removePromptFromRoot(name: string): Promise<void> {
+  const ws = vscode.workspace.workspaceFolders?.[0];
+  if (!ws) return;
+  const target = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', `${name}.prompt.md`);
+  try {
+    await vscode.workspace.fs.delete(target);
+  } catch { /* already removed */ }
 }
 
 /** Offers to add managed artifact directories to .gitignore. */
