@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { type ArtifactItem, type ArtifactType, inferDomain } from '../models/types';
 import { type ArtifactManager } from '../services/artifactManager';
 import { openDetailPanel } from './dashboardPanel';
+import { getFavorites, setFavorites } from '../settings/configuration';
 import { getNonce } from '../utils/paths';
 
 let activeSettingsPanel: vscode.WebviewPanel | undefined;
@@ -74,13 +75,13 @@ export async function openSettingsPanel(
   panel.onDidDispose(() => { activeSettingsPanel = undefined; });
 
   const artifacts = await manager.getArtifacts();
-  panel.webview.html = buildSettingsHtml(artifacts);
+  panel.webview.html = buildSettingsHtml(artifacts, getFavorites());
 
   const refreshAndNotify = async (): Promise<void> => {
     const updated = await manager.getArtifacts();
     artifacts.length = 0;
     artifacts.push(...updated);
-    panel.webview.postMessage({ command: 'update', artifacts: updated });
+    panel.webview.postMessage({ command: 'update', artifacts: updated, favorites: getFavorites() });
     await onDidToggle();
   };
 
@@ -108,6 +109,16 @@ export async function openSettingsPanel(
       if (artifact) {
         await openDetailPanel(context, artifact);
       }
+    } else if (msg.command === 'toggleFavorite' && msg.name) {
+      const favs = [...getFavorites()];
+      const idx = favs.indexOf(msg.name);
+      if (idx >= 0) {
+        favs.splice(idx, 1);
+      } else {
+        favs.push(msg.name);
+      }
+      await setFavorites(favs);
+      panel.webview.postMessage({ command: 'updateFavorites', favorites: favs });
     }
   }, undefined, context.subscriptions);
 }
@@ -116,7 +127,7 @@ export async function openSettingsPanel(
 export async function refreshSettingsPanel(manager: ArtifactManager): Promise<void> {
   if (!activeSettingsPanel) return;
   const updated = await manager.getArtifacts();
-  activeSettingsPanel.webview.postMessage({ command: 'update', artifacts: updated });
+  activeSettingsPanel.webview.postMessage({ command: 'update', artifacts: updated, favorites: getFavorites() });
 }
 
 function escapeHtml(text: string): string {
@@ -231,8 +242,9 @@ function renderChildRow(item: ArtifactItem, domain: string): string {
               </div>`;
 }
 
-function buildSettingsHtml(artifacts: ArtifactItem[]): string {
+function buildSettingsHtml(artifacts: ArtifactItem[], favorites: string[]): string {
   const nonce = getNonce();
+  const favSet = new Set(favorites);
   const sections = buildDomainSections(artifacts);
 
   const domainHtml = sections.map((section) => {
@@ -257,6 +269,7 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
               <input type="checkbox" data-name="${escapeHtml(g.prompt.name)}" data-type="prompt" data-domain="${escapeHtml(section.domain)}" ${g.prompt.enabled ? 'checked' : ''} />
               <span class="artifact-name">${escapeHtml(g.prompt.name)}</span>
               <button class="open-btn" data-open="${escapeHtml(g.prompt.name)}" data-open-type="prompt" title="View details">\u{1F4C4}</button>
+              <button type="button" class="fav-btn" data-fav="${escapeHtml(g.prompt.name)}" title="Toggle favorite">${favSet.has(g.prompt.name) ? '\u2605' : '\u2606'}</button>
             </summary>${bodyHtml}
           </details>`;
     }).join('');
@@ -430,6 +443,18 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
       opacity: 1;
       background: var(--vscode-list-hoverBackground);
     }
+    .fav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95em;
+      padding: 2px 4px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .fav-btn:hover {
+      background: var(--vscode-list-hoverBackground);
+    }
     .link-btn {
       background: none;
       border: none;
@@ -450,8 +475,17 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();
 
+    /* Favorite toggle — must be registered before generic stopPropagation */
+    document.querySelectorAll('[data-fav]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        vscode.postMessage({ command: 'toggleFavorite', name: btn.dataset.fav });
+      });
+    });
+
     /* Stop propagation from controls inside summary so details does not toggle */
-    document.querySelectorAll('details > summary input, details > summary button').forEach(function(el) {
+    document.querySelectorAll('details > summary input, details > summary button:not(.fav-btn)').forEach(function(el) {
       el.addEventListener('click', function(e) {
         e.stopPropagation();
       });
@@ -498,6 +532,12 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
     });
 
     /* Update handler */
+    function updateStars(favorites) {
+      document.querySelectorAll('[data-fav]').forEach(function(btn) {
+        btn.textContent = favorites.indexOf(btn.dataset.fav) >= 0 ? '\u2605' : '\u2606';
+      });
+    }
+
     window.addEventListener('message', function(e) {
       var msg = e.data;
       if (msg.command === 'update') {
@@ -517,6 +557,10 @@ function buildSettingsHtml(artifacts: ArtifactItem[]): string {
           var d = el.dataset.domainCount;
           if (counts[d]) el.textContent = '(' + counts[d].enabled + '/' + counts[d].total + ')';
         });
+        if (msg.favorites) updateStars(msg.favorites);
+      }
+      if (msg.command === 'updateFavorites' && msg.favorites) {
+        updateStars(msg.favorites);
       }
     });
   </script>

@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { type ArtifactItem } from '../models/types';
 import { resolveArtifactUri, getNonce } from '../utils/paths';
 
@@ -17,6 +19,7 @@ interface PromptParam {
   defaultValue: string;
   description: string;
   choices: PromptChoice[];
+  isBoolean: boolean;
 }
 
 /** Opens a parameter input panel for the given artifact before running it in chat. */
@@ -49,10 +52,63 @@ export async function openRunPanel(
   activeRunPanels.set(artifact.name, panel);
   panel.onDidDispose(() => activeRunPanels.delete(artifact.name));
 
-  panel.webview.onDidReceiveMessage(async (message: { command: string; query?: string }) => {
-    if (message.command === 'run' && message.query) {
-      await vscode.commands.executeCommand('workbench.action.chat.open', { query: message.query });
-      panel.dispose();
+  panel.webview.onDidReceiveMessage(async (message: { command: string; query?: string; attachFiles?: string[] }) => {
+    switch (message.command) {
+      case 'run': {
+        if (!message.query) break;
+        const opts: Record<string, unknown> = { query: message.query };
+        if (message.attachFiles?.length) {
+          opts.attachFiles = message.attachFiles.map(f => vscode.Uri.parse(f));
+        }
+        await vscode.commands.executeCommand('workbench.action.chat.open', opts);
+        panel.dispose();
+        break;
+      }
+      case 'pasteImage': {
+        const msg = message as { command: string; data?: string; mimeType?: string };
+        if (msg.data) {
+          const ext = msg.mimeType === 'image/jpeg' ? '.jpg'
+            : msg.mimeType === 'image/gif' ? '.gif'
+            : msg.mimeType === 'image/webp' ? '.webp'
+            : '.png';
+          const fileName = `pasted-${Date.now()}${ext}`;
+          const filePath = join(tmpdir(), fileName);
+          const fileUri = vscode.Uri.file(filePath);
+          const buffer = Buffer.from(msg.data, 'base64');
+          await vscode.workspace.fs.writeFile(fileUri, buffer);
+          await panel.webview.postMessage({
+            command: 'filesSelected',
+            paths: [{ uri: fileUri.toString(), name: fileName, kind: 'image' }],
+          });
+        }
+        break;
+      }
+      case 'pickFiles':
+      case 'pickFolders':
+      case 'pickImages': {
+        const isFolder = message.command === 'pickFolders';
+        const isImage = message.command === 'pickImages';
+        const filters = isImage
+          ? { Images: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'] }
+          : undefined;
+        const uris = await vscode.window.showOpenDialog({
+          canSelectMany: true,
+          canSelectFiles: !isFolder,
+          canSelectFolders: isFolder,
+          defaultUri: vscode.workspace.workspaceFolders?.[0]?.uri,
+          title: isFolder ? 'Select Context Folders' : isImage ? 'Select Images' : 'Select Context Files',
+          filters,
+        });
+        if (uris?.length) {
+          const paths = uris.map(u => ({
+            uri: u.toString(),
+            name: u.path.split('/').pop() ?? u.toString(),
+            kind: isFolder ? 'folder' : isImage ? 'image' : 'file',
+          }));
+          await panel.webview.postMessage({ command: 'filesSelected', paths });
+        }
+        break;
+      }
     }
   });
 
@@ -117,7 +173,7 @@ function parseInputVariables(text: string): PromptParam[] {
       j++;
     }
 
-    params.push({ name, defaultValue, description, choices });
+    params.push({ name, defaultValue, description, choices, isBoolean: /^(true|false)$/i.test(defaultValue) });
   }
 
   return params;
@@ -194,6 +250,17 @@ function buildRunHtml(
         <div class="radio-group" data-param="${escaped}">
           ${radios}
         </div>
+      </div>`;
+      }
+
+      if (p.isBoolean) {
+        const checked = p.defaultValue.toLowerCase() === 'true' ? ' checked' : '';
+        return `
+      <div class="field-card">
+        <label class="bool-label">
+          <input type="checkbox" data-param="${escaped}" data-bool="true"${checked} />
+          <span>${humanName}${badgeHtml}</span>
+        </label>${descHtml}
       </div>`;
       }
 
@@ -340,6 +407,18 @@ function buildRunHtml(
       accent-color: var(--vscode-focusBorder);
       flex-shrink: 0;
     }
+    .bool-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .bool-label input[type="checkbox"] {
+      accent-color: var(--vscode-focusBorder);
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
     .choice-value {
       font-weight: 600;
       font-family: var(--vscode-editor-font-family, monospace);
@@ -369,6 +448,72 @@ function buildRunHtml(
     .run-btn:hover {
       background: var(--vscode-button-hoverBackground);
     }
+
+    /* Context section */
+    .context-section {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--vscode-widget-border, rgba(128,128,128,0.35));
+    }
+    .context-label {
+      font-weight: 600;
+      font-size: 0.95em;
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+    .context-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .ctx-btn {
+      background: transparent;
+      color: var(--vscode-editor-foreground);
+      border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.4));
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.88em;
+      font-family: var(--vscode-font-family);
+      transition: background 0.1s;
+    }
+    .ctx-btn:hover {
+      background: color-mix(in srgb, var(--vscode-list-hoverBackground, rgba(128,128,128,0.1)) 60%, transparent);
+    }
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: color-mix(in srgb, var(--vscode-badge-background, #616161) 30%, transparent);
+      color: var(--vscode-editor-foreground);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.82em;
+      max-width: 220px;
+    }
+    .chip-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chip-remove {
+      background: none;
+      border: none;
+      color: var(--vscode-editor-foreground);
+      cursor: pointer;
+      padding: 0 2px;
+      font-size: 1em;
+      opacity: 0.7;
+      line-height: 1;
+    }
+    .chip-remove:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -388,17 +533,91 @@ function buildRunHtml(
       </div>
       ${paramFields}
     </form>
+
+    <div class="context-section">
+      <div class="context-label">Context (optional)</div>
+      <div class="context-buttons">
+        <button type="button" class="ctx-btn" data-pick="pickFiles">&#128196; Files</button>
+        <button type="button" class="ctx-btn" data-pick="pickFolders">&#128193; Folders</button>
+        <button type="button" class="ctx-btn" data-pick="pickImages">&#128444;&#65039; Images</button>
+        <button type="button" class="ctx-btn" id="paste-btn">&#128203; Paste</button>
+      </div>
+      <div class="chip-container" id="chip-container"></div>
+    </div>
   </div>
 
   <script nonce="${nonce}">
     (function() {
       const vscode = acquireVsCodeApi();
       const prefix = ${JSON.stringify(prefix)};
+      const selectedFiles = [];
+
+      function esc(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      function renderChips() {
+        const container = document.getElementById('chip-container');
+        container.innerHTML = selectedFiles.map(function(f, i) {
+          var icon = f.kind === 'folder' ? '\uD83D\uDCC1' : f.kind === 'image' ? '\uD83D\uDDBC\uFE0F' : '\uD83D\uDCC4';
+          return '<span class="chip" title="' + esc(f.uri) + '">' +
+            '<span class="chip-icon">' + icon + '</span>' +
+            '<span class="chip-name">' + esc(f.name) + '</span>' +
+            '<button type="button" class="chip-remove" data-idx="' + i + '">&times;</button>' +
+            '</span>';
+        }).join('');
+      }
+
+      document.getElementById('chip-container').addEventListener('click', function(e) {
+        var btn = e.target.closest('.chip-remove');
+        if (btn) {
+          selectedFiles.splice(Number(btn.dataset.idx), 1);
+          renderChips();
+        }
+      });
+
+      document.querySelectorAll('.ctx-btn[data-pick]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          vscode.postMessage({ command: btn.dataset.pick });
+        });
+      });
+
+      document.getElementById('paste-btn').addEventListener('click', async function() {
+        try {
+          var items = await navigator.clipboard.read();
+          for (var item of items) {
+            var imageType = item.types.find(function(t) { return t.startsWith('image/'); });
+            if (imageType) {
+              var blob = await item.getType(imageType);
+              var reader = new FileReader();
+              reader.onloadend = function() {
+                var base64 = reader.result.split(',')[1];
+                vscode.postMessage({ command: 'pasteImage', data: base64, mimeType: imageType });
+              };
+              reader.readAsDataURL(blob);
+              return;
+            }
+          }
+        } catch (_e) { /* clipboard not available or empty */ }
+      });
+
+      window.addEventListener('message', function(event) {
+        var msg = event.data;
+        if (msg.command === 'filesSelected' && msg.paths) {
+          for (var p of msg.paths) {
+            if (!selectedFiles.some(function(f) { return f.uri === p.uri; })) {
+              selectedFiles.push(p);
+            }
+          }
+          renderChips();
+        }
+      });
 
       document.getElementById('run-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textAreas = document.querySelectorAll('textarea[data-param]');
         const radioGroups = document.querySelectorAll('.radio-group[data-param]');
+        const boolCheckboxes = document.querySelectorAll('input[type="checkbox"][data-bool]');
         let query = prefix;
         textAreas.forEach(input => {
           const val = input.value.trim();
@@ -412,7 +631,11 @@ function buildRunHtml(
             query += checked.value.trim() + ' ';
           }
         });
-        vscode.postMessage({ command: 'run', query: query.trim() });
+        boolCheckboxes.forEach(cb => {
+          query += (cb.checked ? 'true' : 'false') + ' ';
+        });
+        const attachFiles = selectedFiles.map(function(f) { return f.uri; });
+        vscode.postMessage({ command: 'run', query: query.trim(), attachFiles: attachFiles });
       });
     })();
   </script>

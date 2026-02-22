@@ -5,7 +5,7 @@
     "workspace",
     "ui"
   ],
-  "version": "2.2.14",
+  "version": "2.2.22",
   "description": "AI-powered chat agents, prompts, and instructions for hybrid virtual environments",
   "publisher": "ise-hve-essentials",
   "repository": {
@@ -90,6 +90,18 @@
         "command": "hveCore.disableAll",
         "title": "Disable All Artifacts",
         "category": "HVE Core"
+      },
+      {
+        "command": "hveCore.addFavorite",
+        "title": "Add Favorite",
+        "icon": "$(star-empty)",
+        "category": "HVE Core"
+      },
+      {
+        "command": "hveCore.removeFavorite",
+        "title": "Remove Favorite",
+        "icon": "$(star-full)",
+        "category": "HVE Core"
       }
     ],
     "menus": {
@@ -118,13 +130,45 @@
       "view/item/context": [
         {
           "command": "hveCore.runArtifact",
-          "when": "view == hveCore.artifactExplorer && viewItem == runnable",
+          "when": "view == hveCore.artifactExplorer && viewItem =~ /^(prompt|agent)/",
           "group": "inline"
         },
         {
           "command": "hveCore.openDetail",
-          "when": "view == hveCore.artifactExplorer && viewItem =~ /^(runnable|instruction)$/",
+          "when": "view == hveCore.artifactExplorer && viewItem =~ /^(prompt|agent|instruction)/",
           "group": "inline"
+        },
+        {
+          "command": "hveCore.addFavorite",
+          "when": "view == hveCore.artifactExplorer && viewItem == prompt",
+          "group": "inline"
+        },
+        {
+          "command": "hveCore.removeFavorite",
+          "when": "view == hveCore.artifactExplorer && viewItem == prompt-fav",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "hveCore.runArtifact",
+          "when": "false"
+        },
+        {
+          "command": "hveCore.openDetail",
+          "when": "false"
+        },
+        {
+          "command": "hveCore.toggleArtifact",
+          "when": "false"
+        },
+        {
+          "command": "hveCore.addFavorite",
+          "when": "false"
+        },
+        {
+          "command": "hveCore.removeFavorite",
+          "when": "false"
         }
       ]
     },

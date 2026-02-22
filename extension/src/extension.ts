@@ -4,7 +4,7 @@ import { ArtifactTreeProvider } from './treeview/treeDataProvider';
 import { openDetailPanel } from './webview/dashboardPanel';
 import { openRunPanel } from './webview/runPanel';
 import { openSettingsPanel, refreshSettingsPanel } from './webview/settingsPanel';
-import { isGroupByType, setGroupByType, isInitialized, setInitialized } from './settings/configuration';
+import { isGroupByType, setGroupByType, isInitialized, setInitialized, getFavorites, setFavorites, initFavorites, onFavoritesChanged } from './settings/configuration';
 import { ArtifactManager } from './services/artifactManager';
 import { VIEW_ID, COMMANDS, CONFIG } from './constants';
 
@@ -15,6 +15,7 @@ const GITIGNORE_ENTRIES = [
 ];
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  initFavorites(context.workspaceState);
   const manager = new ArtifactManager(context.extensionUri);
   const provider = new ArtifactTreeProvider();
 
@@ -124,6 +125,56 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       await manager.disableAll();
       await refreshTree();
       await refreshSettingsPanel(manager);
+    }),
+
+    vscode.commands.registerCommand(COMMANDS.addFavorite, async (element: TreeElement) => {
+      if (element?.kind !== 'artifact' || element.item.type !== 'prompt') return;
+      const favs = [...getFavorites()];
+      if (!favs.includes(element.item.name)) {
+        favs.push(element.item.name);
+        await setFavorites(favs);
+        await refreshSettingsPanel(manager);
+      }
+    }),
+
+    vscode.commands.registerCommand(COMMANDS.removeFavorite, async (element: TreeElement) => {
+      if (element?.kind !== 'artifact' || element.item.type !== 'prompt') return;
+      const favs = [...getFavorites()];
+      const idx = favs.indexOf(element.item.name);
+      if (idx >= 0) {
+        favs.splice(idx, 1);
+        await setFavorites(favs);
+        await refreshSettingsPanel(manager);
+      }
+    }),
+  );
+
+  // Dynamic commands for favorited prompts
+  let favoriteDisposables: vscode.Disposable[] = [];
+
+  const registerFavoriteCommands = (): void => {
+    for (const d of favoriteDisposables) d.dispose();
+    favoriteDisposables = [];
+    for (const name of getFavorites()) {
+      const cmdId = `hveCore.runFavorite.${name}`;
+      const d = vscode.commands.registerCommand(cmdId, () =>
+        vscode.commands.executeCommand('workbench.action.chat.open', {
+          query: `/${name} `,
+          isPartialQuery: true,
+        }),
+      );
+      favoriteDisposables.push(d);
+    }
+  };
+
+  registerFavoriteCommands();
+  context.subscriptions.push({ dispose: () => favoriteDisposables.forEach((d) => d.dispose()) });
+
+  // Re-register favorite commands and refresh tree when favorites change
+  context.subscriptions.push(
+    onFavoritesChanged(() => {
+      registerFavoriteCommands();
+      provider.refresh();
     }),
   );
 

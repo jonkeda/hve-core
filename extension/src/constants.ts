@@ -10,6 +10,8 @@ export const COMMANDS = {
   toggleArtifact: 'hveCore.toggleArtifact',
   enableAll: 'hveCore.enableAll',
   disableAll: 'hveCore.disableAll',
+  addFavorite: 'hveCore.addFavorite',
+  removeFavorite: 'hveCore.removeFavorite',
 } as const;
 
 export const CONFIG = {

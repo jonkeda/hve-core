@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { type ArtifactItem, type TreeElement } from '../models/types';
 import { COMMANDS } from '../constants';
+import { getFavorites } from '../settings/configuration';
 
 const TYPE_ICONS: Record<string, vscode.ThemeIcon> = {
   agent: new vscode.ThemeIcon('hubot'),
@@ -22,7 +23,14 @@ export function createArtifactItem(artifact: ArtifactItem): vscode.TreeItem {
   const typeLabel = artifact.type.charAt(0).toUpperCase() + artifact.type.slice(1);
   item.tooltip = new vscode.MarkdownString(`**[${typeLabel}]** ${artifact.name}\n\n${artifact.description}`);
   item.iconPath = TYPE_ICONS[artifact.type] ?? new vscode.ThemeIcon('file');
-  item.contextValue = artifact.type === 'instruction' ? 'instruction' : 'runnable';
+
+  const isPrompt = artifact.type === 'prompt';
+  const isFav = isPrompt && getFavorites().includes(artifact.name);
+  if (isPrompt) {
+    item.contextValue = isFav ? 'prompt-fav' : 'prompt';
+  } else {
+    item.contextValue = artifact.type === 'instruction' ? 'instruction' : 'agent';
+  }
 
   const isRunnable = artifact.type !== 'instruction';
   item.command = {
