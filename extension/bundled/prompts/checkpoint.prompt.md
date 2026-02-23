@@ -4,6 +4,7 @@ description: "Save or restore conversation context using memory files - Brought 
 agent: 'memory'
 maturity: stable
 argument-hint: "[mode={save|continue|incremental}] [description=...]"
+defaultEnabled: true
 ---
 
 # Checkpoint

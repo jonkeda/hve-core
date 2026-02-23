@@ -11,6 +11,7 @@ handoffs:
     agent: task-planner
     prompt: /task-plan
     send: true
+defaultEnabled: true
 ---
 
 # Implementation Reviewer

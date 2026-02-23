@@ -3,6 +3,7 @@ category: 'General'
 description: 'Shared naming and folder conventions for all .copilot-tracking/ categories'
 applyTo: '**/.copilot-tracking/**'
 maturity: stable
+defaultEnabled: true
 ---
 
 # Copilot Tracking Conventions
@@ -13,20 +14,20 @@ All tracking artifacts reside under `.copilot-tracking/` at the workspace root. 
 
 Fixed PascalCase names at the first level. One folder per workflow domain:
 
-| Category             | Folder Name          |
-|----------------------|----------------------|
-| RPI Tasks            | `Task/`              |
-| Work Items           | `WorkItem/`          |
-| Pull Requests        | `PR/`                |
-| Business Requirements| `BRD/`               |
-| Product Requirements | `PRD/`               |
-| Architecture Decisions| `ADR/`              |
-| Security Plans       | `SecurityPlan/`      |
-| Memory               | `Memory/`            |
-| Documentation Ops    | `DocOps/`            |
-| GitHub Issues        | `GitHubIssue/`       |
-| Prompt Sandbox       | `Sandbox/`           |
-| Instruction Analysis | `InstructionAnalysis/`|
+| Category               | Folder Name            |
+|------------------------|------------------------|
+| RPI Tasks              | `Task/`                |
+| Work Items             | `WorkItem/`            |
+| Pull Requests          | `PR/`                  |
+| Business Requirements  | `BRD/`                 |
+| Product Requirements   | `PRD/`                 |
+| Architecture Decisions | `ADR/`                 |
+| Security Plans         | `SecurityPlan/`        |
+| Memory                 | `Memory/`              |
+| Documentation Ops      | `DocOps/`              |
+| GitHub Issues          | `GitHubIssue/`         |
+| Prompt Sandbox         | `Sandbox/`             |
+| Instruction Analysis   | `InstructionAnalysis/` |
 
 ## Instance Folder Naming
 

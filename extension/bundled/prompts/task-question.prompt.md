@@ -3,6 +3,7 @@ category: 'RPI'
 description: "Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core"
 agent: 'task-question'
 maturity: stable
+defaultEnabled: true
 ---
 
 # Task Question

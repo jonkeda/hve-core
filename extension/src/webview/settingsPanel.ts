@@ -3,8 +3,8 @@ import { type ArtifactItem, type ArtifactType, inferDomain } from '../models/typ
 import { type ArtifactManager } from '../services/artifactManager';
 import { openDetailPanel } from './dashboardPanel';
 import { getFavorites, setFavorites } from '../settings/configuration';
-import { copyPromptToRoot, removePromptFromRoot } from '../extension';
 import { getNonce } from '../utils/paths';
+import { escapeHtml } from '../utils/html';
 
 let activeSettingsPanel: vscode.WebviewPanel | undefined;
 
@@ -81,10 +81,8 @@ export async function openSettingsPanel(
       const idx = favs.indexOf(msg.name);
       if (idx >= 0) {
         favs.splice(idx, 1);
-        await removePromptFromRoot(msg.name);
       } else {
         favs.push(msg.name);
-        await copyPromptToRoot(msg.name);
       }
       await setFavorites(favs);
       panel.webview.postMessage({ command: 'updateFavorites', favorites: favs });
@@ -97,10 +95,6 @@ export async function refreshSettingsPanel(manager: ArtifactManager): Promise<vo
   if (!activeSettingsPanel) return;
   const updated = await manager.getArtifacts();
   activeSettingsPanel.webview.postMessage({ command: 'update', artifacts: updated, favorites: getFavorites() });
-}
-
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function typeIcon(type: ArtifactType): string {

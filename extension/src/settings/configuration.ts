@@ -24,18 +24,6 @@ export async function setInitialized(value: boolean): Promise<void> {
   await config.update('artifacts.initialized', value, vscode.ConfigurationTarget.Workspace);
 }
 
-/** Returns current groupByType setting. */
-export function isGroupByType(): boolean {
-  const config = vscode.workspace.getConfiguration(CONFIG.section);
-  return config.get<boolean>('treeView.groupByType', false);
-}
-
-/** Updates the groupByType setting. */
-export async function setGroupByType(value: boolean): Promise<void> {
-  const config = vscode.workspace.getConfiguration(CONFIG.section);
-  await config.update('treeView.groupByType', value, vscode.ConfigurationTarget.Global);
-}
-
 /** Returns the list of favorited prompt names. */
 export function getFavorites(): string[] {
   return _workspaceState?.get<string[]>('favorites', []) ?? [];

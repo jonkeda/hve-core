@@ -4,6 +4,7 @@ description: "Document and resolve software issues with a 2-phase fix workflow -
 agent: 'fix-workflow'
 maturity: stable
 argument-hint: 'Describe the bug or issue to fix'
+defaultEnabled: true
 ---
 
 # Fix Workflow

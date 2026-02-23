@@ -3,6 +3,7 @@ category: 'General'
 description: "Required instructions for creating or editing any Markdown (.md) files"
 applyTo: '**/*.md'
 maturity: stable
+defaultEnabled: true
 ---
 # Markdown Instructions
 
@@ -116,6 +117,7 @@ keywords:
   - setup
   - getting started
 estimated_reading_time: 5
+defaultEnabled: true
 ---
 
 # Getting Started with HVE Core
@@ -129,6 +131,7 @@ This guide shows you how to configure your project...
 ---
 description: "Required instructions for creating or editing any Markdown (.md) files"
 applyTo: '**/*.md'
+defaultEnabled: true
 ---
 
 # Markdown Instructions

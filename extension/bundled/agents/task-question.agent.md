@@ -11,6 +11,7 @@ handoffs:
     agent: task-question
     prompt: /task-question
     send: true
+defaultEnabled: true
 ---
 
 # Task Question

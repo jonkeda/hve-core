@@ -7,6 +7,7 @@ handoffs:
     agent: task-reviewer
     prompt: /task-review
     send: true
+defaultEnabled: true
 ---
 
 # Implementation Plan Executor

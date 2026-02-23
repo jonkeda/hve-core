@@ -11,6 +11,8 @@ export interface ManifestEntry {
   agent?: string;
   /** Prompt name from instruction frontmatter — links an instruction to its parent prompt. */
   prompt?: string;
+  /** Whether this artifact is enabled by default on first install. */
+  defaultEnabled?: boolean;
 }
 
 /** Bundled manifest listing all artifacts shipped with the extension. */

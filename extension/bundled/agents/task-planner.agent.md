@@ -7,6 +7,7 @@ handoffs:
     agent: task-implementor
     prompt: /task-implement
     send: true
+defaultEnabled: true
 ---
 # Implementation Planner
 
@@ -169,6 +170,7 @@ Templates use `{{relative_path}}` as `../..` for file references.
 ```markdown
 ---
 applyTo: '.copilot-tracking/Task/{{NN}}_{{TaskName}}/changes/{{NN}}-{{task_description}}-changes.md'
+defaultEnabled: true
 ---
 <!-- markdownlint-disable-file -->
 # Implementation Plan: {{task_name}}

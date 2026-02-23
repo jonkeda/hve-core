@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { type ArtifactType, type TreeElement } from './models/types';
+import { type TreeElement } from './models/types';
 import { ArtifactTreeProvider } from './treeview/treeDataProvider';
 import { openDetailPanel } from './webview/dashboardPanel';
 import { openRunPanel } from './webview/runPanel';
 import { openSettingsPanel, refreshSettingsPanel } from './webview/settingsPanel';
-import { isGroupByType, setGroupByType, isInitialized, setInitialized, getFavorites, setFavorites, initFavorites, onFavoritesChanged } from './settings/configuration';
+import { isInitialized, setInitialized, getFavorites, setFavorites, initFavorites, onFavoritesChanged } from './settings/configuration';
 import { ArtifactManager } from './services/artifactManager';
+import { WorkflowLoader } from './services/workflowLoader';
+import { TrackingManager } from './services/trackingManager';
 import { VIEW_ID, COMMANDS, CONFIG } from './constants';
-
-const GITIGNORE_ENTRIES = [
-  '.github/agents/hve-core/',
-  '.github/prompts/hve-core/',
-  '.github/instructions/hve-core/',
-];
+import { QUICK_RUN_VIEW_ID, TRACKING_VIEW_ID, TRACKING_COMMANDS } from './constants';
+import { QuickRunViewProvider } from './webview/quickRunPanel';
+import { TrackingPanelProvider } from './webview/trackingPanel';
+import { openTrackingDetailPanel } from './webview/trackingDetailPanel';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   initFavorites(context.workspaceState);
@@ -23,19 +23,39 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const artifacts = await manager.initialize();
   provider.setArtifacts(artifacts);
 
-  // First-activation: copy all artifacts to workspace and offer gitignore update
+  // Quick Run sidebar panel
+  const quickRunProvider = new QuickRunViewProvider(context);
+  quickRunProvider.setArtifacts(artifacts);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(QUICK_RUN_VIEW_ID, quickRunProvider),
+  );
+
+  // Tracking dashboard services
+  const workflowLoader = new WorkflowLoader();
+  await workflowLoader.initialize(context.extensionUri);
+
+  const trackingManager = new TrackingManager(workflowLoader);
+  await trackingManager.initialize();
+
+  const trackingProvider = new TrackingPanelProvider(context, trackingManager, workflowLoader);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(TRACKING_VIEW_ID, trackingProvider),
+  );
+
+  // First-activation: copy default artifacts to workspace
   if (!isInitialized() && vscode.workspace.workspaceFolders?.length) {
-    await manager.enableAll();
+    await manager.enableDefaults();
     await setInitialized(true);
     const freshArtifacts = await manager.getArtifacts();
     provider.setArtifacts(freshArtifacts);
-    offerGitignoreUpdate();
+    quickRunProvider.setArtifacts(freshArtifacts);
   }
 
   // Refresh helper used by watcher and commands
   const refreshTree = async (): Promise<void> => {
     const updated = await manager.getArtifacts();
     provider.setArtifacts(updated);
+    quickRunProvider.setArtifacts(updated);
   };
 
   // Watch workspace for external changes to managed artifact files
@@ -43,12 +63,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const watcher = vscode.workspace.createFileSystemWatcher(
       new vscode.RelativePattern(
         vscode.workspace.workspaceFolders[0],
-        '.github/{agents,prompts,instructions}/hve-core/**/*.md',
+        '.github/{agents,prompts,instructions}/*.md',
       ),
     );
     watcher.onDidCreate(() => refreshTree());
     watcher.onDidDelete(() => refreshTree());
     context.subscriptions.push(watcher);
+
+    // Watch .copilot-tracking/ for changes
+    const trackingWatcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(
+        vscode.workspace.workspaceFolders[0],
+        '.copilot-tracking/**',
+      ),
+    );
+    let trackingDebounce: ReturnType<typeof setTimeout> | undefined;
+    const debouncedTrackingRefresh = (): void => {
+      if (trackingDebounce) clearTimeout(trackingDebounce);
+      trackingDebounce = setTimeout(async () => {
+        await trackingManager.refresh();
+        trackingProvider.refresh();
+      }, 300);
+    };
+    trackingWatcher.onDidCreate(() => debouncedTrackingRefresh());
+    trackingWatcher.onDidDelete(() => debouncedTrackingRefresh());
+    trackingWatcher.onDidChange(() => debouncedTrackingRefresh());
+    context.subscriptions.push(trackingWatcher);
   }
 
   // Register tree view
@@ -58,34 +98,35 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   });
   context.subscriptions.push(treeView);
 
+  // Double-click detection state for tree item clicks
+  let clickTimer: ReturnType<typeof setTimeout> | undefined;
+  let lastClickedName: string | undefined;
+  const DOUBLE_CLICK_MS = 300;
+
   // Register commands
   context.subscriptions.push(
     vscode.commands.registerCommand(COMMANDS.refresh, refreshTree),
 
-    vscode.commands.registerCommand(COMMANDS.toggleGrouping, async () => {
-      const current = isGroupByType();
-      await setGroupByType(!current);
-      provider.refresh();
-    }),
+    vscode.commands.registerCommand(COMMANDS.clickArtifact, (element: TreeElement) => {
+      if (element.kind !== 'artifact') return;
+      const isRunnable = element.item.type !== 'instruction' && element.item.enabled;
 
-    vscode.commands.registerCommand(COMMANDS.filterByType, async () => {
-      const current = provider.getTypeFilter();
-      const items: { label: string; type: ArtifactType | null }[] = [
-        { label: 'All', type: null },
-        { label: 'Agents', type: 'agent' },
-        { label: 'Prompts', type: 'prompt' },
-        { label: 'Instructions', type: 'instruction' },
-      ];
-      const picked = await vscode.window.showQuickPick(
-        items.map((i) => ({
-          label: i.label,
-          description: i.type === current ? '(active)' : undefined,
-          type: i.type,
-        })),
-        { placeHolder: 'Filter artifacts by type' },
-      );
-      if (picked) {
-        provider.setTypeFilter((picked as { label: string; type: ArtifactType | null }).type);
+      if (clickTimer && lastClickedName === element.item.name) {
+        // Double-click: open run panel for runnable artifacts
+        clearTimeout(clickTimer);
+        clickTimer = undefined;
+        lastClickedName = undefined;
+        if (isRunnable) {
+          openRunPanel(context, element.item);
+        }
+      } else {
+        // First click: track for double-click detection but take no action
+        if (clickTimer) clearTimeout(clickTimer);
+        lastClickedName = element.item.name;
+        clickTimer = setTimeout(() => {
+          clickTimer = undefined;
+          lastClickedName = undefined;
+        }, DOUBLE_CLICK_MS);
       }
     }),
 
@@ -115,25 +156,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       await openSettingsPanel(context, manager, refreshTree);
     }),
 
-    vscode.commands.registerCommand(COMMANDS.enableAll, async () => {
-      await manager.enableAll();
-      await refreshTree();
-      await refreshSettingsPanel(manager);
-    }),
-
-    vscode.commands.registerCommand(COMMANDS.disableAll, async () => {
-      await manager.disableAll();
-      await refreshTree();
-      await refreshSettingsPanel(manager);
-    }),
-
     vscode.commands.registerCommand(COMMANDS.addFavorite, async (element: TreeElement) => {
       if (element?.kind !== 'artifact' || element.item.type !== 'prompt') return;
       const favs = [...getFavorites()];
       if (!favs.includes(element.item.name)) {
         favs.push(element.item.name);
         await setFavorites(favs);
-        await copyPromptToRoot(element.item.name);
         await refreshSettingsPanel(manager);
       }
     }),
@@ -145,9 +173,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (idx >= 0) {
         favs.splice(idx, 1);
         await setFavorites(favs);
-        await removePromptFromRoot(element.item.name);
         await refreshSettingsPanel(manager);
       }
+    }),
+
+    vscode.commands.registerCommand(TRACKING_COMMANDS.refreshTracking, async () => {
+      await trackingManager.refresh();
+      trackingProvider.refresh();
+    }),
+
+    vscode.commands.registerCommand(TRACKING_COMMANDS.openTrackingDetail, (category: string, instance: string) => {
+      openTrackingDetailPanel(context, trackingManager, workflowLoader, category, instance);
     }),
   );
 
@@ -159,9 +195,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     favoriteDisposables = [];
     for (const name of getFavorites()) {
       const cmdId = `hveCore.runFavorite.${name}`;
+      const query = `/${name} `;
       const d = vscode.commands.registerCommand(cmdId, () =>
         vscode.commands.executeCommand('workbench.action.chat.open', {
-          query: `#prompt:${name}`,
+          query,
           isPartialQuery: true,
         }),
       );
@@ -170,10 +207,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   };
 
   registerFavoriteCommands();
-  // Restore root prompt copies for existing favorites
-  for (const name of getFavorites()) {
-    await copyPromptToRoot(name);
-  }
   context.subscriptions.push({ dispose: () => favoriteDisposables.forEach((d) => d.dispose()) });
 
   // Re-register favorite commands and refresh tree when favorites change
@@ -181,6 +214,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     onFavoritesChanged(() => {
       registerFavoriteCommands();
       provider.refresh();
+      quickRunProvider.refresh();
     }),
   );
 
@@ -201,57 +235,4 @@ export function deactivate(): void {
   // Cleanup handled by disposables registered in context.subscriptions
 }
 
-/** Copies a prompt file to .github/prompts/ root for /slash-command discovery. */
-export async function copyPromptToRoot(name: string): Promise<void> {
-  const ws = vscode.workspace.workspaceFolders?.[0];
-  if (!ws) return;
-  const source = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', 'hve-core', `${name}.prompt.md`);
-  const target = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', `${name}.prompt.md`);
-  try {
-    const content = await vscode.workspace.fs.readFile(source);
-    await vscode.workspace.fs.writeFile(target, content);
-  } catch { /* source not found — prompt not enabled */ }
-}
 
-/** Removes a prompt file from .github/prompts/ root. */
-export async function removePromptFromRoot(name: string): Promise<void> {
-  const ws = vscode.workspace.workspaceFolders?.[0];
-  if (!ws) return;
-  const target = vscode.Uri.joinPath(ws.uri, '.github', 'prompts', `${name}.prompt.md`);
-  try {
-    await vscode.workspace.fs.delete(target);
-  } catch { /* already removed */ }
-}
-
-/** Offers to add managed artifact directories to .gitignore. */
-function offerGitignoreUpdate(): void {
-  const action = 'Add to .gitignore';
-  vscode.window
-    .showInformationMessage(
-      'HVE Core artifacts have been initialized. Add managed directories to .gitignore?',
-      action,
-      'No thanks',
-    )
-    .then(async (choice) => {
-      if (choice !== action) return;
-      const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
-      if (!workspaceFolder) return;
-
-      const gitignoreUri = vscode.Uri.joinPath(workspaceFolder.uri, '.gitignore');
-      let existing = '';
-      try {
-        const content = await vscode.workspace.fs.readFile(gitignoreUri);
-        existing = new TextDecoder().decode(content);
-      } catch {
-        // .gitignore does not exist yet
-      }
-
-      const linesToAdd = GITIGNORE_ENTRIES.filter((entry) => !existing.includes(entry));
-      if (linesToAdd.length === 0) return;
-
-      const separator = existing.endsWith('\n') || existing === '' ? '' : '\n';
-      const addition = `${separator}\n# HVE Core managed artifacts\n${linesToAdd.join('\n')}\n`;
-      const updated = existing + addition;
-      await vscode.workspace.fs.writeFile(gitignoreUri, new TextEncoder().encode(updated));
-    });
-}

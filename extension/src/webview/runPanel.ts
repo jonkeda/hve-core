@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { tmpdir } from 'os';
-import { join } from 'path';
 import { type ArtifactItem } from '../models/types';
 import { resolveArtifactUri, getNonce } from '../utils/paths';
+import { escapeHtml, escapeAttr } from '../utils/html';
+import { handleFilePickerMessage } from './filePicker';
 
 /** Tracks active run panels to prevent duplicates. */
 const activeRunPanels = new Map<string, vscode.WebviewPanel>();
@@ -37,7 +37,9 @@ export async function openRunPanel(
 
   // No parameters found — run directly in chat
   if (params.length === 0) {
-    const query = artifact.type === 'agent' ? `@${artifact.name} ` : `#prompt:${artifact.name}`;
+    const query = artifact.type === 'agent'
+      ? `@${artifact.name} `
+      : `/${artifact.name} `;
     await vscode.commands.executeCommand('workbench.action.chat.open', { query });
     return;
   }
@@ -52,7 +54,8 @@ export async function openRunPanel(
   activeRunPanels.set(artifact.name, panel);
   panel.onDidDispose(() => activeRunPanels.delete(artifact.name));
 
-  panel.webview.onDidReceiveMessage(async (message: { command: string; query?: string; attachFiles?: string[] }) => {
+  panel.webview.onDidReceiveMessage(async (message: { command: string; query?: string; attachFiles?: string[]; data?: string; mimeType?: string }) => {
+    if (await handleFilePickerMessage(panel.webview, message)) return;
     switch (message.command) {
       case 'run': {
         if (!message.query) break;
@@ -62,51 +65,6 @@ export async function openRunPanel(
         }
         await vscode.commands.executeCommand('workbench.action.chat.open', opts);
         panel.dispose();
-        break;
-      }
-      case 'pasteImage': {
-        const msg = message as { command: string; data?: string; mimeType?: string };
-        if (msg.data) {
-          const ext = msg.mimeType === 'image/jpeg' ? '.jpg'
-            : msg.mimeType === 'image/gif' ? '.gif'
-            : msg.mimeType === 'image/webp' ? '.webp'
-            : '.png';
-          const fileName = `pasted-${Date.now()}${ext}`;
-          const filePath = join(tmpdir(), fileName);
-          const fileUri = vscode.Uri.file(filePath);
-          const buffer = Buffer.from(msg.data, 'base64');
-          await vscode.workspace.fs.writeFile(fileUri, buffer);
-          await panel.webview.postMessage({
-            command: 'filesSelected',
-            paths: [{ uri: fileUri.toString(), name: fileName, kind: 'image' }],
-          });
-        }
-        break;
-      }
-      case 'pickFiles':
-      case 'pickFolders':
-      case 'pickImages': {
-        const isFolder = message.command === 'pickFolders';
-        const isImage = message.command === 'pickImages';
-        const filters = isImage
-          ? { Images: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'] }
-          : undefined;
-        const uris = await vscode.window.showOpenDialog({
-          canSelectMany: true,
-          canSelectFiles: !isFolder,
-          canSelectFolders: isFolder,
-          defaultUri: vscode.workspace.workspaceFolders?.[0]?.uri,
-          title: isFolder ? 'Select Context Folders' : isImage ? 'Select Images' : 'Select Context Files',
-          filters,
-        });
-        if (uris?.length) {
-          const paths = uris.map(u => ({
-            uri: u.toString(),
-            name: u.path.split('/').pop() ?? u.toString(),
-            kind: isFolder ? 'folder' : isImage ? 'image' : 'file',
-          }));
-          await panel.webview.postMessage({ command: 'filesSelected', paths });
-        }
         break;
       }
     }
@@ -213,7 +171,9 @@ function buildRunHtml(
   params: PromptParam[],
 ): string {
   const nonce = getNonce();
-  const prefix = artifact.type === 'agent' ? `@${artifact.name} ` : `#prompt:${artifact.name} `;
+  const prefix = artifact.type === 'agent'
+    ? `@${artifact.name} `
+    : `/${artifact.name} `;
 
   const paramFields = params
     .map((p) => {
@@ -643,14 +603,4 @@ function buildRunHtml(
 </html>`;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 
-function escapeAttr(text: string): string {
-  return escapeHtml(text).replace(/'/g, '&#39;');
-}

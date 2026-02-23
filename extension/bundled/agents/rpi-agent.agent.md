@@ -44,6 +44,7 @@ handoffs:
     agent: rpi-agent
     prompt: "/rpi steer"
     send: false
+defaultEnabled: true
 ---
 
 # RPI Agent

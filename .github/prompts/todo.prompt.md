@@ -3,6 +3,7 @@ category: 'Workflows'
 description: "Quick todo capture and tracking - Brought to you by microsoft/hve-core"
 maturity: stable
 argument-hint: 'Todo item description'
+defaultEnabled: true
 ---
 
 # Todo Capture

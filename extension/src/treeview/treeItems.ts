@@ -32,10 +32,9 @@ export function createArtifactItem(artifact: ArtifactItem): vscode.TreeItem {
     item.contextValue = artifact.type === 'instruction' ? 'instruction' : 'agent';
   }
 
-  const isRunnable = artifact.type !== 'instruction';
   item.command = {
-    command: isRunnable ? COMMANDS.runArtifact : COMMANDS.openDetail,
-    title: isRunnable ? 'Run' : 'Details',
+    command: COMMANDS.clickArtifact,
+    title: 'Open',
     arguments: [{ kind: 'artifact', item: artifact } satisfies TreeElement],
   };
 

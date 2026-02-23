@@ -8,6 +8,7 @@ handoffs:
     agent: fix-workflow
     prompt: "Continue to implement phase for the fix documented above"
     send: true
+defaultEnabled: true
 ---
 
 # Fix Workflow

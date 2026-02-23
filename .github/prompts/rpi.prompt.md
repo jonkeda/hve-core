@@ -4,6 +4,7 @@ description: "Autonomous Research-Plan-Implement-Review-Discover workflow for co
 agent: 'rpi-agent'
 maturity: stable
 argument-hint: "task=... [auto={true|partial|false}] [continue={1|2|3|all}] [suggest]"
+defaultEnabled: true
 ---
 
 # RPI

@@ -12,7 +12,7 @@ export async function handleWebviewMessage(message: WebviewMessage): Promise<voi
       const query = message.agent
         ? `@${message.agent} `
         : message.prompt
-          ? `#prompt:${message.prompt} `
+          ? `/${message.prompt} `
           : '';
       if (query) {
         await vscode.commands.executeCommand('workbench.action.chat.open', { query });
@@ -22,7 +22,7 @@ export async function handleWebviewMessage(message: WebviewMessage): Promise<voi
     case 'run': {
       const query = message.type === 'agent'
         ? `@${message.name} `
-        : `#prompt:${message.name} `;
+        : `/${message.name} `;
       await vscode.commands.executeCommand('workbench.action.chat.open', { query });
       break;
     }

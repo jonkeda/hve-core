@@ -3,6 +3,7 @@ category: 'RPI'
 description: "Initiates implementation review based on user context or automatic artifact discovery - Brought to you by microsoft/hve-core"
 agent: 'task-reviewer'
 maturity: stable
+defaultEnabled: true
 ---
 
 # Task Review

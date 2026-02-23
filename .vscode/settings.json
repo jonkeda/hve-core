@@ -5,12 +5,12 @@
     "editor.defaultFormatter": "davidanson.vscode-markdownlint"
   },
   "markdown.mermaid.theme": "default",
-  "chat.instructionsFilesLocations": {
-    "artifacts/instructions/**/*.instructions.md": true,
-    "artifacts/prompts/**/*.prompt.md": true
+  "files.exclude": {
+    "artifacts/agents/**": true,
+    "artifacts/prompts/**": true
   },
-  "chat.agentFilesLocations": {
-    "artifacts/agents": true
+  "chat.instructionsFilesLocations": {
+    "artifacts/instructions/**/*.instructions.md": true
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {

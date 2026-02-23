@@ -4,6 +4,7 @@ description: "Build or improve prompt engineering artifacts following quality cr
 agent: 'prompt-builder'
 argument-hint: "file=... [requirements=...]"
 maturity: stable
+defaultEnabled: true
 ---
 
 # Prompt Build

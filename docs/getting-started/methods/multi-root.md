@@ -151,8 +151,8 @@ The VS Code title bar should show your workspace name, not just the folder name.
 
 Multi-root workspaces use folder names for paths:
 
-| Path Style           | Example                                 | Recommended       |
-|----------------------|-----------------------------------------|-------------------|
+| Path Style           | Example                                   | Recommended       |
+|----------------------|-------------------------------------------|-------------------|
 | Folder name relative | `"HVE-Core Library/artifacts/agents"`     | ✅  Yes            |
 | Absolute path        | `"/workspaces/hve-core/artifacts/agents"` | ⚠️  Less portable |
 

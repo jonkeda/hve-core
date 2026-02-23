@@ -3,6 +3,7 @@ category: 'RPI'
 description: "Review and finalize research decisions before implementation planning - Brought to you by microsoft/hve-core"
 agent: 'task-researcher'
 maturity: stable
+defaultEnabled: true
 ---
 
 # Task Decide

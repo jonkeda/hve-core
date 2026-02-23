@@ -118,6 +118,7 @@ function Get-FrontmatterData {
     $category = ""
     $agent = ""
     $prompt = ""
+    $defaultEnabled = $false
 
     if ($content -match '(?s)^---\s*\r?\n(.*?)\r?\n---') {
         $yamlContent = $Matches[1] -replace '\r\n', "`n" -replace '\r', "`n"
@@ -138,6 +139,9 @@ function Get-FrontmatterData {
             if ($data.ContainsKey('prompt')) {
                 $prompt = $data.prompt
             }
+            if ($data.ContainsKey('defaultEnabled') -and $data.defaultEnabled -eq $true) {
+                $defaultEnabled = $true
+            }
         }
         catch {
             Write-Warning "Failed to parse YAML frontmatter in $(Split-Path -Leaf $FilePath): $_"
@@ -145,11 +149,12 @@ function Get-FrontmatterData {
     }
 
     return @{
-        description = if ($description) { $description } else { $FallbackDescription }
-        maturity    = $maturity
-        category    = $category
-        agent       = $agent
-        prompt      = $prompt
+        description    = if ($description) { $description } else { $FallbackDescription }
+        maturity       = $maturity
+        category       = $category
+        agent          = $agent
+        prompt         = $prompt
+        defaultEnabled = $defaultEnabled
     }
 }
 
@@ -264,10 +269,11 @@ function Get-DiscoveredAgents {
         }
 
         $result.Agents += [PSCustomObject]@{
-            name        = $agentName
-            path        = "./artifacts/agents/$($agentFile.Name)"
-            description = $frontmatter.description
-            category    = $frontmatter.category
+            name           = $agentName
+            path           = "./artifacts/agents/$($agentFile.Name)"
+            description    = $frontmatter.description
+            category       = $frontmatter.category
+            defaultEnabled = $frontmatter.defaultEnabled
         }
     }
 
@@ -324,11 +330,12 @@ function Get-DiscoveredPrompts {
         }
 
         $result.Prompts += [PSCustomObject]@{
-            name        = $promptName
-            path        = "./artifacts/prompts/$($promptFile.Name)"
-            description = $frontmatter.description
-            category    = $frontmatter.category
-            agent       = $frontmatter.agent
+            name           = $promptName
+            path           = "./artifacts/prompts/$($promptFile.Name)"
+            description    = $frontmatter.description
+            category       = $frontmatter.category
+            agent          = $frontmatter.agent
+            defaultEnabled = $frontmatter.defaultEnabled
         }
     }
 
@@ -386,11 +393,12 @@ function Get-DiscoveredInstructions {
         }
 
         $result.Instructions += [PSCustomObject]@{
-            name        = $instrName
-            path        = "./artifacts/instructions/$($instrFile.Name)"
-            description = $frontmatter.description
-            category    = $frontmatter.category
-            prompt      = $frontmatter.prompt
+            name           = $instrName
+            path           = "./artifacts/instructions/$($instrFile.Name)"
+            description    = $frontmatter.description
+            category       = $frontmatter.category
+            prompt         = $frontmatter.prompt
+            defaultEnabled = $frontmatter.defaultEnabled
         }
     }
 
@@ -500,6 +508,9 @@ function Write-BundledManifest {
         if ($agent.category) {
             $entry | Add-Member -NotePropertyName 'category' -NotePropertyValue $agent.category
         }
+        if ($agent.defaultEnabled) {
+            $entry | Add-Member -NotePropertyName 'defaultEnabled' -NotePropertyValue $true
+        }
         $manifestEntries += $entry
 
         if (-not $DryRun) {
@@ -528,6 +539,9 @@ function Write-BundledManifest {
         if ($prompt.agent) {
             $entry | Add-Member -NotePropertyName 'agent' -NotePropertyValue $prompt.agent
         }
+        if ($prompt.defaultEnabled) {
+            $entry | Add-Member -NotePropertyName 'defaultEnabled' -NotePropertyValue $true
+        }
         $manifestEntries += $entry
 
         if (-not $DryRun) {
@@ -555,6 +569,9 @@ function Write-BundledManifest {
         }
         if ($instr.prompt) {
             $entry | Add-Member -NotePropertyName 'prompt' -NotePropertyValue $instr.prompt
+        }
+        if ($instr.defaultEnabled) {
+            $entry | Add-Member -NotePropertyName 'defaultEnabled' -NotePropertyValue $true
         }
         $manifestEntries += $entry
 

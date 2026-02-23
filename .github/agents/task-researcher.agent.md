@@ -11,6 +11,7 @@ handoffs:
     agent: task-researcher
     prompt: /task-decide
     send: true
+defaultEnabled: true
 ---
 
 # Task Researcher

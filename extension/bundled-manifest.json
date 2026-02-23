@@ -54,7 +54,8 @@
       "type": "agent",
       "relativePath": "agents/fix-workflow.agent.md",
       "description": "Two-phase fix workflow for documenting and resolving software issues - Brought to you by microsoft/hve-core",
-      "category": "Workflows"
+      "category": "Workflows",
+      "defaultEnabled": true
     },
     {
       "name": "gen-data-spec",
@@ -117,7 +118,8 @@
       "type": "agent",
       "relativePath": "agents/memory.agent.md",
       "description": "Conversation memory persistence for session continuity - Brought to you by microsoft/hve-core",
-      "category": "General"
+      "category": "General",
+      "defaultEnabled": true
     },
     {
       "name": "pr-review",
@@ -138,14 +140,16 @@
       "type": "agent",
       "relativePath": "agents/prompt-builder.agent.md",
       "description": "Prompt engineering assistant with phase-based workflow for creating and validating prompts, agents, and instructions files - Brought to you by microsoft/hve-core",
-      "category": "Prompt Engineering"
+      "category": "Prompt Engineering",
+      "defaultEnabled": true
     },
     {
       "name": "rpi-agent",
       "type": "agent",
       "relativePath": "agents/rpi-agent.agent.md",
       "description": "Autonomous RPI orchestrator dispatching task-* agents through Research → Decide → Plan → Implement → Review → Discover phases - Brought to you by microsoft/hve-core",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "security-plan-creator",
@@ -166,35 +170,40 @@
       "type": "agent",
       "relativePath": "agents/task-implementor.agent.md",
       "description": "Executes implementation plans from .copilot-tracking/Task/ with progressive tracking and change records",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "task-planner",
       "type": "agent",
       "relativePath": "agents/task-planner.agent.md",
       "description": "Implementation planner for creating actionable implementation plans - Brought to you by microsoft/hve-core",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "task-question",
       "type": "agent",
       "relativePath": "agents/task-question.agent.md",
       "description": "Pre-research question framing for defining research scope through interactive task-list documents - Brought to you by microsoft/hve-core",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "task-researcher",
       "type": "agent",
       "relativePath": "agents/task-researcher.agent.md",
       "description": "Task research specialist for comprehensive project analysis - Brought to you by microsoft/hve-core",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "task-reviewer",
       "type": "agent",
       "relativePath": "agents/task-reviewer.agent.md",
       "description": "Reviews completed implementation work for accuracy, completeness, and convention compliance - Brought to you by microsoft/hve-core",
-      "category": "RPI"
+      "category": "RPI",
+      "defaultEnabled": true
     },
     {
       "name": "test-streamlit-dashboard",
@@ -284,7 +293,8 @@
       "relativePath": "prompts/checkpoint.prompt.md",
       "description": "Save or restore conversation context using memory files - Brought to you by microsoft/hve-core",
       "category": "General",
-      "agent": "memory"
+      "agent": "memory",
+      "defaultEnabled": true
     },
     {
       "name": "create-workflow",
@@ -308,7 +318,8 @@
       "relativePath": "prompts/fix.prompt.md",
       "description": "Document and resolve software issues with a 2-phase fix workflow - Brought to you by microsoft/hve-core",
       "category": "Workflows",
-      "agent": "fix-workflow"
+      "agent": "fix-workflow",
+      "defaultEnabled": true
     },
     {
       "name": "gen-data-spec",
@@ -340,7 +351,8 @@
       "relativePath": "prompts/git-commit-message.prompt.md",
       "description": "Generates a commit message following the commit-message.instructions.md rules based on all changes in the branch",
       "category": "Git",
-      "agent": "agent"
+      "agent": "agent",
+      "defaultEnabled": true
     },
     {
       "name": "git-commit",
@@ -348,7 +360,8 @@
       "relativePath": "prompts/git-commit.prompt.md",
       "description": "Stages all changes, generates a conventional commit message, shows it to the user, and commits using only git add/commit",
       "category": "Git",
-      "agent": "agent"
+      "agent": "agent",
+      "defaultEnabled": true
     },
     {
       "name": "git-merge",
@@ -356,7 +369,8 @@
       "relativePath": "prompts/git-merge.prompt.md",
       "description": "Coordinate Git merge, rebase, and rebase --onto workflows with consistent conflict handling.",
       "category": "Git",
-      "agent": "agent"
+      "agent": "agent",
+      "defaultEnabled": true
     },
     {
       "name": "git-setup",
@@ -466,7 +480,8 @@
       "relativePath": "prompts/prompt-build.prompt.md",
       "description": "Build or improve prompt engineering artifacts following quality criteria - Brought to you by microsoft/hve-core",
       "category": "Prompt Engineering",
-      "agent": "prompt-builder"
+      "agent": "prompt-builder",
+      "defaultEnabled": true
     },
     {
       "name": "prompt-refactor",
@@ -497,7 +512,8 @@
       "relativePath": "prompts/rpi.prompt.md",
       "description": "Autonomous Research-Plan-Implement-Review-Discover workflow for completing tasks - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "rpi-agent"
+      "agent": "rpi-agent",
+      "defaultEnabled": true
     },
     {
       "name": "security-plan",
@@ -521,7 +537,8 @@
       "relativePath": "prompts/task-decide.prompt.md",
       "description": "Review and finalize research decisions before implementation planning - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-researcher"
+      "agent": "task-researcher",
+      "defaultEnabled": true
     },
     {
       "name": "task-implement",
@@ -529,7 +546,8 @@
       "relativePath": "prompts/task-implement.prompt.md",
       "description": "Locates and executes implementation plans using task-implementor mode - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-implementor"
+      "agent": "task-implementor",
+      "defaultEnabled": true
     },
     {
       "name": "task-plan",
@@ -537,7 +555,8 @@
       "relativePath": "prompts/task-plan.prompt.md",
       "description": "Initiates implementation planning based on user context or research documents - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-planner"
+      "agent": "task-planner",
+      "defaultEnabled": true
     },
     {
       "name": "task-question",
@@ -545,7 +564,8 @@
       "relativePath": "prompts/task-question.prompt.md",
       "description": "Defines research questions through interactive task-list documents before invoking task-researcher - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-question"
+      "agent": "task-question",
+      "defaultEnabled": true
     },
     {
       "name": "task-research",
@@ -553,7 +573,8 @@
       "relativePath": "prompts/task-research.prompt.md",
       "description": "Initiates research for implementation planning based on user requirements - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-researcher"
+      "agent": "task-researcher",
+      "defaultEnabled": true
     },
     {
       "name": "task-review",
@@ -561,7 +582,8 @@
       "relativePath": "prompts/task-review.prompt.md",
       "description": "Initiates implementation review based on user context or automatic artifact discovery - Brought to you by microsoft/hve-core",
       "category": "RPI",
-      "agent": "task-reviewer"
+      "agent": "task-reviewer",
+      "defaultEnabled": true
     },
     {
       "name": "test-streamlit-dashboard",
@@ -576,7 +598,8 @@
       "type": "prompt",
       "relativePath": "prompts/todo.prompt.md",
       "description": "Quick todo capture and tracking - Brought to you by microsoft/hve-core",
-      "category": "Workflows"
+      "category": "Workflows",
+      "defaultEnabled": true
     },
     {
       "name": "ado-create-pull-request-instructions",
@@ -635,7 +658,8 @@
       "relativePath": "instructions/commit-message.instructions.md",
       "description": "Required instructions for creating all commit messages - Brought to you by microsoft/hve-core",
       "category": "Git",
-      "prompt": "git-commit-message"
+      "prompt": "git-commit-message",
+      "defaultEnabled": true
     },
     {
       "name": "community-interaction-instructions",
@@ -650,7 +674,8 @@
       "type": "instruction",
       "relativePath": "instructions/copilot-tracking-conventions.instructions.md",
       "description": "Shared naming and folder conventions for all .copilot-tracking/ categories",
-      "category": "General"
+      "category": "General",
+      "defaultEnabled": true
     },
     {
       "name": "csharp-tests-instructions",
@@ -671,7 +696,8 @@
       "type": "instruction",
       "relativePath": "instructions/git-merge.instructions.md",
       "description": "Required protocol for Git merge, rebase, and rebase --onto workflows with conflict handling and stop controls.",
-      "category": "Git"
+      "category": "Git",
+      "defaultEnabled": true
     },
     {
       "name": "github-backlog-discovery-instructions",
@@ -717,7 +743,8 @@
       "type": "instruction",
       "relativePath": "instructions/markdown.instructions.md",
       "description": "Required instructions for creating or editing any Markdown (.md) files",
-      "category": "General"
+      "category": "General",
+      "defaultEnabled": true
     },
     {
       "name": "prompt-builder-instructions",
@@ -725,7 +752,8 @@
       "relativePath": "instructions/prompt-builder.instructions.md",
       "description": "Authoring standards for prompt engineering artifacts including file types, protocol patterns, writing style, and quality criteria - Brought to you by microsoft/hve-core",
       "category": "Prompt Engineering",
-      "prompt": "prompt-build"
+      "prompt": "prompt-build",
+      "defaultEnabled": true
     },
     {
       "name": "python-script-instructions",
@@ -760,7 +788,8 @@
       "type": "instruction",
       "relativePath": "instructions/writing-style.instructions.md",
       "description": "Required writing style conventions for voice, tone, and language in all markdown content",
-      "category": "General"
+      "category": "General",
+      "defaultEnabled": true
     }
   ]
 }

@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import { type ManifestEntry, type BundledManifest } from '../models/manifest';
 import { type ArtifactItem, type ArtifactType } from '../models/types';
 
-const NAMESPACE = 'hve-core';
-
 /** Manages artifact lifecycle: reading from bundled manifest, copying to workspace, removing. */
 export class ArtifactManager {
   private manifest: BundledManifest = { artifacts: [] };
@@ -69,10 +67,12 @@ export class ArtifactManager {
     this._onDidChange.fire();
   }
 
-  /** Enables all bundled artifacts. */
-  async enableAll(): Promise<void> {
+  /** Enables only artifacts marked as defaultEnabled in the manifest. */
+  async enableDefaults(): Promise<void> {
     for (const entry of this.manifest.artifacts) {
-      await this.enableArtifact(entry.name);
+      if (entry.defaultEnabled) {
+        await this.enableArtifact(entry.name);
+      }
     }
   }
 
@@ -97,11 +97,11 @@ export class ArtifactManager {
     }
   }
 
-  /** Resolves workspace target path: .github/{agents,prompts,instructions}/hve-core/<filename> */
+  /** Resolves workspace target path: .github/{agents,prompts,instructions}/<filename> */
   private getWorkspaceTargetUri(workspaceUri: vscode.Uri, entry: ManifestEntry): vscode.Uri {
     const subdir = this.getSubdirectory(entry.type);
     const filename = entry.relativePath.split('/').pop()!;
-    return vscode.Uri.joinPath(workspaceUri, '.github', subdir, NAMESPACE, filename);
+    return vscode.Uri.joinPath(workspaceUri, '.github', subdir, filename);
   }
 
   /** Resolves bundled source path: bundled/<relativePath> */

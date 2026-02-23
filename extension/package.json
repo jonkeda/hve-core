@@ -5,7 +5,7 @@
     "workspace",
     "ui"
   ],
-  "version": "2.2.32",
+  "version": "2.2.53",
   "description": "AI-powered chat agents, prompts, and instructions for hybrid virtual environments",
   "publisher": "ise-hve-essentials",
   "repository": {
@@ -35,6 +35,16 @@
         {
           "id": "hveCore.artifactExplorer",
           "name": "Artifacts"
+        },
+        {
+          "id": "hveCore.quickRun",
+          "name": "Quick Run",
+          "type": "webview"
+        },
+        {
+          "id": "hveCore.tracking",
+          "name": "Tracking",
+          "type": "webview"
         }
       ]
     },
@@ -46,21 +56,14 @@
         "category": "HVE Core"
       },
       {
-        "command": "hveCore.toggleGrouping",
-        "title": "Toggle Grouping",
-        "icon": "$(list-tree)",
-        "category": "HVE Core"
-      },
-      {
-        "command": "hveCore.filterByType",
-        "title": "Filter by Type",
-        "icon": "$(filter)",
-        "category": "HVE Core"
-      },
-      {
         "command": "hveCore.runArtifact",
         "title": "Run",
         "icon": "$(play)",
+        "category": "HVE Core"
+      },
+      {
+        "command": "hveCore.clickArtifact",
+        "title": "Open Artifact",
         "category": "HVE Core"
       },
       {
@@ -82,16 +85,6 @@
         "category": "HVE Core"
       },
       {
-        "command": "hveCore.enableAll",
-        "title": "Enable All Artifacts",
-        "category": "HVE Core"
-      },
-      {
-        "command": "hveCore.disableAll",
-        "title": "Disable All Artifacts",
-        "category": "HVE Core"
-      },
-      {
         "command": "hveCore.addFavorite",
         "title": "Add Favorite",
         "icon": "$(star-empty)",
@@ -101,6 +94,17 @@
         "command": "hveCore.removeFavorite",
         "title": "Remove Favorite",
         "icon": "$(star-full)",
+        "category": "HVE Core"
+      },
+      {
+        "command": "hveCore.refreshTracking",
+        "title": "Refresh Tracking",
+        "icon": "$(refresh)",
+        "category": "HVE Core"
+      },
+      {
+        "command": "hveCore.openTrackingDetail",
+        "title": "Open Tracking Detail",
         "category": "HVE Core"
       }
     ],
@@ -113,16 +117,6 @@
         },
         {
           "command": "hveCore.refresh",
-          "when": "view == hveCore.artifactExplorer",
-          "group": "1_actions"
-        },
-        {
-          "command": "hveCore.toggleGrouping",
-          "when": "view == hveCore.artifactExplorer",
-          "group": "1_actions"
-        },
-        {
-          "command": "hveCore.filterByType",
           "when": "view == hveCore.artifactExplorer",
           "group": "1_actions"
         }
@@ -155,6 +149,10 @@
           "when": "false"
         },
         {
+          "command": "hveCore.clickArtifact",
+          "when": "false"
+        },
+        {
           "command": "hveCore.openDetail",
           "when": "false"
         },
@@ -169,6 +167,14 @@
         {
           "command": "hveCore.removeFavorite",
           "when": "false"
+        },
+        {
+          "command": "hveCore.refreshTracking",
+          "when": "false"
+        },
+        {
+          "command": "hveCore.openTrackingDetail",
+          "when": "false"
         }
       ]
     },
@@ -180,11 +186,6 @@
           "default": false,
           "scope": "resource",
           "description": "Whether HVE Core artifacts have been initialized in this workspace."
-        },
-        "hveCore.treeView.groupByType": {
-          "type": "boolean",
-          "default": false,
-          "description": "Group artifacts by type (agents/prompts/instructions). When false, groups by functional domain."
         }
       }
     }

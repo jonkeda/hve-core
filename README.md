@@ -118,13 +118,13 @@ Get started with RPI:
 
 ## What's Included
 
-| Component    | Count | Description                                                          | Documentation                                  |
-|--------------|-------|----------------------------------------------------------------------|------------------------------------------------|
-| Agents       | 18    | Specialized AI assistants for research, planning, and implementation | [Agents](.github/CUSTOM-AGENTS.md)             |
+| Component    | Count | Description                                                          | Documentation                                    |
+|--------------|-------|----------------------------------------------------------------------|--------------------------------------------------|
+| Agents       | 18    | Specialized AI assistants for research, planning, and implementation | [Agents](.github/CUSTOM-AGENTS.md)               |
 | Instructions | 17+   | Repository-specific coding guidelines applied automatically          | [Instructions](artifacts/instructions/README.md) |
 | Prompts      | 18    | Reusable templates for common tasks like commits and PRs             | [Prompts](artifacts/prompts/README.md)           |
 | Skills       | 1     | Self-contained packages with cross-platform scripts and guidance     | [Skills](artifacts/skills/)                      |
-| Scripts      | N/A   | Validation tools for linting, security, and quality                  | [Scripts](scripts/README.md)                   |
+| Scripts      | N/A   | Validation tools for linting, security, and quality                  | [Scripts](scripts/README.md)                     |
 
 ## Prompt Engineering Framework
 
@@ -197,12 +197,12 @@ We appreciate contributions! Whether you're fixing typos or adding new component
 
 ## Documentation
 
-| Guide                                                    | Description                                     |
-|----------------------------------------------------------|-------------------------------------------------|
-| [Getting Started](docs/getting-started/README.md)        | Setup and first workflow tutorial               |
-| [RPI Workflow](docs/rpi/README.md)                       | Deep dive into Research, Plan, Implement        |
-| [Contributing](docs/contributing/README.md)              | Create custom agents, instructions, and prompts |
-| [Agents Reference](.github/CUSTOM-AGENTS.md)             | All available agents                            |
+| Guide                                                      | Description                                     |
+|------------------------------------------------------------|-------------------------------------------------|
+| [Getting Started](docs/getting-started/README.md)          | Setup and first workflow tutorial               |
+| [RPI Workflow](docs/rpi/README.md)                         | Deep dive into Research, Plan, Implement        |
+| [Contributing](docs/contributing/README.md)                | Create custom agents, instructions, and prompts |
+| [Agents Reference](.github/CUSTOM-AGENTS.md)               | All available agents                            |
 | [Instructions Reference](artifacts/instructions/README.md) | All coding instructions                         |
 
 ## Responsible AI

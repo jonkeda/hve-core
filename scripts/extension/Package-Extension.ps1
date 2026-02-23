@@ -23,11 +23,6 @@
 .PARAMETER ChangelogPath
     Optional. Path to a changelog file to include in the package.
 
-.PARAMETER BumpPatch
-    Optional. When specified, automatically increments the patch version in package.json
-    before packaging (e.g., 2.2.0 -> 2.2.1). The updated version persists in package.json
-    after packaging completes.
-
 .PARAMETER PreRelease
     Optional. When specified, packages the extension for VS Code Marketplace pre-release channel.
     Uses vsce --pre-release flag which marks the extension for the pre-release track.
@@ -35,10 +30,6 @@
 .EXAMPLE
     ./Package-Extension.ps1
     # Packages using version from package.json
-
-.EXAMPLE
-    ./Package-Extension.ps1 -BumpPatch
-    # Increments patch version (e.g., 2.2.0 -> 2.2.1) and packages
 
 .EXAMPLE
     ./Package-Extension.ps1 -Version "2.0.0"
@@ -75,9 +66,6 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$ChangelogPath = "",
-
-    [Parameter(Mandatory = $false)]
-    [switch]$BumpPatch,
 
     [Parameter(Mandatory = $false)]
     [switch]$PreRelease
@@ -687,9 +675,6 @@ function Invoke-PackageExtension {
         Optional dev build patch number for pre-release versions.
     .PARAMETER ChangelogPath
         Optional path to changelog file to include in package.
-    .PARAMETER BumpPatch
-        When specified, increments the patch version (e.g., 2.2.0 -> 2.2.1) and persists
-        the new version in package.json after packaging.
     .PARAMETER PreRelease
         Switch to mark the package as a pre-release version.
     .OUTPUTS
@@ -714,9 +699,6 @@ function Invoke-PackageExtension {
 
         [Parameter(Mandatory = $false)]
         [string]$ChangelogPath = "",
-
-        [Parameter(Mandatory = $false)]
-        [switch]$BumpPatch,
 
         [Parameter(Mandatory = $false)]
         [switch]$PreRelease
@@ -762,7 +744,7 @@ function Invoke-PackageExtension {
             -SpecifiedVersion $Version `
             -ManifestVersion $packageJson.version `
             -DevPatchNumber $DevPatchNumber `
-            -BumpPatch:$BumpPatch
+            -BumpPatch
 
         if (-not $versionResult.IsValid) {
             return New-PackagingResult -Success $false -ErrorMessage $versionResult.ErrorMessage
@@ -776,12 +758,8 @@ function Invoke-PackageExtension {
 
         if ($packageVersion -ne $originalVersion) {
             Write-Host ""
-            if ($BumpPatch) {
-                Write-Host "📝 Bumping patch version in package.json..." -ForegroundColor Yellow
-                $persistVersion = $true
-            } else {
-                Write-Host "📝 Temporarily updating package.json version..." -ForegroundColor Yellow
-            }
+            Write-Host "📝 Bumping patch version in package.json..." -ForegroundColor Yellow
+            $persistVersion = $true
             $packageJson.version = $packageVersion
             $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $PackageJsonPath -Encoding UTF8NoBOM
             Write-Host "   Version: $originalVersion -> $packageVersion" -ForegroundColor Green
@@ -970,7 +948,6 @@ if ($MyInvocation.InvocationName -ne '.') {
             -Version $Version `
             -DevPatchNumber $DevPatchNumber `
             -ChangelogPath $ChangelogPath `
-            -BumpPatch:$BumpPatch `
             -PreRelease:$PreRelease
 
         if (-not $result.Success) {

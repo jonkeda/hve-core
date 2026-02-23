@@ -11,6 +11,7 @@ handoffs:
     agent: rpi-agent
     prompt: "/rpi suggest"
     send: true
+defaultEnabled: true
 ---
 
 # Memory Agent
